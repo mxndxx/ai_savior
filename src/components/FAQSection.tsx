@@ -73,11 +73,17 @@ export default function FAQSection() {
                     }`}
                   />
                 </button>
-                {openItem === faq.id && (
-                  <div className="px-5 py-4 text-base leading-relaxed text-gray-600 md:text-lg lg:px-10">
+                <div
+                  className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                    openItem === faq.id
+                      ? "max-h-96 opacity-100"
+                      : "max-h-0 opacity-0"
+                  }`}
+                >
+                  <div className="rounded-xl border-2 border-violet-400 px-5 py-4 text-base leading-relaxed text-gray-600 md:text-lg lg:px-10">
                     {faq.answer}
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>
