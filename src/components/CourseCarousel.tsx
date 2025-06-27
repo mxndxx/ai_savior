@@ -29,15 +29,16 @@ export default function CourseCarousel({
   const [currentItemsPerSlide, setCurrentItemsPerSlide] = useState(1);
   const [isClient, setIsClient] = useState(false);
 
-  // 반응형 아이템 개수 계산
-  const getItemsPerSlide = () => {
-    if (window.innerWidth >= 1024) return itemsPerSlide.desktop;
-    if (window.innerWidth >= 768) return itemsPerSlide.tablet;
-    return itemsPerSlide.mobile;
-  };
-
   useEffect(() => {
     setIsClient(true);
+
+    // 반응형 아이템 개수 계산
+    const getItemsPerSlide = () => {
+      if (window.innerWidth >= 1024) return itemsPerSlide.desktop;
+      if (window.innerWidth >= 768) return itemsPerSlide.tablet;
+      return itemsPerSlide.mobile;
+    };
+
     setCurrentItemsPerSlide(getItemsPerSlide());
 
     const handleResize = () => {
@@ -46,7 +47,7 @@ export default function CourseCarousel({
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [itemsPerSlide.desktop, itemsPerSlide.tablet, itemsPerSlide.mobile]);
 
   const totalSlides = Math.ceil(featuredCourses.length / currentItemsPerSlide);
 
