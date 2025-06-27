@@ -7,7 +7,7 @@ export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-sm border-b border-gray-200 rounded-full p-2 my-4 mx-8 2xl:mx-40">
+    <header className="fixed top-0 right-0 left-0 z-50 mx-8 my-4 rounded-full border-b border-gray-200 bg-white p-2 shadow-sm 2xl:mx-40">
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -16,24 +16,24 @@ export default function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8 text-2xl">
+          <nav className="hidden items-center space-x-8 text-2xl md:flex">
             <Link
               href="/about"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-gray-700 transition-colors hover:text-blue-600"
             >
               Savior
             </Link>
             <Link
               href="/course"
-              className="text-gray-700 hover:text-blue-600 transition-colors"
+              className="text-gray-700 transition-colors hover:text-blue-600"
             >
               클래스
             </Link>
-            <div className="relative group">
-              <button className="text-gray-700 hover:text-blue-600 transition-colors">
+            <div className="group relative">
+              <button className="text-gray-700 transition-colors hover:text-blue-600">
                 고객지원
               </button>
-              <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div className="invisible absolute top-full left-0 z-50 mt-2 w-48 rounded-lg bg-white opacity-0 shadow-lg transition-all duration-200 group-hover:visible group-hover:opacity-100">
                 <Link
                   href="/support/notices"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
@@ -61,47 +61,47 @@ export default function Header() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden flex flex-col space-y-1"
+              className="flex flex-col space-y-1 md:hidden"
             >
-              <span className="w-6 h-0.5 bg-gray-900 transition-all" />
-              <span className="w-6 h-0.5 bg-gray-900 transition-all" />
-              <span className="w-6 h-0.5 bg-gray-900 transition-all" />
+              <span className="h-0.5 w-6 bg-gray-900 transition-all" />
+              <span className="h-0.5 w-6 bg-gray-900 transition-all" />
+              <span className="h-0.5 w-6 bg-gray-900 transition-all" />
             </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <nav className="md:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+          <nav className="mt-4 border-t border-gray-200 pt-4 pb-4 md:hidden">
             <div className="flex flex-col space-y-3">
               <Link
                 href="/about"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 Savior
               </Link>
               <Link
                 href="/course"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 클래스
               </Link>
               <Link
                 href="/support/notices"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 안내사항
               </Link>
               <Link
                 href="/support/faqs"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 자주묻는질문
               </Link>
               <Link
                 href="https://nlab.channel.io/home"
                 target="_blank"
-                className="text-gray-700 hover:text-blue-600 transition-colors"
+                className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 1:1문의
               </Link>

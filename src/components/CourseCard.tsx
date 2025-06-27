@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import CourseImage from "./CourseImage";
+import CourseImage from "@/components/CourseImage";
 
 interface CourseCardProps {
   id: string;
@@ -24,7 +24,7 @@ export default function CourseCard({
 }: CourseCardProps) {
   return (
     <Link href={link}>
-      <div className="w-full hover:-translate-y-2 transition-transform duration-300">
+      <div className="w-full transition-transform duration-300 hover:-translate-y-2">
         {/* 이미지 */}
         <CourseImage src={thumbnail} alt={title} />
 
@@ -35,7 +35,7 @@ export default function CourseCard({
               {badges.map((badge, index) => (
                 <span
                   key={`${badge.text}-${index}`}
-                  className={`px-2 py-1 rounded-full text-lg font-semibold text-white ${badge.color}`}
+                  className={`rounded-full px-2 py-1 text-lg font-semibold text-white ${badge.color}`}
                 >
                   {badge.text}
                 </span>
@@ -43,10 +43,10 @@ export default function CourseCard({
             </div>
           )}
           <div className="py-2 text-2xl">
-            <h3 className="font-bold mb-2 line-clamp-2 leading-tight">
+            <h3 className="mb-2 line-clamp-2 leading-tight font-bold">
               {title}
             </h3>
-            <p className="text-gray text-sm mb-3">{instructor}</p>
+            <p className="text-gray mb-3 text-sm">{instructor}</p>
           </div>
         </div>
       </div>

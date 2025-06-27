@@ -53,7 +53,7 @@ export default function HeroSection() {
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide(
-        (prev) => (prev + 1) % featuredCourses.slice(0, 4).length
+        (prev) => (prev + 1) % featuredCourses.slice(0, 4).length,
       );
     }, 5000);
 
@@ -62,7 +62,7 @@ export default function HeroSection() {
 
   const handlePrevSlide = () => {
     setCurrentSlide((prev) =>
-      prev === 0 ? featuredCourses.slice(0, 4).length - 1 : prev - 1
+      prev === 0 ? featuredCourses.slice(0, 4).length - 1 : prev - 1,
     );
   };
 
@@ -71,10 +71,10 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="w-full h-full">
+    <section className="h-full w-full">
       <div className="w-full max-w-none px-0">
         {/* Main Hero Carousel */}
-        <div className="relative mb-12 rounded-4xl overflow-hidden">
+        <div className="relative mb-12 overflow-hidden rounded-4xl">
           <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -86,7 +86,7 @@ export default function HeroSection() {
                     src={slide.thumbnail}
                     alt={slide.title}
                     fill={true}
-                    className="w-full aspect-[16/9] rounded-4xl"
+                    className="aspect-[16/9] w-full rounded-4xl"
                   />
                 </Link>
               </div>
@@ -107,10 +107,10 @@ export default function HeroSection() {
           </div> */}
 
           {/* Slide Counter with Arrows */}
-          <div className="absolute bottom-4 right-4 bg-white bg-opacity-50 text-black rounded-full text-2xl flex items-center gap-4 p-2">
+          <div className="bg-opacity-50 absolute right-4 bottom-4 flex items-center gap-4 rounded-full bg-white p-2 text-2xl text-black">
             <button
               onClick={handlePrevSlide}
-              className="hover:text-gray-600 transition-colors"
+              className="transition-colors hover:text-gray-600"
               aria-label="Previous slide"
             >
               <svg
@@ -129,7 +129,7 @@ export default function HeroSection() {
             </span>
             <button
               onClick={handleNextSlide}
-              className="hover:text-gray-600 transition-colors"
+              className="transition-colors hover:text-gray-600"
               aria-label="Next slide"
             >
               <svg

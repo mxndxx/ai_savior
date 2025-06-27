@@ -4,10 +4,10 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-6 rounded-t-4xl">
+    <footer className="rounded-t-4xl bg-gray-800 py-6 text-white">
       <div className="container mx-auto px-4">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-4">
+        <div className="mb-4 grid grid-cols-1 gap-8 lg:grid-cols-4">
           {/* Company Info */}
           <div className="lg:col-span-2">
             {/* Contact Info */}
@@ -26,29 +26,29 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">바로가기</h3>
+            <h3 className="mb-4 text-lg font-semibold">바로가기</h3>
             <div className="space-y-3">
               <Link
                 href="/about"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 N잡 연구소
               </Link>
               <Link
                 href="/course"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 클래스
               </Link>
               <Link
                 href="/course"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 무료 강의
               </Link>
               <Link
                 href="/teachers"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 강사진
               </Link>
@@ -57,30 +57,30 @@ export default function Footer() {
 
           {/* Support & Legal */}
           <div>
-            <h3 className="font-semibold text-lg mb-4">고객지원</h3>
+            <h3 className="mb-4 text-lg font-semibold">고객지원</h3>
             <div className="space-y-3">
               <Link
                 href="/support/notices"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 안내사항
               </Link>
               <Link
                 href="/support/faqs"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 자주묻는질문
               </Link>
               <Link
                 href="https://nlab.channel.io/home"
                 target="_blank"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 1:1문의
               </Link>
               <Link
                 href="mailto:ttacompany01@gmail.com"
-                className="block text-gray-300 hover:text-teal transition-colors"
+                className="hover:text-teal block text-gray-300 transition-colors"
               >
                 강사 신청 및 협업제안
               </Link>
@@ -90,7 +90,7 @@ export default function Footer() {
 
         {/* Legal Links */}
         <div className="border-t border-gray-700 pt-4">
-          <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-300">
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300 md:justify-start">
             <Link
               href="/privacy-policy"
               className="hover:text-teal transition-colors"
