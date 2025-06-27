@@ -1,0 +1,245 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import CourseCard from "./CourseCard";
+import { featuredCourses } from "@/data/courses";
+
+interface CourseCarouselProps {
+  itemsPerSlide?: {
+    mobile: number;
+    tablet: number;
+    desktop: number;
+  };
+  autoPlay?: boolean;
+  autoPlayInterval?: number;
+  className?: string;
+}
+
+export default function CourseCarousel({
+  itemsPerSlide = { mobile: 1, tablet: 2, desktop: 3 },
+  autoPlay = true,
+  autoPlayInterval = 4000,
+  className = "",
+}: CourseCarouselProps) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isUserInteracting, setIsUserInteracting] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [currentItemsPerSlide, setCurrentItemsPerSlide] = useState(1);
+  const [isClient, setIsClient] = useState(false);
+
+  // 반응형 아이템 개수 계산
+  const getItemsPerSlide = () => {
+    if (window.innerWidth >= 1024) return itemsPerSlide.desktop;
+    if (window.innerWidth >= 768) return itemsPerSlide.tablet;
+    return itemsPerSlide.mobile;
+  };
+
+  useEffect(() => {
+    setIsClient(true);
+    setCurrentItemsPerSlide(getItemsPerSlide());
+
+    const handleResize = () => {
+      setCurrentItemsPerSlide(getItemsPerSlide());
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const totalSlides = Math.ceil(featuredCourses.length / currentItemsPerSlide);
+
+  // 자동 슬라이드
+  useEffect(() => {
+    if (!autoPlay || isUserInteracting) return;
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % totalSlides);
+    }, autoPlayInterval);
+
+    return () => clearInterval(timer);
+  }, [totalSlides, isUserInteracting, autoPlay, autoPlayInterval]);
+
+  // 슬라이드 이동
+  const goToSlide = (slideIndex: number) => {
+    setCurrentSlide(slideIndex);
+    setIsUserInteracting(true);
+    setTimeout(() => setIsUserInteracting(false), 3000);
+  };
+
+  const nextSlide = () => {
+    goToSlide((currentSlide + 1) % totalSlides);
+  };
+
+  const prevSlide = () => {
+    goToSlide(currentSlide === 0 ? totalSlides - 1 : currentSlide - 1);
+  };
+
+  // 마우스 이벤트 핸들러
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setIsUserInteracting(true);
+    setStartX(e.pageX);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const x = e.pageX;
+    const walk = (startX - x) / 100;
+
+    if (Math.abs(walk) > 0.5) {
+      if (walk > 0 && currentSlide < totalSlides - 1) {
+        setCurrentSlide(currentSlide + 1);
+        setIsDragging(false);
+      } else if (walk < 0 && currentSlide > 0) {
+        setCurrentSlide(currentSlide - 1);
+        setIsDragging(false);
+      }
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    setTimeout(() => setIsUserInteracting(false), 3000);
+  };
+
+  // 터치 이벤트
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setIsUserInteracting(true);
+    setStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!startX) return;
+    const currentX = e.touches[0].clientX;
+    const diff = startX - currentX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0 && currentSlide < totalSlides - 1) {
+        nextSlide();
+      } else if (diff < 0 && currentSlide > 0) {
+        prevSlide();
+      }
+      setStartX(0);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setStartX(0);
+  };
+
+  if (!isClient) {
+    return <div className="h-64 animate-pulse bg-gray-200 rounded-lg" />;
+  }
+
+  return (
+    <div className={`relative ${className}`}>
+      {/* Carousel Container */}
+      <div
+        ref={scrollContainerRef}
+        className="overflow-hidden pt-2"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
+        <div
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(-${
+              (currentSlide * 100) / currentItemsPerSlide
+            }%)`,
+            cursor: isDragging ? "grabbing" : "grab",
+          }}
+        >
+          {featuredCourses.map((course, index) => (
+            <div
+              key={course.id}
+              className="flex-shrink-0 px-2"
+              style={{
+                width: `${100 / currentItemsPerSlide}%`,
+              }}
+            >
+              <CourseCard
+                id={course.id}
+                title={course.title}
+                instructor={course.instructor}
+                thumbnail={course.thumbnail}
+                badges={course.badges}
+                category={course.category}
+                link={course.link}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Navigation Buttons */}
+      {totalSlides > 1 && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-200 z-10 group disabled:opacity-50"
+            disabled={currentSlide === 0}
+          >
+            <svg
+              className="w-6 h-6 text-black group-hover:text-teal transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-200 z-10 group disabled:opacity-50"
+            disabled={currentSlide === totalSlides - 1}
+          >
+            <svg
+              className="w-6 h-6 text-black group-hover:text-teal transition-colors"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </>
+      )}
+
+      {/* Slide Indicators */}
+      {totalSlides > 1 && (
+        <div className="flex justify-center mt-8 space-x-2">
+          {Array.from({ length: totalSlides }).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                currentSlide === index
+                  ? "bg-black scale-110"
+                  : "bg-gray-300 hover:bg-black"
+              }`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
