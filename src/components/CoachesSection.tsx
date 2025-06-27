@@ -52,7 +52,7 @@ export default function CoachesSection() {
 
   return (
     <section className="bg-white py-10 md:py-[100px]">
-      <div className="mx-auto w-full px-4">
+      <div className="w-full">
         <div className="space-y-5 md:space-y-10 lg:space-y-16">
           {/* Header */}
           <div className="flex flex-wrap justify-between gap-5 md:flex-nowrap md:gap-8">
