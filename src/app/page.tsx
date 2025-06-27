@@ -2,7 +2,7 @@ import CourseSection from "@/components/CourseSection";
 import FAQSection from "@/components/FAQSection";
 import HeroSection from "@/components/HeroSection";
 import MarketingSection from "@/components/MarketingSection";
-import MentorsSection from "@/components/MentorsSection";
+import CoachesSection from "@/components/CoachesSection";
 
 export default function Home() {
   return (
@@ -11,7 +11,7 @@ export default function Home() {
       <CourseSection />
       {/* <MarketingSection /> */}
       <FAQSection />
-      <MentorsSection />
+      <CoachesSection />
     </main>
   );
 }
