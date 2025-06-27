@@ -33,7 +33,7 @@ export default function FAQSection() {
 
   return (
     <section className="space-y-5 bg-white py-10 md:space-y-10 md:py-[100px] lg:space-y-16">
-      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 px-4 lg:flex-row">
+      <div className="flex w-full flex-col justify-between gap-5 lg:flex-row">
         {/* Left Content */}
         <div className="space-y-10">
           <div className="flex w-full flex-col items-start gap-3 md:gap-4">
