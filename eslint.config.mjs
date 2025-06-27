@@ -14,6 +14,8 @@ const eslintConfig = [
   {
     rules: {
       "@typescript-eslint/no-explicit-any": "off",
+      // TODO: 추후 삭제 예정
+      "@typescript-eslint/no-unused-vars": "off",
     },
   },
 ];
