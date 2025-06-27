@@ -20,17 +20,17 @@ export default function SuccessModal({
   return (
     <ModalPortal>
       <div
-        className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center p-4"
+        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
         onClick={onClose}
       >
         <div
-          className="bg-white rounded-lg max-w-sm w-full p-6 text-center"
+          className="w-full max-w-sm rounded-lg bg-white p-6 text-center"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mb-4">
-            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
               <svg
-                className="w-8 h-8 text-green-500"
+                className="h-8 w-8 text-green-500"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -44,11 +44,11 @@ export default function SuccessModal({
               </svg>
             </div>
           </div>
-          <h3 className="text-xl font-bold mb-2">{title}</h3>
-          <p className="text-gray-600 mb-6">{message}</p>
+          <h3 className="mb-2 text-xl font-bold">{title}</h3>
+          <p className="mb-6 text-gray-600">{message}</p>
           <button
             onClick={onClose}
-            className="bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 px-6 rounded-lg transition-colors duration-200"
+            className="rounded-lg bg-violet-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-violet-700"
           >
             확인
           </button>

@@ -34,13 +34,13 @@ export default function CourseImage({
   }
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="flex w-full justify-center">
       <Image
         src={src}
         alt={alt}
         width={width || 480}
         height={height || 400}
-        className={`object-contain rounded-4xl ${className}`.trim()}
+        className={`rounded-4xl object-contain ${className}`.trim()}
       />
     </div>
   );

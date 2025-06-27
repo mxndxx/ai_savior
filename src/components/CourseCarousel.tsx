@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import CourseCard from "./CourseCard";
+import CourseCard from "@/components/CourseCard";
 import { featuredCourses } from "@/data/courses";
 
 interface CourseCarouselProps {
@@ -131,7 +131,7 @@ export default function CourseCarousel({
   };
 
   if (!isClient) {
-    return <div className="h-64 animate-pulse bg-gray-200 rounded-lg" />;
+    return <div className="h-64 animate-pulse rounded-lg bg-gray-200" />;
   }
 
   return (
@@ -184,11 +184,11 @@ export default function CourseCarousel({
         <>
           <button
             onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-200 z-10 group disabled:opacity-50"
+            className="group absolute top-1/2 left-0 z-10 -translate-x-4 -translate-y-1/2 rounded-full bg-white p-3 shadow-xl transition-all duration-200 hover:bg-gray-50 disabled:opacity-50"
             disabled={currentSlide === 0}
           >
             <svg
-              className="w-6 h-6 text-black group-hover:text-teal transition-colors"
+              className="group-hover:text-teal h-6 w-6 text-black transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -204,11 +204,11 @@ export default function CourseCarousel({
 
           <button
             onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white shadow-xl rounded-full p-3 hover:bg-gray-50 transition-all duration-200 z-10 group disabled:opacity-50"
+            className="group absolute top-1/2 right-0 z-10 translate-x-4 -translate-y-1/2 rounded-full bg-white p-3 shadow-xl transition-all duration-200 hover:bg-gray-50 disabled:opacity-50"
             disabled={currentSlide === totalSlides - 1}
           >
             <svg
-              className="w-6 h-6 text-black group-hover:text-teal transition-colors"
+              className="group-hover:text-teal h-6 w-6 text-black transition-colors"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -226,14 +226,14 @@ export default function CourseCarousel({
 
       {/* Slide Indicators */}
       {totalSlides > 1 && (
-        <div className="flex justify-center mt-8 space-x-2">
+        <div className="mt-8 flex justify-center space-x-2">
           {Array.from({ length: totalSlides }).map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-200 ${
+              className={`h-3 w-3 rounded-full transition-all duration-200 ${
                 currentSlide === index
-                  ? "bg-black scale-110"
+                  ? "scale-110 bg-black"
                   : "bg-gray-300 hover:bg-black"
               }`}
             />

@@ -29,17 +29,17 @@ const youtubeVideos = [
 
 export default function MarketingSection() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-blue-500 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
+        <div className="mb-12 text-center">
+          <div className="mb-4 inline-block rounded-full bg-blue-500 px-4 py-2 text-sm font-semibold text-white">
             Marketing
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
             11만 구독자, 누적 조회수 CEO - 옆집CEO 유튜브 채널
           </h2>
-          <p className="text-gray-600 text-lg max-w-3xl mx-auto mb-8">
+          <p className="mx-auto mb-8 max-w-3xl text-lg text-gray-600">
             11만 구독자와 함께하는 CEO 성장 스토리를 경험해보세요!
           </p>
 
@@ -47,10 +47,10 @@ export default function MarketingSection() {
           <Link
             href="https://www.youtube.com/@ceo-nextdoor"
             target="_blank"
-            className="inline-flex items-center bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+            className="inline-flex items-center rounded-lg bg-red-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-red-700"
           >
             <svg
-              className="w-5 h-5 mr-2"
+              className="mr-2 h-5 w-5"
               viewBox="0 0 24 24"
               fill="currentColor"
             >
@@ -62,11 +62,11 @@ export default function MarketingSection() {
         </div>
 
         {/* Video Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {youtubeVideos.map((video) => (
             <div
               key={video.id}
-              className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="transform overflow-hidden rounded-xl bg-white shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <Link href={video.videoUrl} target="_blank">
                 <div className="relative">
@@ -80,10 +80,10 @@ export default function MarketingSection() {
                     />
 
                     {/* Play Button Overlay */}
-                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-30 opacity-0 hover:opacity-100 transition-opacity">
-                      <div className="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center">
+                    <div className="bg-opacity-30 absolute inset-0 flex items-center justify-center bg-black opacity-0 transition-opacity hover:opacity-100">
+                      <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-600">
                         <svg
-                          className="w-6 h-6 text-white ml-1"
+                          className="ml-1 h-6 w-6 text-white"
                           fill="currentColor"
                           viewBox="0 0 24 24"
                         >
@@ -93,13 +93,13 @@ export default function MarketingSection() {
                     </div>
 
                     {/* View Count */}
-                    <div className="absolute bottom-3 right-3 bg-black bg-opacity-75 text-white px-2 py-1 rounded text-xs font-semibold">
+                    <div className="bg-opacity-75 absolute right-3 bottom-3 rounded bg-black px-2 py-1 text-xs font-semibold text-white">
                       조회수 {video.views}
                     </div>
                   </div>
 
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900 text-sm leading-tight line-clamp-2">
+                    <h3 className="line-clamp-2 text-sm leading-tight font-semibold text-gray-900">
                       {video.title}
                     </h3>
                   </div>
@@ -110,20 +110,20 @@ export default function MarketingSection() {
         </div>
 
         {/* Channel Stats */}
-        <div className="mt-16 bg-white rounded-2xl p-8 shadow-lg">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+        <div className="mt-16 rounded-2xl bg-white p-8 shadow-lg">
+          <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3">
             <div>
-              <div className="text-3xl font-bold text-blue-500 mb-2">11만+</div>
+              <div className="mb-2 text-3xl font-bold text-blue-500">11만+</div>
               <div className="text-gray-600">구독자 수</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-purple-500 mb-2">
+              <div className="mb-2 text-3xl font-bold text-purple-500">
                 500만+
               </div>
               <div className="text-gray-600">누적 조회수</div>
             </div>
             <div>
-              <div className="text-3xl font-bold text-yellow-500 mb-2">
+              <div className="mb-2 text-3xl font-bold text-yellow-500">
                 200+
               </div>
               <div className="text-gray-600">업로드 영상</div>

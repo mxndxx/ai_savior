@@ -1,133 +1,86 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { CircleChevronRight, ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    id: "1",
-    question: "강의는 어떻게 수강할 수 있나요?",
+    id: "item-1",
+    question: "무료 라이브 강의는 어떻게 참여하나요?",
     answer:
-      "회원가입 후 원하는 강의를 선택하여 결제하시면 바로 수강이 가능합니다. 모든 강의는 온라인으로 제공되며, 언제 어디서나 학습할 수 있습니다.",
+      "무료 라이브 강의는 홈페이지에서 사전 신청을 통해 참여하실 수 있습니다. 신청 후 강의 시작 전에 참여 링크를 이메일로 발송해드립니다. 강의는 실시간으로 진행되며, 질의응답 시간도 포함되어 있습니다.",
   },
   {
-    id: "2",
-    question: "무료 강의와 유료 강의의 차이점은 무엇인가요?",
+    id: "item-2",
+    question: "N잡 연구소는 뭐하는 곳인가요?",
     answer:
-      "무료 강의는 N잡에 대한 기본적인 정보와 시작 방법을 제공하며, 유료 강의는 더 구체적이고 실전적인 노하우와 1:1 피드백, 커뮤니티 참여 등의 혜택이 포함됩니다.",
+      "N잡 연구소는 부업과 창업을 통한 다양한 수익 창출 방법을 연구하고 교육하는 곳입니다. 실제 성공 사례를 바탕으로 한 실무 중심의 교육을 제공하며, 수강생들의 성공적인 N잡 도전을 지원합니다.",
   },
   {
-    id: "3",
-    question: "강의 수강 기간은 얼마나 되나요?",
+    id: "item-3",
+    question: "문의는 어디서 가능한가요?",
     answer:
-      "강의마다 다르지만, 대부분의 강의는 구매 후 6개월 동안 무제한으로 시청할 수 있습니다. 일부 프리미엄 강의는 평생 수강이 가능합니다.",
-  },
-  {
-    id: "4",
-    question: "환불 정책은 어떻게 되나요?",
-    answer:
-      "강의 구매 후 7일 이내, 진도율 30% 미만일 경우 100% 환불이 가능합니다. 자세한 환불 정책은 이용약관에서 확인하실 수 있습니다.",
-  },
-  {
-    id: "5",
-    question: "1:1 멘토링은 어떻게 받을 수 있나요?",
-    answer:
-      "프리미엄 강의 수강생에게는 강사와의 1:1 멘토링 기회가 제공됩니다. 별도의 멘토링 프로그램도 운영하고 있으니 고객센터로 문의해주세요.",
+      "문의는 홈페이지의 고객지원 페이지를 통해 가능합니다. 이메일, 전화, 온라인 채팅을 통해 언제든지 문의하실 수 있으며, 평일 오전 9시부터 오후 6시까지 실시간 상담이 가능합니다.",
   },
 ];
 
 export default function FAQSection() {
-  const [openFAQ, setOpenFAQ] = useState<string | null>(null);
+  const [openItem, setOpenItem] = useState<string | null>(null);
 
-  const toggleFAQ = (id: string) => {
-    setOpenFAQ(openFAQ === id ? null : id);
+  const toggleItem = (id: string) => {
+    setOpenItem(openItem === id ? null : id);
   };
 
   return (
-    <section className="py-16 bg-white">
-      <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-purple text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
-            FAQ
+    <section className="space-y-5 bg-white py-10 md:space-y-10 md:py-[100px] lg:space-y-16">
+      <div className="mx-auto flex max-w-7xl flex-col justify-between gap-5 px-4 lg:flex-row">
+        {/* Left Content */}
+        <div className="space-y-10">
+          <div className="flex w-full flex-col items-start gap-3 md:gap-4">
+            <span className="rounded-full border-2 border-purple-600 px-4 py-1 text-sm font-semibold text-purple-600 md:text-[20px]">
+              FaQ
+            </span>
+            <h2 className="text-3xl leading-[1.2] font-semibold whitespace-pre-line md:text-4xl lg:text-5xl">
+              자주 묻는 질문
+            </h2>
+            <p className="text-lg leading-[1.3] text-gray-700 md:text-xl lg:text-[28px]">
+              N잡 연구소에게 수강생 여러분들께서{"\n"}
+              가장 궁금해 하시는 질문들을 안내드립니다.
+            </p>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-navy mb-4">
-            자주 묻는 질문
-          </h2>
-          <p className="text-gray text-lg max-w-2xl mx-auto mb-8">
-            N잡연구소에서 가장 많이 받는 질문들을 모았습니다.
-          </p>
+          <a
+            href="/support/faqs"
+            className="flex items-center gap-4 text-lg text-gray-600 transition-colors hover:text-purple-600 md:text-2xl"
+          >
+            모든 질문 확인하기
+            <CircleChevronRight className="size-7 stroke-1" />
+          </a>
         </div>
 
-        {/* FAQ List */}
-        <div className="max-w-4xl mx-auto">
-          <div className="space-y-4">
+        {/* Right Content - FAQ Accordion */}
+        <div className="w-full max-w-[800px]">
+          <div className="space-y-2 lg:space-y-3">
             {faqs.map((faq) => (
-              <div
-                key={faq.id}
-                className="bg-lightgray rounded-xl overflow-hidden"
-              >
+              <div key={faq.id} className="space-y-2 border-none lg:space-y-3">
                 <button
-                  onClick={() => toggleFAQ(faq.id)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-opacity-80 transition-colors"
+                  onClick={() => toggleItem(faq.id)}
+                  className="flex w-full items-center justify-between rounded-[20px] border border-gray-200 px-5 py-5 text-left text-lg transition-colors hover:bg-slate-100 md:text-2xl lg:px-10 lg:py-7"
                 >
-                  <h3 className="font-semibold text-navy text-lg">
-                    {faq.question}
-                  </h3>
-                  <div
-                    className={`transform transition-transform duration-200 ${
-                      openFAQ === faq.id ? "rotate-180" : ""
+                  {faq.question}
+                  <ChevronDown
+                    className={`h-6 w-6 transition-transform ${
+                      openItem === faq.id ? "rotate-180" : ""
                     }`}
-                  >
-                    <svg
-                      className="w-5 h-5 text-gray"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
+                  />
                 </button>
-
-                {openFAQ === faq.id && (
-                  <div className="px-6 pb-4">
-                    <div className="border-t border-borderColor pt-4">
-                      <p className="text-gray leading-relaxed">{faq.answer}</p>
-                    </div>
+                {openItem === faq.id && (
+                  <div className="px-5 py-4 text-base leading-relaxed text-gray-600 md:text-lg lg:px-10">
+                    {faq.answer}
                   </div>
                 )}
               </div>
             ))}
           </div>
-        </div>
-
-        {/* View All FAQs Button */}
-        <div className="text-center mt-12">
-          <Link
-            href="/support/faqs"
-            className="inline-flex items-center bg-navy text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
-          >
-            모든 질문 확인하기
-            <svg
-              className="w-5 h-5 ml-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </Link>
         </div>
       </div>
     </section>

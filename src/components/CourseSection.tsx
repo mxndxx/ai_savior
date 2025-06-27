@@ -4,13 +4,13 @@ import CourseCarousel from "@/components/CourseCarousel";
 
 export default function CourseSection() {
   return (
-    <section className="py-16 flex flex-col gap-16">
+    <section className="flex flex-col gap-16 py-16">
       <div className="mb-8">
-        <div className="flex flex-col mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-black">
+        <div className="mb-10 flex flex-col">
+          <h2 className="text-3xl font-bold text-black md:text-4xl">
             얼리버드 할인 중
           </h2>
-          <p className="text-black text-lg max-w-2xl">
+          <p className="max-w-2xl text-lg text-black">
             마감임박! 곧 신청 마감될 강의
           </p>
         </div>
@@ -21,11 +21,11 @@ export default function CourseSection() {
         />
       </div>
       <div className="mb-8">
-        <div className="flex flex-col mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold text-black">
+        <div className="mb-10 flex flex-col">
+          <h2 className="text-3xl font-bold text-black md:text-4xl">
             매일 배우는, 무료강의
           </h2>
-          <p className="text-black text-lg max-w-2xl">
+          <p className="max-w-2xl text-lg text-black">
             하나라도 더 얻어가세요!
           </p>
         </div>

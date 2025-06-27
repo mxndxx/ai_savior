@@ -61,27 +61,27 @@ const mentors = [
 
 export default function MentorsSection() {
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-4">
         {/* Section Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block bg-yellow-500 text-gray-900 px-4 py-2 rounded-full text-sm font-semibold mb-4">
+        <div className="mb-12 text-center">
+          <div className="mb-4 inline-block rounded-full bg-yellow-500 px-4 py-2 text-sm font-semibold text-gray-900">
             Mentors
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
             검증된 멘토
           </h2>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto mb-8">
+          <p className="mx-auto mb-8 max-w-2xl text-lg text-gray-600">
             N잡연구소의 각 분야별 전문가들을 만나보세요!
           </p>
 
           <Link
             href="/teachers"
-            className="inline-flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-colors"
+            className="hover:bg-opacity-90 inline-flex items-center rounded-lg bg-gray-900 px-6 py-3 font-semibold text-white transition-colors"
           >
             강사 이력 확인하기
             <svg
-              className="w-5 h-5 ml-2"
+              className="ml-2 h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -97,17 +97,17 @@ export default function MentorsSection() {
         </div>
 
         {/* Mentors Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-8 md:grid-cols-2">
           {mentors.map((mentor) => (
             <div
               key={mentor.id}
-              className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+              className="transform rounded-2xl bg-white p-6 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             >
               <Link href={mentor.link}>
-                <div className="flex flex-col md:flex-row items-start space-y-4 md:space-y-0 md:space-x-6">
+                <div className="flex flex-col items-start space-y-4 md:flex-row md:space-y-0 md:space-x-6">
                   {/* Profile Image */}
-                  <div className="flex-shrink-0 mx-auto md:mx-0">
-                    <div className="w-24 h-24 relative rounded-full overflow-hidden bg-gray-200">
+                  <div className="mx-auto flex-shrink-0 md:mx-0">
+                    <div className="relative h-24 w-24 overflow-hidden rounded-full bg-gray-200">
                       <Image
                         src={mentor.image}
                         alt={mentor.name}
@@ -120,10 +120,10 @@ export default function MentorsSection() {
 
                   {/* Profile Info */}
                   <div className="flex-1 text-center md:text-left">
-                    <h3 className="font-bold text-xl text-gray-900 mb-1">
+                    <h3 className="mb-1 text-xl font-bold text-gray-900">
                       {mentor.name}
                     </h3>
-                    <h4 className="text-blue-500 font-semibold mb-4">
+                    <h4 className="mb-4 font-semibold text-blue-500">
                       {mentor.title}
                     </h4>
 
@@ -134,7 +134,7 @@ export default function MentorsSection() {
                           key={`${mentor.id}-achievement-${index}`}
                           className="flex items-start text-sm text-gray-600"
                         >
-                          <span className="text-blue-500 mr-2 flex-shrink-0">
+                          <span className="mr-2 flex-shrink-0 text-blue-500">
                             •
                           </span>
                           <span>{achievement}</span>
@@ -143,10 +143,10 @@ export default function MentorsSection() {
                     </ul>
 
                     <div className="mt-4">
-                      <span className="inline-flex items-center text-blue-500 font-semibold text-sm">
+                      <span className="inline-flex items-center text-sm font-semibold text-blue-500">
                         강사 더 알아보기
                         <svg
-                          className="w-4 h-4 ml-1"
+                          className="ml-1 h-4 w-4"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
