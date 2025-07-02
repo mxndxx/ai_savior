@@ -12,79 +12,60 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      {/* <header className="sticky top-0 z-50 border-b border-gray-200 bg-white shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="text-2xl font-bold text-[#0D0D2B]">
-              월5천 아이템 <span className="text-[#DC2626]">생성기</span>{" "}
-              <span className="text-sm text-gray-600">by AI최대표</span>
-            </div>
-            <div className="hidden text-sm font-medium text-gray-600 md:block">
-              AI로 만드는 나만의 수익 시스템
-            </div>
-          </div>
-        </div>
-      </header> */}
-
-      {/* Hero Section */}
       <section
         id="hero"
         className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white"
       >
-        <div className="relative mx-auto space-y-10 px-4 py-6 sm:px-6 lg:px-32 lg:py-24">
+        <div className="relative mx-auto space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
           <div className="mx-auto inline-flex items-center rounded-full border border-[#DC2626]/30 bg-[#DC2626]/20 px-4 py-2 text-sm font-medium text-[#DC2626] backdrop-blur-sm">
             <Sparkles className="mr-2 h-4 w-4" />
             AI최대표의 맞춤형 수익 시스템
           </div>
           <h1 className="text-4xl leading-tight font-bold lg:text-5xl">
-            딱 1분. 당신의 현재 상황을 Al 최대표에게 전달해 주세요.
+            딱 1분.
             <br />
-            당신에게만 적용되는
-            <span className="text-[#DC2626]"> 월5천 자동화 전략</span>을 무료로
-            설계해드립니다.
+            당신의 현재 상황을{" "}
+            <span className="block sm:inline">
+              AI 최대표에게 전달해 주세요.
+              <br />
+            </span>
+            당신에게만 적용되는{" "}
+            <span className="block text-[#DC2626] sm:inline">
+              월5천 자동화 전략을{" "}
+            </span>
+            <span className="block sm:inline">무료로 설계해드립니다.</span>
           </h1>
           <p className="text-xl leading-relaxed text-gray-300">
-            경험 없음, 기술 없음 괜찮습니다. 당신의 일과 삶을 바탕으로 지금 가장
-            빠르게 자동화 수익을 만들 수 있는 전략을 A 최대표가 직접
-            제안해드립니다.
+            경험 없음, 기술 없음 괜찮습니다.
+            <span className="sm:hidden">
+              <br />
+            </span>
+            당신의 일과 삶을 바탕으로 지금 가장 빠르게 자동화 수익을 만들 수
+            있는 전략을 A 최대표가 직접 제안해드립니다.
           </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <Target className="mr-2 h-5 w-5 text-[#00BFFF]" />
+          <div className="flex flex-row items-center justify-center gap-2 text-center text-sm sm:gap-6">
+            <div className="flex items-center gap-1 rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <Target className="h-5 w-5 text-[#00BFFF]" />
               <span>PRODUCT 아이템 생성</span>
             </div>
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <Zap className="mr-2 h-5 w-5 text-[#00BFFF]" />
+            <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <Zap className="h-5 w-5 text-[#00BFFF]" />
               <span>AUTOMATE 자동화 설계</span>
             </div>
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <ArrowRight className="mr-2 h-5 w-5 text-[#00BFFF]" />
+            <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <ArrowRight className="h-5 w-5 text-[#00BFFF]" />
               <span>TRAFFIC 유입 전략</span>
             </div>
           </div>
-
-          {/* CTA Button - Fixed at bottom */}
-          <div className="flex items-center justify-center">
+          <div className="fixed right-0 bottom-0 left-0 z-50 flex items-center justify-center p-2">
             <button
               onClick={openModal}
-              className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
+              className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
             >
               나만의 월5천 전략 받기
               <ArrowRight className="ml-3 h-6 w-6" />
             </button>
           </div>
-          {/* TODO 버튼 포지션 조정 */}
-          {/* <div className="fixed right-0 bottom-0 left-0 z-50 flex items-center justify-center bg-white/95 p-4 backdrop-blur-sm">
-            <button
-              onClick={openModal}
-              className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
-            >
-              나만의 월5천 전략 받기
-              <ArrowRight className="ml-3 h-6 w-6" />
-            </button>
-          </div> */}
         </div>
       </section>
 
@@ -113,8 +94,8 @@ export default function LandingPage() {
       </section> */}
 
       {/* Features Section - 개선 */}
-      <section className="flex flex-col gap-10 py-20">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="flex flex-col gap-10 px-4 py-20 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
+        <div className="mx-auto">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#0D0D2B] lg:text-4xl">
               왜 <span className="text-[#DC2626]">월5천 아이템 생성기</span>
@@ -163,26 +144,24 @@ export default function LandingPage() {
             </div>
           </div>
         </div>
-        <div className="px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              { icon: "👤", text: "딱 1명, 당신에게만 맞는 전략입니다" },
-              { icon: "💼", text: "지금까지 해온 일을 기반으로만 설계됩니다" },
-              { icon: "⚡", text: "신청 즉시 분석 시작 + 결과 리포트 제공" },
-            ].map((item, index) => (
-              <div key={index} className="flex items-center justify-center">
-                <div className="rounded-full border-1 border-gray-400 bg-white px-6 py-3 text-center">
-                  <span className="mr-2 text-xl">{item.icon}</span>
-                  <span className="font-bold text-[#0D0D2B]">{item.text}</span>
-                </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {[
+            { icon: "👤", text: "딱 1명, 당신에게만 맞는 전략입니다" },
+            { icon: "💼", text: "지금까지 해온 일을 기반으로만 설계됩니다" },
+            { icon: "⚡", text: "신청 즉시 분석 시작 + 결과 리포트 제공" },
+          ].map((item, index) => (
+            <div key={index} className="flex items-center justify-center">
+              <div className="w-full rounded-full border-1 border-gray-400 bg-white px-6 py-3 text-center">
+                <span className="mr-2 text-xl">{item.icon}</span>
+                <span className="font-bold text-[#0D0D2B]">{item.text}</span>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </section>
       {/* Testimonials Section - 새로 추가 */}
-      <section className="bg-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="bg-white py-20 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#0D0D2B] lg:text-4xl">
               실제 이용자들의 <span className="text-[#DC2626]">성공 후기</span>
@@ -246,8 +225,7 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section - 개선 */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] py-20 text-white">
-        <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-[#DC2626]/10"></div>
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] py-10 text-white">
         <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
           <h2 className="mb-6 text-3xl font-bold lg:text-4xl">
             &quot;AI최대표&quot;와 함께라면
@@ -257,26 +235,21 @@ export default function LandingPage() {
             </span>{" "}
             확보까지
           </h2>
-          <p className="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-gray-300">
-            본업 외 수익을 꿈꾸는 MZ세대를 위한 현실적인 솔루션.
-            <br />
-            AI가 당신만의 최적화된 수익 시스템을 3페이지 만에 제안합니다.
+          <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
+            본업 외 수익을 꿈꾸는
+            <span className="block sm:inline">
+              MZ세대를 위한 현실적인 솔루션.
+              <br />
+            </span>
+            AI가 당신만의 최적화된 수익 시스템을
+            <span className="block sm:inline">3페이지 만에 제안합니다.</span>
           </p>
-          <button
-            type="button"
-            className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
-            onClick={openModal}
-          >
-            나만의 월5천 전략 받기
-            <ArrowRight className="ml-3 h-6 w-6" />
-          </button>
         </div>
       </section>
 
-      {/* Footer - 개선 */}
-      <footer className="border-t border-gray-200 bg-white py-12">
+      <footer className="border-t border-gray-200 bg-white pt-4 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="pt-8 text-center text-gray-600">
+          <div className="text-center text-gray-600">
             <p>
               &copy; 2024 월5천 아이템 생성기 by AI최대표. All rights reserved.
             </p>
