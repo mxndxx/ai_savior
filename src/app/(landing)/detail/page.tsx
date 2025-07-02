@@ -17,15 +17,15 @@ import DetailedConsultationModal from "@/components/DetailedConsultationModal";
 import ConsultationProgressModal from "@/components/ConsultationProgressModal";
 
 export default function DetailPage() {
-  const [isDetailedConsultationModalOpen, setIsDetailedConsultationModalOpen] =
-    useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
 
-  const userName = "고객"; // 페이지에서는 항상 "고객"으로 표시
+  // TODO 해당 페이지에 필요한 지 확인 후 삭제
+  // const userName = "고객"; // 페이지에서는 항상 "고객"으로 표시
 
   // DetailedConsultationModal에서 호출될 함수
   const handleShowProgress = () => {
-    setIsDetailedConsultationModalOpen(false);
+    setIsModalOpen(false);
     setIsProgressModalOpen(true);
   };
 
@@ -33,34 +33,41 @@ export default function DetailPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white">
-        <div className="relative mx-auto space-y-10 px-4 py-6 sm:px-6 lg:px-32 lg:py-24">
+        <div className="relative mx-auto space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
           <h1 className="text-center text-4xl leading-tight font-bold lg:text-5xl">
-            앞으로 <span className="text-[#DC2626]">N잡</span>을 원하는 사람들이
-            <br />더{" "}
+            앞으로 <span className="text-[#DC2626]">N잡</span>을{" "}
+            <span className="block sm:inline">
+              원하는 사람들이
+              <br />
+            </span>
+            더{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
               줄어들까요?
             </span>{" "}
-            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+            <span className="block bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent sm:inline">
               늘어날까요?
             </span>
           </h1>
 
           <p className="text-center text-xl leading-relaxed text-gray-300">
-            경제 불안정과 AI 기술 발전으로 N잡 시장이 급성장하고 있습니다.
+            경제 불안정과 AI 기술 발전으로{" "}
+            <span className="block sm:inline">
+              N잡 시장이 급성장하고 있습니다.
+            </span>
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <TrendingUp className="mr-2 h-5 w-5 text-red-400" />
-              <span>경제 불안정</span>
+          <div className="flex flex-row items-center justify-center gap-2 text-center text-sm sm:gap-6">
+            <div className="flex items-center gap-1 rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <TrendingUp className="h-5 w-5 text-[#00BFFF]" />
+              <span className="break-keep">경제 불안정</span>
             </div>
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <Brain className="mr-2 h-5 w-5 text-blue-400" />
-              <span>AI 기술 발전</span>
+            <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <Brain className="h-5 w-5 text-[#00BFFF]" />
+              <span className="break-keep">AI 기술 발전</span>
             </div>
-            <div className="flex items-center rounded-lg bg-white/10 px-4 py-2 backdrop-blur-sm">
-              <Users className="mr-2 h-5 w-5 text-green-400" />
-              <span>N잡 트렌드 증가</span>
+            <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <Users className="h-5 w-5 text-[#00BFFF]" />
+              <span className="break-keep">N잡 트렌드 증가</span>
             </div>
           </div>
         </div>
@@ -75,7 +82,7 @@ export default function DetailPage() {
             </h2>
             <p className="text-lg text-gray-600">데이터로 보는 부업의 미래</p>
           </div>
-          <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 text-center md:grid-cols-3">
             <div className="space-y-2">
               <div className="text-3xl font-bold text-[#DC2626]">73%</div>
               <div className="text-gray-600">직장인 부업 관심도</div>
@@ -156,8 +163,10 @@ export default function DetailPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#0D0D2B] lg:text-4xl">
-              실제 AI 도구로 <span className="text-[#DC2626]">N잡 성공</span>한
-              사례
+              실제 AI 도구로{" "}
+              <span className="block sm:inline">
+                <span className="text-red-500">N잡 성공</span> 한 사례
+              </span>
             </h2>
           </div>
 
@@ -370,15 +379,21 @@ export default function DetailPage() {
             <span className="bg-gradient-to-r from-[#DC2626] to-[#FF4444] bg-clip-text text-transparent">
               맞춤 AI 부업 전략
             </span>
-            을 받아보세요
+            을 <span className="block sm:inline">받아보세요</span>
           </h2>
           <p className="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-gray-300">
-            AI 최대표가 직접 분석하는 개인별 맞춤 컨설팅
-            <br />
-            당신의 현실 상황을 반영한 실전 액션 플랜을 제공합니다.
+            AI 최대표가 직접 분석하는{" "}
+            <span className="block sm:inline">
+              개인별 맞춤 컨설팅
+              <br />
+            </span>
+            당신의 현실 상황을 반영한{" "}
+            <span className="block sm:inline">
+              실전 액션 플랜을 제공합니다.
+            </span>
           </p>
 
-          <div className="mb-8 flex flex-col items-center justify-center gap-4 md:flex-row">
+          <div className="mb-8 flex flex-row items-center justify-center gap-2 sm:gap-4">
             <div className="flex items-center text-white">
               <CheckCircle className="mr-2 h-5 w-5" />
               <span>1:1 맞춤 분석</span>
@@ -392,22 +407,21 @@ export default function DetailPage() {
               <span>AI 도구 추천</span>
             </div>
           </div>
-
-          <button
-            type="button"
-            className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
-            onClick={() => setIsDetailedConsultationModalOpen(true)}
-          >
-            상세 컨설팅 받기
-            <ArrowRight className="ml-3 h-6 w-6" />
-          </button>
+          <div className="fixed right-0 bottom-0 left-0 z-50 flex items-center justify-center p-2">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
+            >
+              상세 컨설팅 받기
+              <ArrowRight className="ml-3 h-6 w-6" />
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white py-12">
+      <footer className="border-t border-gray-200 bg-white pt-4 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="pt-8 text-center text-gray-600">
+          <div className="text-center text-gray-600">
             <p>
               &copy; 2024 월5천 아이템 생성기 by AI최대표. All rights reserved.
             </p>
@@ -417,8 +431,8 @@ export default function DetailPage() {
 
       {/* Detailed Consultation Modal */}
       <DetailedConsultationModal
-        isOpen={isDetailedConsultationModalOpen}
-        onClose={() => setIsDetailedConsultationModalOpen(false)}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
         onShowProgress={handleShowProgress}
       />
 

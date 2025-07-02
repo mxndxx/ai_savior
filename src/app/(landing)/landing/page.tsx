@@ -43,17 +43,17 @@ export default function LandingPage() {
             당신의 일과 삶을 바탕으로 지금 가장 빠르게 자동화 수익을 만들 수
             있는 전략을 A 최대표가 직접 제안해드립니다.
           </p>
-          <div className="flex flex-row items-center justify-center gap-2 text-sm sm:gap-6">
-            <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
-              <Target className="mr-2 h-5 w-5 text-[#00BFFF]" />
+          <div className="flex flex-row items-center justify-center gap-2 text-center text-sm sm:gap-6">
+            <div className="flex items-center gap-1 rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
+              <Target className="h-5 w-5 text-[#00BFFF]" />
               <span>PRODUCT 아이템 생성</span>
             </div>
             <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
-              <Zap className="mr-2 h-5 w-5 text-[#00BFFF]" />
+              <Zap className="h-5 w-5 text-[#00BFFF]" />
               <span>AUTOMATE 자동화 설계</span>
             </div>
             <div className="flex items-center rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
-              <ArrowRight className="mr-2 h-5 w-5 text-[#00BFFF]" />
+              <ArrowRight className="h-5 w-5 text-[#00BFFF]" />
               <span>TRAFFIC 유입 전략</span>
             </div>
           </div>
@@ -247,7 +247,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Footer - 개선 */}
       <footer className="border-t border-gray-200 bg-white pt-4 pb-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-600">
