@@ -181,7 +181,7 @@ export default function CourseCarousel({
       </div>
 
       {/* Navigation Buttons */}
-      {totalSlides > 1 && (
+      {/* {totalSlides > 1 && (
         <>
           <button
             onClick={prevSlide}
@@ -223,7 +223,7 @@ export default function CourseCarousel({
             </svg>
           </button>
         </>
-      )}
+      )} */}
 
       {/* Slide Indicators */}
       {totalSlides > 1 && (

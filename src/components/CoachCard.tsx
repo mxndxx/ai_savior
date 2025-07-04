@@ -14,13 +14,15 @@ export default function CoachCard({
   return (
     <div
       className={`relative cursor-pointer overflow-hidden rounded-[20px] bg-neutral-900 text-white transition-all duration-800 ${
-        isMobile
-          ? "mr-5 h-[412px] w-[184px] min-w-[184px]"
-          : "h-[412px] min-w-[184px]"
+        isMobile ? "h-[412px] w-full min-w-full" : "h-[412px] min-w-[184px]"
       } ${
         isActive
-          ? "min-w-[500px] flex-[6] saturate-100"
-          : "w-[184px] flex-[1] saturate-[0.1]"
+          ? isMobile
+            ? "saturate-100"
+            : "min-w-[500px] flex-[6] saturate-100"
+          : isMobile
+            ? "saturate-100"
+            : "w-[184px] flex-[1] saturate-[0.1]"
       } `}
       onClick={onClick}
     >
@@ -44,7 +46,11 @@ export default function CoachCard({
 
       {/* Content */}
       <div
-        className={`absolute inset-y-0 right-0 p-10 transition-all duration-800 md:left-[50%] xl:right-auto xl:left-[40%] ${isActive ? "opacity-100" : "opacity-0"} `}
+        className={`absolute inset-y-0 right-0 p-10 transition-all duration-800 ${
+          isMobile
+            ? "left-[40%] opacity-100"
+            : "md:left-[50%] xl:right-auto xl:left-[40%]"
+        } ${!isMobile && (isActive ? "opacity-100" : "opacity-0")} `}
       >
         <div className="flex flex-col items-start gap-3">
           {/* Name with underline */}
@@ -69,11 +75,23 @@ export default function CoachCard({
 
       {/* Learn More Button */}
       <div
-        className={`absolute bottom-12 whitespace-nowrap transition-all duration-800 ${isActive ? "left-[50%] md:left-[60%]" : "left-5"} `}
+        className={`absolute bottom-12 whitespace-nowrap transition-all duration-800 ${
+          isMobile
+            ? "left-[40%]"
+            : isActive
+              ? "left-[50%] md:left-[60%]"
+              : "left-5"
+        } `}
       >
         <Link href={coach.link} className="flex items-center gap-3">
           <span
-            className={`transition-all duration-800 ${isActive ? "w-[100px] opacity-100" : "w-0 opacity-0"} `}
+            className={`transition-all duration-800 ${
+              isMobile
+                ? "w-[100px] opacity-100"
+                : isActive
+                  ? "w-[100px] opacity-100"
+                  : "w-0 opacity-0"
+            } `}
           >
             강사 더 알아보기
           </span>
