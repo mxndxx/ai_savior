@@ -85,8 +85,7 @@ export default function CoachesSection() {
               <div
                 className="flex transition-transform duration-500 ease-in-out"
                 style={{
-                  transform: `translateX(-${activeIndex * (184 + 20)}px)`,
-                  width: `${coaches.length * (184 + 20)}px`,
+                  transform: `translateX(-${activeIndex * 100}%)`,
                 }}
               >
                 {coaches.map((coach, index) => (
