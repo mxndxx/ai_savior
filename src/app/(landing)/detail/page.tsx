@@ -35,16 +35,20 @@ export default function DetailPage() {
       <section className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white">
         <div className="relative mx-auto space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
           <h1 className="text-center text-4xl leading-tight font-bold lg:text-5xl">
-            앞으로 <span className="text-[#DC2626]">N잡</span>을{" "}
+            앞으로 <span className="text-[#DC2626]">AI 시대</span>에서{" "}
             <span className="block sm:inline">
-              원하는 사람들이
+              수익을 만드려면
               <br />
             </span>
-            더{" "}
+            어떻게 해야 할까요?{" "}
+            <span className="block sm:inline">그리고 여러분처럼 </span>
+            <span className="text-[#DC2626]">
+              추가수입을 원하는 사람들이
+            </span>{" "}
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
               줄어들까요?
             </span>{" "}
-            <span className="block bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent sm:inline">
+            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
               늘어날까요?
             </span>
           </h1>
@@ -109,8 +113,9 @@ export default function DetailPage() {
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#0D0D2B] lg:text-4xl">
-              왜 지금이 <span className="text-[#DC2626]">N잡 시작</span>의
-              최적기인가?
+              왜 지금이{" "}
+              <span className="text-[#DC2626]">AI로 새로운 수익을 만들</span>{" "}
+              최적기일까요?
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-gray-600">
               경제적 불확실성과 AI 기술 발전이 만든 새로운 기회의 시대입니다.
@@ -412,7 +417,7 @@ export default function DetailPage() {
               onClick={() => setIsModalOpen(true)}
               className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
             >
-              상세 컨설팅 받기
+              무료 강의 전 나만의 수익화 전략 확인하기
               <ArrowRight className="ml-3 h-6 w-6" />
             </button>
           </div>

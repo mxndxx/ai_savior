@@ -44,17 +44,18 @@ export default function LandingPage() {
               AI최대표의 맞춤형 수익 시스템
             </div>
             <h1 className="text-4xl leading-tight font-bold sm:text-5xl">
-              딱 1분.
+              딱 1분, 수익화는 꿈도 못꾸던 노베이스에 평범한 직장인이
               <br />
-              당신의 현재 상황을{" "}
+              1달만에 <span className="text-red-500">월 5,000만원</span> 벌게 된
+              비법을 모두 받아가세요!
               <span className="block sm:inline">
-                AI 최대표에게 전달해 주세요.
                 <br />
               </span>
-              당신에게만 적용되는{" "}
+              오직 당신에게만 적용되는{" "}
               <span className="block text-[#DC2626] sm:inline">
-                월5천 자동화 전략을{" "}
+                월 5000 AI 자동수익 전략
               </span>
+              까지 <br />
               <span className="block sm:inline">무료로 설계해드립니다.</span>
             </h1>
             <p className="text-xl leading-relaxed text-gray-300">
@@ -84,7 +85,7 @@ export default function LandingPage() {
                 onClick={openModal}
                 className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
               >
-                나만의 월5천 전략 받기
+                무료강의 신청하고 나만의 월 5천 전략 받기
                 <ArrowRight className="ml-3 h-6 w-6" />
               </button>
             </div>
@@ -93,18 +94,20 @@ export default function LandingPage() {
         <section className="flex flex-col items-center sm:px-6 lg:px-32">
           <div className="mx-auto mb-10 text-center sm:mb-24">
             <h2 className="mb-6 text-3xl font-bold text-[#0D0D2B] sm:text-4xl">
-              1달 만에 <span className="text-red-500">월 5,000만원</span>
+              요즘 AI로 돈 버는 방법,{" "}
+              <span className="text-red-500">너무 많아서</span>
               <br />
-              <span className="text-red-500">AI 자동화 수익 시스템</span>으로
+              <span className="text-red-500">혼란스러우시죠?</span>
               <span className="block sm:inline">
-                나만의 SaaS 비즈니스 만들기
+                도대체 나에게 맞는 수익화 방식은 뭘까요?
               </span>
             </h2>
             <p className="mx-auto text-lg leading-relaxed text-gray-600 sm:text-xl">
               해외 AI 부자들의 수익 시스템 그대로,{" "}
               <span className="block sm:inline">단 2일간 공개됩니다.</span>{" "}
               <span className="block sm:inline">
-                지금 신청하고 나만의 월5천 전략을 받아보세요.
+                이 페이지에서 신청하시면 나만의 월5천 전략까지 무료로
+                설계해드립니다.
               </span>
             </p>
           </div>
