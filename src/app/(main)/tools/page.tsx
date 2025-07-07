@@ -8,14 +8,6 @@ import ToolCard from "@/components/ToolCard";
 export default function ToolsPage() {
   const [activeCategory, setActiveCategory] = useState("전체");
 
-  const navigationItems = [
-    { name: "홈", href: "/", isActive: false },
-    { name: "내 시스템 찾기", href: "/system", isActive: false },
-    { name: "솔루션", href: "/solution", isActive: false },
-    { name: "성공사례", href: "/success", isActive: false },
-    { name: "AI 도구", href: "/tools", isActive: true },
-  ];
-
   const scrollToSection = (category: string) => {
     setActiveCategory(category);
     if (category !== "전체") {
@@ -68,47 +60,9 @@ export default function ToolsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header Navigation */}
-      <header className="border-b border-gray-200 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            {/* Logo */}
-            <div className="flex items-center">
-              <Link href="/" className="text-2xl font-bold text-black">
-                N잡 AI
-              </Link>
-            </div>
-
-            {/* Navigation Items */}
-            <nav className="hidden items-center space-x-8 md:flex">
-              {navigationItems.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`px-3 py-2 text-sm font-medium transition-colors ${
-                    item.isActive
-                      ? "border-b-2 border-black text-black"
-                      : "text-gray-700 hover:text-black"
-                  }`}
-                >
-                  {item.name}
-                </Link>
-              ))}
-            </nav>
-
-            {/* Login Button */}
-            <div className="flex items-center">
-              <button className="rounded-lg bg-black px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-gray-800">
-                로그인
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen">
       {/* Main Content */}
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Page Title */}
         <div className="my-2">
           <h1 className="mb-2 text-3xl font-bold text-gray-900">

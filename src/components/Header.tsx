@@ -12,22 +12,40 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center">
-            <div className="text-4xl font-bold text-gray-900">SAVIOR</div>
+            <div className="text-4xl font-bold text-gray-900">N잡 AI</div>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden items-center space-x-8 text-2xl md:flex">
             <Link
-              href="/about"
+              href="/"
               className="text-gray-700 transition-colors hover:text-blue-600"
             >
-              Savior
+              홈
             </Link>
             <Link
-              href="/course"
+              href="/system"
               className="text-gray-700 transition-colors hover:text-blue-600"
             >
-              클래스
+              내 시스템 찾기
+            </Link>
+            <Link
+              href="/solution"
+              className="text-gray-700 transition-colors hover:text-blue-600"
+            >
+              솔루션
+            </Link>
+            <Link
+              href="/success"
+              className="text-gray-700 transition-colors hover:text-blue-600"
+            >
+              성공사례
+            </Link>
+            <Link
+              href="/tools"
+              className="text-gray-700 transition-colors hover:text-blue-600"
+            >
+              AI 도구
             </Link>
             <div className="group relative">
               <button className="text-gray-700 transition-colors hover:text-blue-600">
