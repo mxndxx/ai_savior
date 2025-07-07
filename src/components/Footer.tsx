@@ -12,7 +12,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             {/* Contact Info */}
             <div className="space-y-2 text-sm text-gray-300">
-              <div>상호명: N잡연구소</div>
+              <div>상호명: N잡 AI</div>
               <div>대표자: 김○○</div>
               <div>사업자등록번호: 339-87-03570</div>
               <div>통신판매업신고번호: 제2025-서울-01438호</div>
@@ -29,10 +29,10 @@ export default function Footer() {
             <h3 className="mb-4 text-lg font-semibold">바로가기</h3>
             <div className="space-y-3">
               <Link
-                href="/about"
+                href="/"
                 className="hover:text-teal block text-gray-300 transition-colors"
               >
-                N잡 연구소
+                N잡 AI
               </Link>
               <Link
                 href="/course"
