@@ -37,10 +37,12 @@ export default function DetailPage() {
           <h1 className="text-center text-4xl leading-tight font-bold lg:text-5xl">
             앞으로 <span className="text-[#DC2626]">AI 시대</span>에서{" "}
             <span className="block sm:inline">
-              수익을 만드려면
-              <br />
+              수익을 만드려면{" "}
+              <span className="block sm:inline">
+                어떻게 해야 할까요?
+                <br />
+              </span>{" "}
             </span>
-            어떻게 해야 할까요?{" "}
             <span className="block sm:inline">그리고 여러분처럼 </span>
             <span className="text-[#DC2626]">
               추가수입을 원하는 사람들이
@@ -415,10 +417,15 @@ export default function DetailPage() {
           <div className="fixed right-0 bottom-0 left-0 z-50 flex items-center justify-center p-2">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
+              className="relative flex h-16 transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl sm:w-1/2"
             >
-              무료 강의 전 나만의 수익화 전략 확인하기
-              <ArrowRight className="ml-3 h-6 w-6" />
+              <div className="flex-1 text-center">
+                무료강의 전{" "}
+                <span className="block sm:inline">
+                  나만의 수익화 전략 확인하기
+                </span>
+              </div>
+              <ArrowRight className="absolute right-4 h-6 w-6" />
             </button>
           </div>
         </div>
