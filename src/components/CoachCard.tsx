@@ -35,7 +35,7 @@ export default function CoachCard({
       >
         <div className="relative size-full">
           <Image
-            src={coach.image}
+            src={coach.profile_image || ""}
             alt={coach.name}
             fill
             className="pointer-events-none h-full object-cover select-none"
@@ -60,16 +60,8 @@ export default function CoachCard({
           </div>
 
           {/* Specialty and Achievements */}
-          <h4 className="font-semibold">{coach.specialty}</h4>
-          <div className="space-y-2 text-sm">
-            {coach.achievements.length > 0 && (
-              <ul className="list-disc space-y-1 pl-3">
-                {coach.achievements.map((achievement, index) => (
-                  <li key={index}>{achievement}</li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <h4 className="font-semibold">{coach.career}</h4>
+          <div className="space-y-2 text-sm"></div>
         </div>
       </div>
 
@@ -83,7 +75,7 @@ export default function CoachCard({
               : "left-5"
         } `}
       >
-        <Link href={coach.link} className="flex items-center gap-3">
+        <Link href={`/coach/${coach.id}`} className="flex items-center gap-3">
           <span
             className={`transition-all duration-800 ${
               isMobile
