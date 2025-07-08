@@ -2,8 +2,9 @@ export const coaches = [
   {
     id: "1",
     name: "콘텐츠농부",
-    specialty: "콘텐츠 마케팅 전문가",
-    image:
+    bio: "콘텐츠 마케팅 전문가",
+    career: "콘텐츠 마케팅 전문가",
+    profile_image:
       "https://www.nlab.kr/_next/image?url=https%3A%2F%2Fswsgppjaigbmxetrmygu.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fimage-2c4d8f0d-cac2-4857-b1a1-0d6d6c2c8424-2025-06-24&w=3840&q=75",
     achievements: [],
     link: "/teachers/content-farmer",
@@ -11,8 +12,9 @@ export const coaches = [
   {
     id: "2",
     name: "잰수성가",
-    specialty: "공동구매 전문가",
-    image:
+    bio: "공동구매 전문가",
+    career: "공동구매 전문가",
+    profile_image:
       "https://www.nlab.kr/_next/image?url=https%3A%2F%2Fswsgppjaigbmxetrmygu.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fimage-2c4d8f0d-cac2-4857-b1a1-0d6d6c2c8424-2025-06-24&w=3840&q=75",
     achievements: [
       "100% 무자본, 부업계의 블루오션!",
@@ -27,8 +29,9 @@ export const coaches = [
   {
     id: "3",
     name: "보부상",
-    specialty: "건강식품 창업 전문가",
-    image:
+    bio: "건강식품 창업 전문가",
+    career: "건강식품 창업 전문가",
+    profile_image:
       "https://www.nlab.kr/_next/image?url=https%3A%2F%2Fswsgppjaigbmxetrmygu.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fimage-2c4d8f0d-cac2-4857-b1a1-0d6d6c2c8424-2025-06-24&w=3840&q=75",
     achievements: [
       "(주)보부상컴퍼니 대표이사",
@@ -41,8 +44,9 @@ export const coaches = [
   {
     id: "4",
     name: "씨오",
-    specialty: "브랜드, 중국 사입 전문가",
-    image:
+    bio: "브랜드, 중국 사입 전문가",
+    career: "브랜드, 중국 사입 전문가",
+    profile_image:
       "https://www.nlab.kr/_next/image?url=https%3A%2F%2Fswsgppjaigbmxetrmygu.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fimage-2c4d8f0d-cac2-4857-b1a1-0d6d6c2c8424-2025-06-24&w=3840&q=75",
     achievements: [
       '쿠팡, 스마트스토어 경쟁이 아닌 "여기"',
@@ -55,8 +59,9 @@ export const coaches = [
   {
     id: "5",
     name: "온비전",
-    specialty: "에이블리 전문가",
-    image:
+    bio: "에이블리 전문가",
+    career: "에이블리 전문가",
+    profile_image:
       "https://www.nlab.kr/_next/image?url=https%3A%2F%2Fswsgppjaigbmxetrmygu.supabase.co%2Fstorage%2Fv1%2Fobject%2Fpublic%2Fimages%2Fimage-2c4d8f0d-cac2-4857-b1a1-0d6d6c2c8424-2025-06-24&w=3840&q=75",
     achievements: [
       "2024년 연매출 50억 이상(연계회사 합산매출)",
