@@ -100,6 +100,31 @@ export const lecturesApi = {
     return data || [];
   },
 
+  // 강의 상세 정보 조회
+  getLectureById: async (id: string): Promise<LectureWithCoach | null> => {
+    const { data, error } = await supabase
+      .from("lectures")
+      .select(
+        `
+        *,
+        coach:coaches!coach_id (id, name)
+      `,
+      )
+      .eq("id", id)
+      .single();
+
+    if (error) {
+      // PostgREST 'PGRST116' 에러는 찾는 행이 없을 때 발생합니다.
+      // 이 경우 null을 반환하여 데이터가 없음을 알립니다.
+      if (error.code === "PGRST116") {
+        return null;
+      }
+      throw new Error(`강의 정보 조회 실패: ${error.message}`);
+    }
+
+    return data as LectureWithCoach;
+  },
+
   // 강의 수정
   updateLecture: async (
     id: string,
