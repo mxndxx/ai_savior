@@ -17,7 +17,7 @@ export default function LectureCard({
   coach,
 }: LectureCardProps) {
   return (
-    <Link href={`/lectures/${id}`}>
+    <Link href={`/lecture/${id}`}>
       <div className="w-full transition-transform duration-300 hover:-translate-y-2">
         {/* 이미지 */}
         <LectureImage src={thumbnail} alt={title} />

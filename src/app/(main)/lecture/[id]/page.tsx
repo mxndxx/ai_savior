@@ -1,23 +1,48 @@
 "use client";
 
-import { useState, use } from "react";
-import { notFound } from "next/navigation";
+import { useState, useEffect } from "react";
+import { notFound, useParams } from "next/navigation";
 import LectureImage from "@/components/LectureImage";
 import Image from "next/image";
-import { courseData } from "@/data/courses";
+import { lecturesApi } from "@/app/api/lectures";
 import { LectureSidebar } from "@/components/LectureSidebar";
+import { LectureWithCoach } from "@/types/lectures";
 
-interface CourseDetailPageProps {
-  params: Promise<{ id: string }>;
-}
-
-export default function CourseDetailPage({ params }: CourseDetailPageProps) {
+export default function CourseDetailPage() {
   const [activeTab, setActiveTab] = useState("intro");
-  const resolvedParams = use(params);
-  const course = courseData[resolvedParams.id];
+  const params = useParams();
+  const lectureId = params.id as string;
+  const [lecture, setLecture] = useState<LectureWithCoach | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!course) {
-    notFound();
+  useEffect(() => {
+    const fetchLecture = async () => {
+      try {
+        const fetchedLecture = await lecturesApi.getLectureById(lectureId);
+        if (fetchedLecture) {
+          setLecture(fetchedLecture);
+        } else {
+          notFound();
+        }
+      } catch (error) {
+        console.error("Failed to fetch lecture:", error);
+        notFound();
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (lectureId) {
+      fetchLecture();
+    }
+  }, [lectureId]);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!lecture) {
+    return notFound();
   }
 
   return (
@@ -27,8 +52,8 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
           <div className="relative flex gap-8">
             <div className="flex-3/5 space-y-4">
               <LectureImage
-                src={course.thumbnail}
-                alt={course.title}
+                src={lecture.thumbnail}
+                alt={lecture.title}
                 width={760}
                 height={600}
               />
@@ -56,8 +81,8 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                     <div className="prose max-w-none">
                       <h2 className="mb-4 text-2xl font-bold">강의 소개</h2>
                       <Image
-                        src={course.introImage || ""}
-                        alt={course.title}
+                        src={lecture.content_image || ""}
+                        alt={lecture.title}
                         width={760}
                         height={600}
                       />
@@ -69,11 +94,11 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
                       <h2 className="mb-4 text-2xl font-bold">강사 소개</h2>
                       <div className="rounded-lg bg-gray-50 p-6">
                         <h3 className="mb-2 text-xl font-bold">
-                          {course.instructor}
+                          {lecture.coach.name}
                         </h3>
-                        <p className="leading-relaxed text-gray-700">
-                          {course.instructor_info}
-                        </p>
+                        {/* <p className="leading-relaxed text-gray-700">
+                          {lecture.coach.bio}
+                        </p> */}
                       </div>
                     </div>
                   )}
@@ -82,7 +107,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
             </div>
 
             <div className="flex-2/5 space-y-6">
-              <LectureSidebar course={course} />
+              <LectureSidebar lecture={lecture} />
             </div>
           </div>
         </div>
