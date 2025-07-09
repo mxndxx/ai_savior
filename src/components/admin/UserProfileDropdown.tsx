@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { supabase } from "@/utils/supabase";
 
 interface UserProfileDropdownProps {
   user: {
@@ -17,13 +18,17 @@ export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleLogout = () => {
-    // 로그아웃 처리 (토큰 삭제, 세션 정리 등)
-    localStorage.removeItem("authToken");
-    sessionStorage.removeItem("authToken");
-
-    // 로그인 페이지로 이동
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      // Supabase Auth 로그아웃 처리
+      await supabase.auth.signOut();
+      // 로그인 페이지로 이동
+      router.push("/admin/login");
+    } catch (error) {
+      console.error("로그아웃 중 오류:", error);
+      // 에러가 발생해도 로그인 페이지로 이동
+      router.push("/admin/login");
+    }
   };
 
   // 드롭다운 외부 클릭 시 닫기

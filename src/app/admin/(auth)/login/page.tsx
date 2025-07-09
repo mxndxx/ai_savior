@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { auth } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,13 +13,16 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const { data, error } = await auth.signIn(email, password);
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
       if (error) {
         setError(error.message);
@@ -32,33 +35,6 @@ export default function LoginPage() {
       }
     } catch (err) {
       setError("로그인 중 오류가 발생했습니다.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleForgotPassword = async () => {
-    if (!email) {
-      setError("이메일을 입력해주세요.");
-      return;
-    }
-
-    setLoading(true);
-    setError("");
-
-    try {
-      const { error } = await auth.resetPassword(
-        email,
-        `${window.location.origin}/admin/reset-password`,
-      );
-
-      if (error) {
-        setError(error.message);
-      } else {
-        setError("비밀번호 재설정 링크가 이메일로 전송되었습니다.");
-      }
-    } catch (err) {
-      setError("비밀번호 재설정 중 오류가 발생했습니다.");
     } finally {
       setLoading(false);
     }
@@ -139,18 +115,6 @@ export default function LoginPage() {
               <p className="text-sm text-red-600">{error}</p>
             </div>
           )}
-
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <button
-                type="button"
-                onClick={handleForgotPassword}
-                className="font-medium text-blue-600 hover:text-blue-500"
-              >
-                비밀번호를 잊으셨나요?
-              </button>
-            </div>
-          </div>
 
           <div>
             <button
