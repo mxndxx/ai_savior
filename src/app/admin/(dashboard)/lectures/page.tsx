@@ -13,7 +13,6 @@ export default function LecturesPage() {
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedLecture, setSelectedLecture] =
     useState<LectureWithCoach | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   // 강의 목록 불러오기
@@ -34,17 +33,21 @@ export default function LecturesPage() {
     fetchLectures();
   }, []);
 
-  // 검색 필터링
-  const filteredLectures = lectures.filter((lecture) =>
-    lecture.title.toLowerCase().includes(searchTerm.toLowerCase()),
-  );
-
-  // 강의 삭제
   // 강의 삭제
   const handleDeleteLecture = async (id: string) => {
     if (confirm("정말로 이 강의를 삭제하시겠습니까?")) {
       try {
-        await lecturesApi.deleteLecture(id);
+        const lectureToDelete = lectures.find((lecture) => lecture.id === id);
+        if (!lectureToDelete) {
+          alert("삭제할 강의를 찾지 못했습니다.");
+          return;
+        }
+
+        await lecturesApi.deleteLecture(
+          lectureToDelete.id,
+          lectureToDelete.thumbnail,
+          lectureToDelete.content_image,
+        );
         setLectures(lectures.filter((lecture) => lecture.id !== id));
       } catch (error) {
         console.error("강의 삭제 중 오류:", error);
@@ -109,7 +112,7 @@ export default function LecturesPage() {
                       강의 목록을 불러오는 중...
                     </td>
                   </tr>
-                ) : filteredLectures.length === 0 ? (
+                ) : lectures.length === 0 ? (
                   <tr>
                     <td
                       colSpan={5}
@@ -119,7 +122,7 @@ export default function LecturesPage() {
                     </td>
                   </tr>
                 ) : (
-                  filteredLectures.map((lecture) => (
+                  lectures.map((lecture) => (
                     <tr key={lecture.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
