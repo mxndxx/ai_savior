@@ -69,7 +69,7 @@ export const coachesApi = {
       .from("coaches")
       .select("*")
       .order("created_at", { ascending: false });
-
+    // TODO 정렬 기준 수정 필요
     if (error) {
       throw new Error(`강사 목록 조회 실패: ${error.message}`);
     }
@@ -114,34 +114,47 @@ export const coachesApi = {
     id: string,
     updateData: Partial<CreateCoachForm>,
     profileImageFile?: File,
+    existingProfileImageUrl?: string | null,
   ): Promise<Coach> => {
     try {
       const updatePayload: any = { ...updateData };
+      let newProfileImageUrl: string | null = null;
 
-      // 프로필 이미지 파일이 있으면 업로드
+      // 1. 프로필 이미지 파일이 있으면 업로드
       if (profileImageFile) {
-        updatePayload.profile_image = await storageApi.uploadFile(
+        newProfileImageUrl = await storageApi.uploadFile(
           profileImageFile,
           "coach-profiles",
         );
+        updatePayload.profile_image = newProfileImageUrl;
       }
 
-      const { data, error } = await supabase
+      // 2. 데이터베이스 업데이트
+      const { data: updatedCoach, error: updateError } = await supabase
         .from("coaches")
         .update(updatePayload)
         .eq("id", id)
         .select()
         .single();
 
-      if (error) {
-        throw new Error(`강사 정보 수정 실패: ${error.message}`);
+      if (updateError) {
+        // DB 업데이트 실패 시, 방금 업로드한 파일이 있다면 삭제 (롤백)
+        if (newProfileImageUrl) {
+          await storageApi.deleteFile(newProfileImageUrl);
+        }
+        throw new Error(`강사 정보 수정 실패: ${updateError.message}`);
       }
 
-      if (!data) {
+      // 3. DB 업데이트 성공 후, 기존 이미지 삭제
+      if (profileImageFile && existingProfileImageUrl) {
+        await storageApi.deleteFile(existingProfileImageUrl);
+      }
+
+      if (!updatedCoach) {
         throw new Error("강사를 찾을 수 없습니다.");
       }
 
-      return data;
+      return updatedCoach;
     } catch (error) {
       console.error("강사 정보 수정 중 오류:", error);
       throw error;
@@ -149,30 +162,28 @@ export const coachesApi = {
   },
 
   // 강사 삭제
-  //   deleteCoach: async (id: string): Promise<void> => {
-  //     try {
-  //       // 1. 강사 정보 조회 (프로필 이미지 삭제를 위해)
-  //       const coach = await coachesApi.getCoachById(id);
+  deleteCoach: async (
+    id: string,
+    profileImageUrl: string | null,
+  ): Promise<void> => {
+    try {
+      // 1. 데이터베이스에서 강사 삭제
+      const { error: deleteError } = await supabase
+        .from("coaches")
+        .delete()
+        .eq("id", id);
 
-  //       // 2. 프로필 이미지 삭제 (선택사항)
-  //       if (coach.profile_image) {
-  //         try {
-  //           await storageApi.deleteFile(coach.profile_image, "coach-profiles");
-  //         } catch (error) {
-  //           console.warn("프로필 이미지 삭제 실패:", error);
-  //           // 이미지 삭제 실패해도 강사 삭제는 진행
-  //         }
-  //       }
+      if (deleteError) {
+        throw new Error(`강사 삭제 실패: ${deleteError.message}`);
+      }
 
-  //       // 3. 데이터베이스에서 강사 삭제
-  //       const { error } = await supabase.from("coaches").delete().eq("id", id);
-
-  //       if (error) {
-  //         throw new Error(`강사 삭제 실패: ${error.message}`);
-  //       }
-  //     } catch (error) {
-  //       console.error("강사 삭제 중 오류:", error);
-  //       throw error;
-  //     }
-  //   },
+      // 2. DB 삭제 성공 후, 스토리지에서 프로필 이미지 삭제
+      if (profileImageUrl) {
+        await storageApi.deleteFile(profileImageUrl);
+      }
+    } catch (error) {
+      console.error("강사 삭제 중 오류:", error);
+      throw error;
+    }
+  },
 };

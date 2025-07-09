@@ -106,38 +106,58 @@ export const lecturesApi = {
     updateData: Partial<CreateLectureForm>,
     thumbnailFile?: File,
     contentImageFile?: File,
+    existingThumbnailUrl?: string | null,
+    existingContentImageUrl?: string | null,
   ): Promise<Lecture> => {
     try {
       const updatePayload: any = { ...updateData };
 
-      // 2. 이미지 파일들 업로드 (createLecture와 동일한 키 이름 사용)
+      // 1. 썸네일 이미지 처리
       if (thumbnailFile) {
-        updatePayload.thumbnail = await storageApi.uploadFile(
+        const newThumbnailUrl = await storageApi.uploadFile(
           thumbnailFile,
           "lecture-thumbnails",
         );
+        updatePayload.thumbnail = newThumbnailUrl;
       }
 
+      // 2. 내용 이미지 처리
       if (contentImageFile) {
-        updatePayload.content_image = await storageApi.uploadFile(
+        const newContentImageUrl = await storageApi.uploadFile(
           contentImageFile,
           "lecture-content-images",
         );
+        updatePayload.content_image = newContentImageUrl;
       }
 
       // 3. 데이터베이스 업데이트
-      const { data: updatedLecture, error } = await supabase
+      const { data: updatedLecture, error: updateError } = await supabase
         .from("lectures")
         .update(updatePayload)
         .eq("id", id)
         .select()
         .single();
 
-      if (error) {
-        throw new Error(`강의 수정 실패: ${error.message}`);
+      if (updateError) {
+        // DB 업데이트 실패 시, 방금 업로드한 파일이 있다면 삭제 (롤백)
+        if (updatePayload.thumbnail) {
+          await storageApi.deleteFile(updatePayload.thumbnail);
+        }
+        if (updatePayload.content_image) {
+          await storageApi.deleteFile(updatePayload.content_image);
+        }
+        throw new Error(`강의 수정 실패: ${updateError.message}`);
       }
 
-      // 4. 일관된 반환 형식 (createLecture와 동일)
+      // 4. DB 업데이트 성공 후, 기존 이미지 삭제
+      if (thumbnailFile && existingThumbnailUrl) {
+        await storageApi.deleteFile(existingThumbnailUrl);
+      }
+      if (contentImageFile && existingContentImageUrl) {
+        await storageApi.deleteFile(existingContentImageUrl);
+      }
+
+      // 5. 일관된 반환 형식 (createLecture와 동일)
       return {
         id: updatedLecture.id,
         title: updatedLecture.title,
@@ -158,11 +178,39 @@ export const lecturesApi = {
   },
 
   // 강의 삭제
-  deleteLecture: async (id: string): Promise<void> => {
-    const { error } = await supabase.from("lectures").delete().eq("id", id);
+  deleteLecture: async (
+    id: string,
+    thumbnailUrl: string,
+    contentImageUrl: string,
+  ): Promise<void> => {
+    try {
+      // 1. 데이터베이스에서 강의 삭제
+      const { error: deleteError } = await supabase
+        .from("lectures")
+        .delete()
+        .eq("id", id);
 
-    if (error) {
-      throw new Error(`강의 삭제 실패: ${error.message}`);
+      if (deleteError) {
+        throw new Error(`강의 삭제 실패: ${deleteError.message}`);
+      }
+
+      // 2. DB 삭제 성공 시, 스토리지에서 이미지 파일들 삭제
+      try {
+        if (thumbnailUrl) {
+          await storageApi.deleteFile(thumbnailUrl);
+        }
+        if (contentImageUrl) {
+          await storageApi.deleteFile(contentImageUrl);
+        }
+      } catch (storageError) {
+        // 스토리지 파일 삭제 실패 시 에러를 로깅하지만, 전체 프로세스를 중단시키지는 않습니다.
+        // DB에서는 이미 삭제되었으므로, 사용자 경험상으로는 삭제가 성공한 것처럼 보입니다.
+        console.error("스토리지 파일 삭제 중 오류 발생:", storageError);
+      }
+    } catch (error) {
+      console.error("강의 삭제 처리 중 오류:", error);
+      // 에러를 다시 던져서 호출한 쪽에서 처리할 수 있도록 함
+      throw error;
     }
   },
 };
