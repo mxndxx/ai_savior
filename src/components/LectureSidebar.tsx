@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CourseDetail } from "@/types/course";
+import { CourseDetail } from "@/types/lectures";
 import EnrollmentModal from "@/components/EnrollmentModal";
 
-export function CourseSidebar({ course }: { course: CourseDetail }) {
+export function LectureSidebar({ course }: { course: CourseDetail }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,

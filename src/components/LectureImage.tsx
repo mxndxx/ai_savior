@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 
-interface CourseImageProps {
+interface LectureImageProps {
   src: string;
   alt: string;
   width?: number;
@@ -11,14 +11,14 @@ interface CourseImageProps {
   fill?: boolean;
 }
 
-export default function CourseImage({
+export default function LectureImage({
   src,
   alt,
   width,
   height,
   className = "",
   fill = false,
-}: CourseImageProps) {
+}: LectureImageProps) {
   if (fill) {
     return (
       <div className={`relative overflow-hidden ${className}`}>

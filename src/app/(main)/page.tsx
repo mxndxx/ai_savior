@@ -1,4 +1,4 @@
-import CourseSection from "@/components/CourseSection";
+import LectureSection from "@/components/LectureSection";
 import FAQSection from "@/components/FAQSection";
 import HeroSection from "@/components/HeroSection";
 import MarketingSection from "@/components/MarketingSection";
@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main>
       <HeroSection />
-      <CourseSection />
+      <LectureSection />
       {/* <MarketingSection /> */}
       <FAQSection />
       <CoachesSection />

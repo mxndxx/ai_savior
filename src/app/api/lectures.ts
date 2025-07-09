@@ -1,5 +1,5 @@
 import { supabase } from "@/utils/supabase";
-import { Lecture, CreateLectureForm, LectureWithCoach } from "@/types/course";
+import { Lecture, CreateLectureForm, LectureWithCoach } from "@/types/lectures";
 import { storageApi } from "@/app/api/storage";
 
 export interface CreateLectureParams {

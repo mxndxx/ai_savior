@@ -2,10 +2,10 @@
 
 import { useState, use } from "react";
 import { notFound } from "next/navigation";
-import CourseImage from "@/components/CourseImage";
+import LectureImage from "@/components/LectureImage";
 import Image from "next/image";
 import { courseData } from "@/data/courses";
-import { CourseSidebar } from "@/components/CourseSidebar";
+import { LectureSidebar } from "@/components/LectureSidebar";
 
 interface CourseDetailPageProps {
   params: Promise<{ id: string }>;
@@ -26,7 +26,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
         <div className="mx-auto max-w-6xl px-4">
           <div className="relative flex gap-8">
             <div className="flex-3/5 space-y-4">
-              <CourseImage
+              <LectureImage
                 src={course.thumbnail}
                 alt={course.title}
                 width={760}
@@ -82,7 +82,7 @@ export default function CourseDetailPage({ params }: CourseDetailPageProps) {
             </div>
 
             <div className="flex-2/5 space-y-6">
-              <CourseSidebar course={course} />
+              <LectureSidebar course={course} />
             </div>
           </div>
         </div>

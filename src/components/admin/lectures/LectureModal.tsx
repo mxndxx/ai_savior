@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { CreateLectureForm, LectureWithCoach } from "@/types/course";
+import { CreateLectureForm, LectureWithCoach } from "@/types/lectures";
 import { X } from "lucide-react";
 import ModalPortal from "@/components/ModalPortal";
 import { lecturesApi } from "@/app/api/lectures";
