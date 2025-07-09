@@ -18,9 +18,9 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
     const deadlineString = lecture.apply_deadline || "2026-01-01T00:00:00";
     const targetDate = new Date(deadlineString);
 
-    console.log("Course deadline:", lecture.apply_deadline);
-    console.log("Target date:", targetDate);
-    console.log("Current date:", new Date());
+    // console.log("Course deadline:", lecture.apply_deadline);
+    // console.log("Target date:", targetDate);
+    // console.log("Current date:", new Date());
 
     const updateTimer = () => {
       const now = new Date();
@@ -59,9 +59,7 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
           </div>
         </div>
 
-        <h3 className="mb-3 text-xl font-bold">
-          [콘텐츠농부X시장 연구소] 1년 안에 5억 버는 AI 활용 컨텐츠 제작 방법
-        </h3>
+        <h3 className="mb-3 text-xl font-bold">{lecture.title}</h3>
 
         <div className="space-y-1 border-b border-gray-200 pb-6">
           <p className="text-sm font-bold text-gray-600">강의정보</p>
