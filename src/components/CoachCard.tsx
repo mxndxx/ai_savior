@@ -9,21 +9,14 @@ export default function CoachCard({
   coach,
   isActive,
   onClick,
-  isMobile,
 }: CoachCardProps) {
   return (
     <div
-      className={`relative cursor-pointer overflow-hidden rounded-[20px] bg-neutral-900 text-white transition-all duration-800 ${
-        isMobile ? "h-[412px] w-full min-w-full" : "h-[412px] min-w-[184px]"
-      } ${
+      className={`relative h-[412px] min-w-full cursor-pointer overflow-hidden rounded-[20px] bg-neutral-900 text-white saturate-100 transition-all duration-800 xl:w-auto xl:min-w-[184px] ${
         isActive
-          ? isMobile
-            ? "saturate-100"
-            : "min-w-[500px] flex-[6] saturate-100"
-          : isMobile
-            ? "saturate-100"
-            : "w-[184px] flex-[1] saturate-[0.1]"
-      } `}
+          ? "xl:min-w-[500px] xl:flex-[3] xl:saturate-100"
+          : "xl:w-[184px] xl:flex-[1] xl:saturate-[0.1]"
+      }`}
       onClick={onClick}
     >
       {/* Gradient Overlay */}
@@ -46,11 +39,9 @@ export default function CoachCard({
 
       {/* Content */}
       <div
-        className={`absolute inset-y-0 right-0 p-10 transition-all duration-800 ${
-          isMobile
-            ? "left-[40%] opacity-100"
-            : "md:left-[50%] xl:right-auto xl:left-[40%]"
-        } ${!isMobile && (isActive ? "opacity-100" : "opacity-0")} `}
+        className={`absolute inset-y-0 right-0 left-[40%] p-10 opacity-100 transition-all duration-800 md:left-[50%] xl:right-auto xl:left-[40%] ${
+          isActive ? "xl:opacity-100" : "xl:opacity-0"
+        } `}
       >
         <div className="flex flex-col items-start gap-3">
           {/* Name with underline */}
@@ -60,29 +51,27 @@ export default function CoachCard({
           </div>
 
           {/* Specialty and Achievements */}
-          <h4 className="font-semibold">{coach.career}</h4>
-          <div className="space-y-2 text-sm"></div>
+          <h4 className="font-semibold">{coach.bio}</h4>
+          <div className="space-y-2 text-sm">
+            <ul className="list-inside list-disc">
+              {coach.career.split("\n").map((line, index) => (
+                <li key={index}>{line}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
       {/* Learn More Button */}
       <div
-        className={`absolute bottom-12 whitespace-nowrap transition-all duration-800 ${
-          isMobile
-            ? "left-[40%]"
-            : isActive
-              ? "left-[50%] md:left-[60%]"
-              : "left-5"
+        className={`absolute bottom-12 left-[40%] whitespace-nowrap transition-all duration-800 ${
+          isActive ? "xl:left-[60%]" : "xl:left-5"
         } `}
       >
         <Link href={`/coach/${coach.id}`} className="flex items-center gap-3">
           <span
-            className={`transition-all duration-800 ${
-              isMobile
-                ? "w-[100px] opacity-100"
-                : isActive
-                  ? "w-[100px] opacity-100"
-                  : "w-0 opacity-0"
+            className={`w-[100px] opacity-100 transition-all duration-800 ${
+              isActive ? "xl:opacity-100" : "xl:w-0 xl:opacity-0"
             } `}
           >
             강사 더 알아보기
