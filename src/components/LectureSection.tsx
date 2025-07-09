@@ -1,8 +1,6 @@
-"use client";
+import LectureCarousel from "@/components/LectureCarousel";
 
-import CourseCarousel from "@/components/CourseCarousel";
-
-export default function CourseSection() {
+export default function LectureSection() {
   return (
     <section className="flex flex-col gap-16 py-16">
       <div className="mb-8">
@@ -14,7 +12,7 @@ export default function CourseSection() {
             마감임박! 곧 신청 마감될 강의
           </p>
         </div>
-        <CourseCarousel
+        <LectureCarousel
           itemsPerSlide={{ mobile: 1, tablet: 2, desktop: 3 }}
           autoPlay={true}
           autoPlayInterval={4000}
@@ -29,7 +27,7 @@ export default function CourseSection() {
             하나라도 더 얻어가세요!
           </p>
         </div>
-        <CourseCarousel
+        <LectureCarousel
           itemsPerSlide={{ mobile: 1, tablet: 2, desktop: 3 }}
           autoPlay={true}
           autoPlayInterval={4000}

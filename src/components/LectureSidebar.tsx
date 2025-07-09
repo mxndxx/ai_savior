@@ -1,10 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CourseDetail } from "@/types/course";
+import { LectureWithCoach } from "@/types/lectures";
 import EnrollmentModal from "@/components/EnrollmentModal";
 
-export function CourseSidebar({ course }: { course: CourseDetail }) {
+export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -15,12 +15,12 @@ export function CourseSidebar({ course }: { course: CourseDetail }) {
 
   useEffect(() => {
     // 강의의 deadline을 사용하거나 기본값 설정
-    const deadlineString = course.deadline || "2026-01-01T00:00:00";
+    const deadlineString = lecture.apply_deadline || "2026-01-01T00:00:00";
     const targetDate = new Date(deadlineString);
 
-    console.log("Course deadline:", course.deadline);
-    console.log("Target date:", targetDate);
-    console.log("Current date:", new Date());
+    // console.log("Course deadline:", lecture.apply_deadline);
+    // console.log("Target date:", targetDate);
+    // console.log("Current date:", new Date());
 
     const updateTimer = () => {
       const now = new Date();
@@ -46,37 +46,30 @@ export function CourseSidebar({ course }: { course: CourseDetail }) {
     const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
-  }, [course.deadline]);
+  }, [lecture.apply_deadline]);
 
   return (
     <div className="sticky top-28 h-fit">
       <div className="flex flex-col gap-3 p-6">
         <div className="mb-1 flex items-center gap-2">
           <div className="flex flex-wrap gap-2">
-            {course.badges.map((badge: any, index: number) => (
-              <span
-                key={index}
-                className={`rounded-full px-3 py-1 text-sm font-bold text-white ${badge.color}`}
-              >
-                {badge.text}
-              </span>
-            ))}
+            <span className="rounded-full bg-violet-600 px-3 py-1 text-sm font-bold text-white">
+              {lecture.coach.name}
+            </span>
           </div>
         </div>
 
-        <h3 className="mb-3 text-xl font-bold">
-          [콘텐츠농부X시장 연구소] 1년 안에 5억 버는 AI 활용 컨텐츠 제작 방법
-        </h3>
+        <h3 className="mb-3 text-xl font-bold">{lecture.title}</h3>
 
         <div className="space-y-1 border-b border-gray-200 pb-6">
           <p className="text-sm font-bold text-gray-600">강의정보</p>
           <div className="flex justify-between">
             <span className="font-semibold text-gray-600">카테고리</span>
-            <span>{course.category}</span>
+            {/* <span>{lecture.category}</span> */}
           </div>
           <div className="flex justify-between">
             <span className="font-semibold text-gray-600">강사명</span>
-            <span>{course.instructor}</span>
+            <span>{lecture.coach.name}</span>
           </div>
         </div>
         <div className="flex justify-between">

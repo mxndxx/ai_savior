@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import CourseImage from "./CourseImage";
+import LectureImage from "@/components/LectureImage";
 import { lecturesApi } from "@/app/api/lectures";
-import { LectureWithCoach } from "@/types/course";
+import { LectureWithCoach } from "@/types/lectures";
 
 export default function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -89,8 +89,8 @@ export default function HeroSection() {
           >
             {lectures.map((lecture) => (
               <div key={lecture.id} className="w-full flex-shrink-0">
-                <Link href={`/course/${lecture.id}`}>
-                  <CourseImage
+                <Link href={`/lecture/${lecture.id}`}>
+                  <LectureImage
                     src={lecture.thumbnail}
                     alt={lecture.title}
                     fill={true}

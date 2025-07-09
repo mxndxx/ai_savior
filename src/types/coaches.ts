@@ -18,5 +18,4 @@ export interface CoachCardProps {
   coach: Coach;
   isActive: boolean;
   onClick: () => void;
-  isMobile: boolean;
 }

@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import CourseCard from "@/components/CourseCard";
-import { featuredCourses } from "@/data/courses";
+import LectureCard from "@/components/LectureCard";
+import { lecturesApi } from "@/app/api/lectures";
+import { LectureWithCoach } from "@/types/lectures";
 
-interface CourseCarouselProps {
+interface LectureCarouselProps {
   itemsPerSlide?: {
     mobile: number;
     tablet: number;
@@ -15,12 +16,13 @@ interface CourseCarouselProps {
   className?: string;
 }
 
-export default function CourseCarousel({
+export default function LectureCarousel({
   itemsPerSlide = { mobile: 1, tablet: 2, desktop: 3 },
   autoPlay = true,
   autoPlayInterval = 4000,
   className = "",
-}: CourseCarouselProps) {
+}: LectureCarouselProps) {
+  const [lectures, setLectures] = useState<LectureWithCoach[]>([]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isUserInteracting, setIsUserInteracting] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -28,6 +30,14 @@ export default function CourseCarousel({
   const [startX, setStartX] = useState(0);
   const [currentItemsPerSlide, setCurrentItemsPerSlide] = useState(1);
   const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    const fetchLectures = async () => {
+      const fetchedLectures = await lecturesApi.getLectures();
+      setLectures(fetchedLectures);
+    };
+    fetchLectures();
+  }, []);
 
   useEffect(() => {
     setIsClient(true);
@@ -49,7 +59,7 @@ export default function CourseCarousel({
     return () => window.removeEventListener("resize", handleResize);
   }, [itemsPerSlide.desktop, itemsPerSlide.tablet, itemsPerSlide.mobile]);
 
-  const totalSlides = Math.ceil(featuredCourses.length / currentItemsPerSlide);
+  const totalSlides = Math.ceil(lectures.length / currentItemsPerSlide);
 
   // 자동 슬라이드
   useEffect(() => {
@@ -158,22 +168,19 @@ export default function CourseCarousel({
             cursor: isDragging ? "grabbing" : "grab",
           }}
         >
-          {featuredCourses.map((course, index) => (
+          {lectures.map((lecture, index) => (
             <div
-              key={course.id}
+              key={lecture.id}
               className="flex-shrink-0 px-2"
               style={{
                 width: `${100 / currentItemsPerSlide}%`,
               }}
             >
-              <CourseCard
-                id={course.id}
-                title={course.title}
-                instructor={course.instructor}
-                thumbnail={course.thumbnail}
-                badges={course.badges}
-                category={course.category}
-                link={course.link}
+              <LectureCard
+                id={lecture.id}
+                title={lecture.title}
+                thumbnail={lecture.thumbnail}
+                coach={lecture.coach.name}
               />
             </div>
           ))}

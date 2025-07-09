@@ -2,28 +2,30 @@
 
 import { useState, useEffect, useRef } from "react";
 import { CircleChevronRight } from "lucide-react";
-import { coaches } from "@/data/coaches";
-import CoachCard from "./CoachCard";
+import { coachesApi } from "@/app/api/coaches";
+import { Coach } from "@/types/coaches";
+import CoachCard from "@/components/CoachCard";
 
 export default function CoachesSection() {
+  const [coaches, setCoaches] = useState<Coach[]>([]);
   const [activeIndex, setActiveIndex] = useState(0); // 첫 번째 아이템부터 시작
-  const [isMobile, setIsMobile] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(true); // 자동 애니메이션 상태
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1280);
+    const fetchCoaches = async () => {
+      try {
+        const fetchedCoaches = await coachesApi.getCoaches();
+        setCoaches(fetchedCoaches);
+      } catch (error) {
+        console.error("강사 정보를 불러오는 데 실패했습니다.", error);
+      }
     };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    fetchCoaches();
   }, []);
 
   // 자동 애니메이션 효과
   useEffect(() => {
-    if (isAnimating) {
+    if (coaches.length > 0) {
       intervalRef.current = setInterval(() => {
         setActiveIndex((prevIndex) => (prevIndex + 1) % coaches.length);
       }, 3000); // 3초마다 변경
@@ -34,7 +36,7 @@ export default function CoachesSection() {
         clearInterval(intervalRef.current);
       }
     };
-  }, [isAnimating]);
+  }, [coaches.length]);
 
   const handleCardClick = (index: number) => {
     setActiveIndex(index);
@@ -80,41 +82,35 @@ export default function CoachesSection() {
           </div>
 
           {/* Mobile Swiper View */}
-          {isMobile && (
-            <div className="overflow-hidden">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{
-                  transform: `translateX(-${activeIndex * 100}%)`,
-                }}
-              >
-                {coaches.map((coach, index) => (
-                  <CoachCard
-                    key={coach.id}
-                    coach={coach}
-                    isActive={index === activeIndex}
-                    onClick={() => handleCardClick(index)}
-                    isMobile={true}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Desktop Grid View */}
-          {!isMobile && (
-            <div className="flex w-full gap-4">
+          <div className="overflow-hidden xl:hidden">
+            <div
+              className="flex transition-transform duration-500 ease-in-out"
+              style={{
+                transform: `translateX(-${activeIndex * 100}%)`,
+              }}
+            >
               {coaches.map((coach, index) => (
                 <CoachCard
                   key={coach.id}
                   coach={coach}
                   isActive={index === activeIndex}
                   onClick={() => handleCardClick(index)}
-                  isMobile={false}
                 />
               ))}
             </div>
-          )}
+          </div>
+
+          {/* Desktop Grid View */}
+          <div className="hidden w-full gap-4 xl:flex">
+            {coaches.map((coach, index) => (
+              <CoachCard
+                key={coach.id}
+                coach={coach}
+                isActive={index === activeIndex}
+                onClick={() => handleCardClick(index)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

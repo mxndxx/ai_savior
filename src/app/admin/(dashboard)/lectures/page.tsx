@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { LectureWithCoach } from "@/types/course";
+import { LectureWithCoach } from "@/types/lectures";
 import { Edit, Trash2, Plus } from "lucide-react";
 import Image from "next/image";
 import LectureModal from "@/components/admin/lectures/LectureModal";
