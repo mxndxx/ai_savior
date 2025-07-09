@@ -144,6 +144,8 @@ export default function LectureModal({
           data,
           thumbnailFile || undefined,
           contentImageFile || undefined,
+          lectureData.thumbnail,
+          lectureData.content_image,
         );
 
         alert("강의가 성공적으로 수정되었습니다!");
