@@ -80,12 +80,24 @@ export default function CourseDetailPage() {
                   {activeTab === "intro" && (
                     <div className="prose max-w-none">
                       <h2 className="mb-4 text-2xl font-bold">강의 소개</h2>
-                      <Image
-                        src={lecture.content_image || ""}
-                        alt={lecture.title}
-                        width={760}
-                        height={600}
-                      />
+                      {lecture.content_text && <p>{lecture.content_text}</p>}
+                      {lecture.content_image && (
+                        <Image
+                          src={lecture.content_image}
+                          alt={lecture.title}
+                          width={760}
+                          height={600}
+                        />
+                      )}
+                      {lecture.content_url && (
+                        <iframe
+                          src={lecture.content_url}
+                          title="강의 소개"
+                          width="100%"
+                          height="800px"
+                          style={{ border: "none" }}
+                        />
+                      )}
                     </div>
                   )}
 
