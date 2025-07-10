@@ -31,6 +31,8 @@ export interface Lecture {
   description: string;
   thumbnail: string;
   content_image: string;
+  content_url: string;
+  content_text: string;
   url: string;
   start_date: string; // ISO string format
   apply_deadline: string; // ISO string format (date only)
@@ -42,8 +44,10 @@ export interface Lecture {
 export interface CreateLectureForm {
   title: string;
   description: string;
-  thumbnail: string;
-  content_image: string;
+  thumbnail: string | null;
+  content_image: string | null;
+  content_url?: string;
+  content_text?: string;
   url: string;
   start_date: string;
   apply_deadline: string;
