@@ -5,7 +5,7 @@ import { storageApi } from "@/app/api/storage";
 export interface CreateLectureParams {
   formData: CreateLectureForm;
   thumbnailFile: File;
-  contentImageFile: File;
+  contentImageFile?: File;
 }
 
 export const lecturesApi = {
@@ -32,10 +32,13 @@ export const lecturesApi = {
         "lecture-thumbnails",
       );
 
-      const contentImageUrl = await storageApi.uploadFile(
-        contentImageFile,
-        "lecture-content-images",
-      );
+      let contentImageUrl: string | null = null;
+      if (contentImageFile) {
+        contentImageUrl = await storageApi.uploadFile(
+          contentImageFile,
+          "lecture-content-images",
+        );
+      }
 
       // 2. 데이터베이스에 강의 데이터 삽입
       const lectureData = {
@@ -43,6 +46,8 @@ export const lecturesApi = {
         description: formData.description,
         thumbnail: thumbnailUrl,
         content_image: contentImageUrl,
+        content_text: formData.content_text,
+        content_url: formData.content_url,
         url: formData.url,
         start_date: formData.start_date,
         apply_deadline: formData.apply_deadline,
@@ -66,6 +71,8 @@ export const lecturesApi = {
         description: insertedLecture.description,
         thumbnail: insertedLecture.thumbnail,
         content_image: insertedLecture.content_image,
+        content_text: insertedLecture.content_text,
+        content_url: insertedLecture.content_url,
         url: insertedLecture.url,
         start_date: insertedLecture.start_date,
         apply_deadline: insertedLecture.apply_deadline,
@@ -136,23 +143,29 @@ export const lecturesApi = {
   ): Promise<Lecture> => {
     try {
       const updatePayload: any = { ...updateData };
+      let newThumbnailUrl: string | undefined;
+      let newContentImageUrl: string | undefined;
 
       // 1. 썸네일 이미지 처리
       if (thumbnailFile) {
-        const newThumbnailUrl = await storageApi.uploadFile(
+        newThumbnailUrl = await storageApi.uploadFile(
           thumbnailFile,
           "lecture-thumbnails",
         );
         updatePayload.thumbnail = newThumbnailUrl;
+      } else if (updateData.thumbnail === null) {
+        updatePayload.thumbnail = null;
       }
 
       // 2. 내용 이미지 처리
       if (contentImageFile) {
-        const newContentImageUrl = await storageApi.uploadFile(
+        newContentImageUrl = await storageApi.uploadFile(
           contentImageFile,
           "lecture-content-images",
         );
         updatePayload.content_image = newContentImageUrl;
+      } else if (updateData.content_image === null) {
+        updatePayload.content_image = null;
       }
 
       // 3. 데이터베이스 업데이트
@@ -165,20 +178,26 @@ export const lecturesApi = {
 
       if (updateError) {
         // DB 업데이트 실패 시, 방금 업로드한 파일이 있다면 삭제 (롤백)
-        if (updatePayload.thumbnail) {
-          await storageApi.deleteFile(updatePayload.thumbnail);
+        if (newThumbnailUrl) {
+          await storageApi.deleteFile(newThumbnailUrl);
         }
-        if (updatePayload.content_image) {
-          await storageApi.deleteFile(updatePayload.content_image);
+        if (newContentImageUrl) {
+          await storageApi.deleteFile(newContentImageUrl);
         }
         throw new Error(`강의 수정 실패: ${updateError.message}`);
       }
 
       // 4. DB 업데이트 성공 후, 기존 이미지 삭제
-      if (thumbnailFile && existingThumbnailUrl) {
+      if (
+        (thumbnailFile || updateData.thumbnail === null) &&
+        existingThumbnailUrl
+      ) {
         await storageApi.deleteFile(existingThumbnailUrl);
       }
-      if (contentImageFile && existingContentImageUrl) {
+      if (
+        (contentImageFile || updateData.content_image === null) &&
+        existingContentImageUrl
+      ) {
         await storageApi.deleteFile(existingContentImageUrl);
       }
 
@@ -189,6 +208,8 @@ export const lecturesApi = {
         description: updatedLecture.description,
         thumbnail: updatedLecture.thumbnail,
         content_image: updatedLecture.content_image,
+        content_text: updatedLecture.content_text,
+        content_url: updatedLecture.content_url,
         url: updatedLecture.url,
         start_date: updatedLecture.start_date,
         apply_deadline: updatedLecture.apply_deadline,
