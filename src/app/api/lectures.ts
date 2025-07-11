@@ -5,7 +5,7 @@ import { storageApi } from "@/app/api/storage";
 export interface CreateLectureParams {
   formData: CreateLectureForm;
   thumbnailFile: File;
-  contentImageFile?: File;
+  contentImageFiles?: File[];
 }
 
 export const lecturesApi = {
@@ -13,7 +13,7 @@ export const lecturesApi = {
   createLecture: async ({
     formData,
     thumbnailFile,
-    contentImageFile,
+    contentImageFiles,
   }: CreateLectureParams): Promise<Lecture> => {
     try {
       // 1. 현재 사용자 인증 상태 확인
@@ -32,12 +32,13 @@ export const lecturesApi = {
         "lecture-thumbnails",
       );
 
-      let contentImageUrl: string | null = null;
-      if (contentImageFile) {
-        contentImageUrl = await storageApi.uploadFile(
-          contentImageFile,
-          "lecture-content-images",
+      let contentImagesUrl: string | null = null;
+      if (contentImageFiles && contentImageFiles.length > 0) {
+        const uploadPromises = contentImageFiles.map((file) =>
+          storageApi.uploadFile(file, "lecture-content-images"),
         );
+        const urls = await Promise.all(uploadPromises);
+        contentImagesUrl = urls.join(",");
       }
 
       // 2. 데이터베이스에 강의 데이터 삽입
@@ -45,7 +46,7 @@ export const lecturesApi = {
         title: formData.title,
         description: formData.description,
         thumbnail: thumbnailUrl,
-        content_image: contentImageUrl,
+        content_image: contentImagesUrl,
         content_text: formData.content_text,
         content_url: formData.content_url,
         url: formData.url,
@@ -137,14 +138,15 @@ export const lecturesApi = {
     id: string,
     updateData: Partial<CreateLectureForm>,
     thumbnailFile?: File,
-    contentImageFile?: File,
+    contentImageFiles?: File[],
     existingThumbnailUrl?: string | null,
-    existingContentImageUrl?: string | null,
+    existingContentImageUrls?: string[],
+    deletedContentImageUrls?: string[],
   ): Promise<Lecture> => {
     try {
       const updatePayload: any = { ...updateData };
       let newThumbnailUrl: string | undefined;
-      let newContentImageUrl: string | undefined;
+      let newUploadedImageUrls: string[] = [];
 
       // 1. 썸네일 이미지 처리
       if (thumbnailFile) {
@@ -157,16 +159,20 @@ export const lecturesApi = {
         updatePayload.thumbnail = null;
       }
 
-      // 2. 내용 이미지 처리
-      if (contentImageFile) {
-        newContentImageUrl = await storageApi.uploadFile(
-          contentImageFile,
-          "lecture-content-images",
+      // 2. 내용 이미지 처리 (업로드 및 URL 조합)
+      if (contentImageFiles && contentImageFiles.length > 0) {
+        const uploadPromises = contentImageFiles.map((file) =>
+          storageApi.uploadFile(file, "lecture-content-images"),
         );
-        updatePayload.content_image = newContentImageUrl;
-      } else if (updateData.content_image === null) {
-        updatePayload.content_image = null;
+        newUploadedImageUrls = await Promise.all(uploadPromises);
       }
+
+      // 삭제되지 않은 기존 이미지와 새로 업로드된 이미지를 합쳐서 최종 URL 목록 생성
+      const finalImageUrls = [
+        ...(existingContentImageUrls || []),
+        ...newUploadedImageUrls,
+      ];
+      updatePayload.content_image = finalImageUrls.join(",");
 
       // 3. 데이터베이스 업데이트
       const { data: updatedLecture, error: updateError } = await supabase
@@ -181,24 +187,30 @@ export const lecturesApi = {
         if (newThumbnailUrl) {
           await storageApi.deleteFile(newThumbnailUrl);
         }
-        if (newContentImageUrl) {
-          await storageApi.deleteFile(newContentImageUrl);
+        if (newUploadedImageUrls.length > 0) {
+          const deletePromises = newUploadedImageUrls.map((url) =>
+            storageApi.deleteFile(url),
+          );
+          await Promise.all(deletePromises);
         }
         throw new Error(`강의 수정 실패: ${updateError.message}`);
       }
 
       // 4. DB 업데이트 성공 후, 기존 이미지 삭제
+      // 4-1. 썸네일 삭제
       if (
         (thumbnailFile || updateData.thumbnail === null) &&
         existingThumbnailUrl
       ) {
         await storageApi.deleteFile(existingThumbnailUrl);
       }
-      if (
-        (contentImageFile || updateData.content_image === null) &&
-        existingContentImageUrl
-      ) {
-        await storageApi.deleteFile(existingContentImageUrl);
+
+      // 4-2. 내용 이미지 삭제
+      if (deletedContentImageUrls && deletedContentImageUrls.length > 0) {
+        const deletePromises = deletedContentImageUrls.map((url) =>
+          storageApi.deleteFile(url),
+        );
+        await Promise.all(deletePromises);
       }
 
       // 5. 일관된 반환 형식 (createLecture와 동일)
@@ -246,7 +258,11 @@ export const lecturesApi = {
           await storageApi.deleteFile(thumbnailUrl);
         }
         if (contentImageUrl) {
-          await storageApi.deleteFile(contentImageUrl);
+          const imageUrls = contentImageUrl.split(",");
+          const deletePromises = imageUrls.map((url) =>
+            storageApi.deleteFile(url),
+          );
+          await Promise.all(deletePromises);
         }
       } catch (storageError) {
         // 스토리지 파일 삭제 실패 시 에러를 로깅하지만, 전체 프로세스를 중단시키지는 않습니다.
