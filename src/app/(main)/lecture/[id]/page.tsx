@@ -81,14 +81,19 @@ export default function CourseDetailPage() {
                     <div className="prose max-w-none">
                       <h2 className="mb-4 text-2xl font-bold">강의 소개</h2>
                       {lecture.content_text && <p>{lecture.content_text}</p>}
-                      {lecture.content_image && (
-                        <Image
-                          src={lecture.content_image}
-                          alt={lecture.title}
-                          width={760}
-                          height={600}
-                        />
-                      )}
+                      {lecture.content_image &&
+                        lecture.content_image
+                          .split(",")
+                          .filter((url) => url.trim())
+                          .map((url, index) => (
+                            <Image
+                              key={index}
+                              src={url.trim()}
+                              alt={`${lecture.title} content image ${index + 1}`}
+                              width={760}
+                              height={600}
+                            />
+                          ))}
                       {lecture.content_url && (
                         <iframe
                           src={lecture.content_url}
