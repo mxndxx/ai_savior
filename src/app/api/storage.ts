@@ -6,7 +6,21 @@ export const storageApi = {
     bucket: string,
     path?: string,
   ): Promise<string> => {
-    const fileName = path || `${Date.now()}-${file.name}`;
+    const normalizedFileName = file.name.normalize("NFC");
+    const lastDotIndex = normalizedFileName.lastIndexOf(".");
+
+    let baseName = normalizedFileName;
+    let extension = "";
+
+    if (lastDotIndex > -1) {
+      baseName = normalizedFileName.substring(0, lastDotIndex);
+      extension = normalizedFileName.substring(lastDotIndex);
+    }
+
+    const sanitizedBaseName = baseName.replace(/[^a-zA-Z0-9_.-]/g, "_");
+
+    const uniqueBaseName = `${Date.now()}-${sanitizedBaseName}`;
+    const fileName = path || `${uniqueBaseName}${extension}`;
 
     const { data, error } = await supabase.storage
       .from(bucket)

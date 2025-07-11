@@ -8,6 +8,7 @@ import { lecturesApi } from "@/app/api/lectures";
 import { coachesApi } from "@/app/api/coaches";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface LectureModalProps {
   isOpen: boolean;
@@ -23,20 +24,22 @@ export default function LectureModal({
   lectureData = null,
 }: LectureModalProps) {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [contentImageFile, setContentImageFile] = useState<File | null>(null);
+  const [contentImageFiles, setContentImageFiles] = useState<File[]>([]);
   const [thumbnailPreview, setThumbnailPreview] = useState<string>("");
-  const [contentImagePreview, setContentImagePreview] = useState<string>("");
-  const [coaches, setCoaches] = useState<{ id: string; name: string }[]>([]);
-  const [loadingCoaches, setLoadingCoaches] = useState(false);
+  const [contentImagePreviews, setContentImagePreviews] = useState<string[]>(
+    [],
+  );
+  const [deletedImageUrls, setDeletedImageUrls] = useState<string[]>([]);
   const thumbnailInputRef = useRef<HTMLInputElement>(null);
   const contentImageInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const {
     register,
     handleSubmit,
     reset,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm<CreateLectureForm>({
     defaultValues: {
       title: "",
@@ -52,6 +55,22 @@ export default function LectureModal({
       coach_id: "",
     },
   });
+
+  const {
+    data: coaches = [],
+    isLoading: loadingCoaches,
+    error: coachesError,
+  } = useQuery({
+    queryKey: ["coachOptions"],
+    queryFn: coachesApi.getCoachOptions,
+    enabled: isOpen,
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+
+  if (coachesError) {
+    console.error("강사 목록 조회 실패:", coachesError);
+  }
 
   // 편집 모드일 때 폼 데이터 초기화
   useEffect(() => {
@@ -73,19 +92,24 @@ export default function LectureModal({
 
       // 기존 이미지 URL을 폼 필드에도 설정
       setValue("thumbnail", lectureData.thumbnail || null);
-      setValue("content_image", lectureData.content_image || null);
+      // lectureData.content_image는 콤마로 구분된 문자열이므로, 이를 배열로 변환합니다.
+      const existingImages = lectureData.content_image
+        ? lectureData.content_image.split(",").map((s) => s.trim())
+        : [];
+      setValue("content_image", existingImages.join(","));
 
       // 기존 이미지 미리보기 설정
       if (lectureData.thumbnail) {
         setThumbnailPreview(lectureData.thumbnail);
       }
       if (lectureData.content_image) {
-        setContentImagePreview(lectureData.content_image);
+        setContentImagePreviews(existingImages);
       }
     } else if (!isEdit) {
       reset();
       setThumbnailPreview("");
-      setContentImagePreview("");
+      setContentImagePreviews([]);
+      setDeletedImageUrls([]);
     }
   }, [isEdit, lectureData, isOpen, setValue, reset]);
 
@@ -102,31 +126,13 @@ export default function LectureModal({
       if (thumbnailPreview && thumbnailPreview.startsWith("blob:")) {
         URL.revokeObjectURL(thumbnailPreview);
       }
-      if (contentImagePreview && contentImagePreview.startsWith("blob:")) {
-        URL.revokeObjectURL(contentImagePreview);
-      }
+      contentImagePreviews.forEach((preview) => {
+        if (preview.startsWith("blob:")) {
+          URL.revokeObjectURL(preview);
+        }
+      });
     };
-  }, [thumbnailPreview, contentImagePreview]);
-
-  // 강사 목록 불러오기
-  useEffect(() => {
-    const fetchCoaches = async () => {
-      if (!isOpen) return;
-
-      setLoadingCoaches(true);
-      try {
-        const coachList = await coachesApi.getCoachOptions();
-        setCoaches(coachList);
-      } catch (error) {
-        console.error("강사 목록 조회 실패:", error);
-        alert("강사 목록을 불러오는데 실패했습니다.");
-      } finally {
-        setLoadingCoaches(false);
-      }
-    };
-
-    fetchCoaches();
-  }, [isOpen]);
+  }, [thumbnailPreview, contentImagePreviews]);
 
   const handleRemoveThumbnail = () => {
     setThumbnailFile(null);
@@ -137,16 +143,74 @@ export default function LectureModal({
     setValue("thumbnail", null);
   };
 
-  const handleRemoveContentImage = () => {
-    setContentImageFile(null);
-    setContentImagePreview("");
-    if (contentImageInputRef.current) {
-      contentImageInputRef.current.value = "";
+  const handleRemoveContentImage = (index: number) => {
+    const removedPreview = contentImagePreviews[index];
+
+    if (!removedPreview.startsWith("blob:")) {
+      // 기존 이미지 URL인 경우 삭제 목록에 추가
+      setDeletedImageUrls((prev) => [...prev, removedPreview]);
+    } else {
+      const objectURL = removedPreview;
+      setContentImageFiles((prevFiles) =>
+        prevFiles.filter((file) => {
+          return URL.createObjectURL(file) !== objectURL;
+        }),
+      );
     }
-    setValue("content_image", null);
+
+    // 미리보기 목록에서 제거
+    setContentImagePreviews((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const onSubmit = async (data: CreateLectureForm) => {
+  const { mutate, isPending: isSubmitting } = useMutation({
+    mutationFn: (data: CreateLectureForm) => {
+      if (isEdit && lectureData) {
+        // 편집 모드
+        const originalImages = Array.isArray(lectureData.content_image)
+          ? lectureData.content_image
+          : (lectureData.content_image || "").split(",").filter(Boolean);
+        const remainingImages = originalImages.filter(
+          (url) => !deletedImageUrls.includes(url),
+        );
+
+        return lecturesApi.updateLecture(
+          lectureData.id,
+          data,
+          thumbnailFile || undefined,
+          contentImageFiles,
+          lectureData.thumbnail,
+          remainingImages, // 업데이트된 기존 이미지 목록
+          deletedImageUrls, // 삭제할 이미지 URL 목록
+        );
+      } else {
+        // 생성 모드
+        return lecturesApi.createLecture({
+          formData: data,
+          thumbnailFile: thumbnailFile!,
+          contentImageFiles: contentImageFiles,
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["adminLectures"] });
+      alert(
+        isEdit
+          ? "강의가 성공적으로 수정되었습니다!"
+          : "강의가 성공적으로 생성되었습니다!",
+      );
+      handleClose();
+    },
+    onError: (error) => {
+      console.error("강의 처리 중 오류:", error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : "강의 처리 중 오류가 발생했습니다.",
+      );
+    },
+  });
+
+  const onSubmit = (data: CreateLectureForm) => {
     // 편집 모드가 아닐 때만 파일 필수 체크
     if (!isEdit) {
       if (!thumbnailFile) {
@@ -154,48 +218,16 @@ export default function LectureModal({
         return;
       }
     }
-
-    try {
-      if (isEdit && lectureData) {
-        // 편집 모드
-        await lecturesApi.updateLecture(
-          lectureData.id,
-          data,
-          thumbnailFile || undefined,
-          contentImageFile || undefined,
-          lectureData.thumbnail,
-          lectureData.content_image,
-        );
-
-        alert("강의가 성공적으로 수정되었습니다!");
-      } else {
-        // 생성 모드
-        await lecturesApi.createLecture({
-          formData: data,
-          thumbnailFile: thumbnailFile!,
-          contentImageFile: contentImageFile!,
-        });
-
-        alert("강의가 성공적으로 생성되었습니다!");
-      }
-
-      handleClose();
-    } catch (error) {
-      console.error("강의 처리 중 오류:", error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "강의 처리 중 오류가 발생했습니다.",
-      );
-    }
+    mutate(data);
   };
 
   const handleClose = () => {
     reset();
     setThumbnailFile(null);
-    setContentImageFile(null);
+    setContentImageFiles([]);
     setThumbnailPreview("");
-    setContentImagePreview("");
+    setContentImagePreviews([]);
+    setDeletedImageUrls([]);
     onClose();
   };
 
@@ -414,49 +446,54 @@ export default function LectureModal({
               <input
                 type="file"
                 accept="image/*"
+                multiple // 여러 파일 선택 가능하도록 추가
                 ref={contentImageInputRef}
                 onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  setContentImageFile(file || null);
+                  const files = e.target.files;
+                  if (files) {
+                    const newFiles = Array.from(files);
+                    setContentImageFiles((prevFiles) => [
+                      ...prevFiles,
+                      ...newFiles,
+                    ]);
 
-                  // 미리보기 URL 생성
-                  if (file) {
-                    // 기존 미리보기 URL 정리
-                    if (
-                      contentImagePreview &&
-                      contentImagePreview.startsWith("blob:")
-                    ) {
-                      URL.revokeObjectURL(contentImagePreview);
-                    }
-                    const previewUrl = URL.createObjectURL(file);
-                    setContentImagePreview(previewUrl);
-                  } else {
-                    setContentImagePreview("");
+                    // 미리보기 URL 생성
+                    const newPreviews = newFiles.map((file) =>
+                      URL.createObjectURL(file),
+                    );
+                    setContentImagePreviews((prevPreviews) => [
+                      ...prevPreviews,
+                      ...newPreviews,
+                    ]);
                   }
                 }}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               />
 
               {/* 강의 상세 내용 이미지 미리보기 */}
-              {contentImagePreview && (
+              {contentImagePreviews.length > 0 && (
                 <div className="mt-2">
                   <p className="mb-1 text-xs text-gray-600">미리보기:</p>
-                  <div className="relative h-40 w-full">
-                    <Image
-                      width={100}
-                      height={100}
-                      src={contentImagePreview}
-                      alt="강의 상세 내용 이미지 미리보기"
-                      className="h-full w-full rounded-lg border object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={handleRemoveContentImage}
-                      className="absolute top-1 right-1 rounded-full bg-black/50 p-1 text-white transition-colors hover:bg-black/70"
-                      aria-label="강의 상세 내용 이미지 삭제"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
+                  <div className="grid grid-cols-3 gap-2">
+                    {contentImagePreviews.map((preview, index) => (
+                      <div key={index} className="relative h-40 w-full">
+                        <Image
+                          width={100}
+                          height={100}
+                          src={preview}
+                          alt={`강의 상세 내용 이미지 미리보기 ${index + 1}`}
+                          className="h-full w-full rounded-lg border object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveContentImage(index)}
+                          className="absolute top-1 right-1 rounded-full bg-black/50 p-1 text-white transition-colors hover:bg-black/70"
+                          aria-label="강의 상세 내용 이미지 삭제"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}
@@ -561,9 +598,7 @@ export default function LectureModal({
               </button>
               <button
                 type="submit"
-                disabled={
-                  isSubmitting || (!isEdit && !thumbnailFile) || loadingCoaches
-                }
+                disabled={isSubmitting || loadingCoaches}
                 className="rounded-lg bg-black px-4 py-2 text-sm text-white hover:bg-gray-800 disabled:opacity-50"
               >
                 {isSubmitting

@@ -1,58 +1,59 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { LectureWithCoach } from "@/types/lectures";
 import { Edit, Trash2, Plus } from "lucide-react";
 import Image from "next/image";
 import LectureModal from "@/components/admin/lectures/LectureModal";
 import { lecturesApi } from "@/app/api/lectures";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export default function LecturesPage() {
-  const [lectures, setLectures] = useState<LectureWithCoach[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [selectedLecture, setSelectedLecture] =
     useState<LectureWithCoach | null>(null);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   // 강의 목록 불러오기
-  useEffect(() => {
-    const fetchLectures = async () => {
-      try {
-        setLoading(true);
-        const lectureData = await lecturesApi.getLectures();
-        console.log(lectureData);
-        setLectures(lectureData);
-      } catch (error) {
-        console.error("강의 목록을 불러오는데 실패했습니다:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchLectures();
-  }, []);
+  const {
+    data: lectures = [],
+    isLoading: loading,
+    isError,
+    error,
+  } = useQuery<LectureWithCoach[]>({
+    queryKey: ["adminLectures"],
+    queryFn: lecturesApi.getLectures,
+  });
 
   // 강의 삭제
-  const handleDeleteLecture = async (id: string) => {
-    if (confirm("정말로 이 강의를 삭제하시겠습니까?")) {
-      try {
-        const lectureToDelete = lectures.find((lecture) => lecture.id === id);
-        if (!lectureToDelete) {
-          alert("삭제할 강의를 찾지 못했습니다.");
-          return;
-        }
+  const { mutate: deleteLecture } = useMutation({
+    mutationFn: ({
+      id,
+      thumbnail,
+      content_image,
+    }: {
+      id: string;
+      thumbnail: string | null;
+      content_image: string | null;
+    }) => lecturesApi.deleteLecture(id, thumbnail || "", content_image || ""),
+    onSuccess: () => {
+      alert("강의가 삭제되었습니다.");
+      queryClient.invalidateQueries({ queryKey: ["adminLectures"] });
+    },
+    onError: (error) => {
+      console.error("강의 삭제 중 오류:", error);
+      alert("강의 삭제에 실패했습니다. 다시 시도해주세요.");
+    },
+  });
 
-        await lecturesApi.deleteLecture(
-          lectureToDelete.id,
-          lectureToDelete.thumbnail,
-          lectureToDelete.content_image,
-        );
-        setLectures(lectures.filter((lecture) => lecture.id !== id));
-      } catch (error) {
-        console.error("강의 삭제 중 오류:", error);
-        alert("강의 삭제에 실패했습니다. 다시 시도해주세요.");
-      }
+  const handleDeleteLecture = (lecture: LectureWithCoach) => {
+    if (confirm("정말로 이 강의를 삭제하시겠습니까?")) {
+      deleteLecture({
+        id: lecture.id,
+        thumbnail: lecture.thumbnail,
+        content_image: lecture.content_image,
+      });
     }
   };
 
@@ -69,6 +70,11 @@ export default function LecturesPage() {
     setIsEditMode(false);
     setSelectedLecture(null);
   };
+
+  if (isError) {
+    console.error("강의 목록을 불러오는데 실패했습니다:", error);
+    return <div>오류가 발생했습니다. 데이터를 불러올 수 없습니다.</div>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -168,7 +174,7 @@ export default function LecturesPage() {
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => handleDeleteLecture(lecture.id)}
+                            onClick={() => handleDeleteLecture(lecture)}
                             className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600"
                           >
                             <Trash2 className="h-4 w-4" />
