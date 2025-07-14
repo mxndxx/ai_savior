@@ -2,13 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  BookOpen,
-  Users,
-  Settings,
-  ChevronDown,
-} from "lucide-react";
+import { LayoutDashboard, BookOpen, Users, Bell } from "lucide-react";
 
 const sidebarItems = [
   {
@@ -20,6 +14,11 @@ const sidebarItems = [
     name: "강의 관리",
     href: "/admin/lectures",
     icon: BookOpen,
+  },
+  {
+    name: "알림 관리",
+    href: "/admin/messages",
+    icon: Bell,
   },
   {
     name: "강사 관리",
@@ -64,7 +63,6 @@ export function Sidebar() {
           </ul>
         </nav>
       </div>
-      
     </div>
   );
 }
