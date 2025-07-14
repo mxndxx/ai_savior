@@ -103,7 +103,8 @@ export const lecturesApi = {
       throw new Error(`강의 목록 조회 실패: ${error.message}`);
     }
 
-    console.log("api 함수 : ", data);
+    // TODO: 콘솔 제거
+    // console.log("api 함수 : ", data);
 
     return data || [];
   },
