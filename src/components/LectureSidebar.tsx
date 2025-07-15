@@ -1,17 +1,100 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { User } from "@supabase/supabase-js";
 import { LectureWithCoach } from "@/types/lectures";
-import EnrollmentModal from "@/components/EnrollmentModal";
+import InfoModal from "@/components/InfoModal";
+import { supabase } from "@/utils/supabase";
+import { leadsApi } from "@/app/api/leads";
 
 export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalStatus, setModalStatus] = useState<
+    "hidden" | "login" | "success"
+  >("hidden");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
     minutes: 0,
     seconds: 0,
   });
+  const [user, setUser] = useState<User | null>(null);
+  const [applyAfterLogin, setApplyAfterLogin] = useState(false);
+
+  // TODO 에러 처리 필요
+  const handleLogin = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "kakao",
+      options: {
+        redirectTo: `${window.location.origin}${window.location.pathname}${window.location.search}`,
+      },
+    });
+
+    if (error) {
+      console.error("Kakao login error:", error);
+      alert("로그인 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    }
+  };
+
+  const handleApply = useCallback(
+    async (currentUser: User) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        await leadsApi.createLead({
+          name: currentUser.user_metadata?.full_name || currentUser.email || "",
+          email: currentUser.email || "",
+          subscribe: lecture.id,
+        });
+        setModalStatus("success");
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("알 수 없는 오류가 발생하여 신청에 실패했습니다.");
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [lecture.id],
+  );
+
+  const handleApplyClick = () => {
+    if (!user) {
+      setApplyAfterLogin(true);
+      setModalStatus("login");
+      return;
+    }
+    handleApply(user);
+  };
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+      setError(null);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+
+      if (event === "SIGNED_IN" && session && applyAfterLogin) {
+        setApplyAfterLogin(false);
+        setModalStatus("hidden");
+        handleApply(session.user);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [applyAfterLogin, handleApply]);
 
   useEffect(() => {
     // 강의의 deadline을 사용하거나 기본값 설정
@@ -82,10 +165,11 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
         </div>
 
         <button
-          onClick={() => setIsModalOpen(true)}
-          className="w-full rounded-lg bg-violet-600 px-6 py-4 text-lg font-bold text-white transition-colors duration-200 hover:bg-violet-700"
+          onClick={handleApplyClick}
+          disabled={isLoading}
+          className="w-full rounded-lg bg-violet-600 px-6 py-4 text-lg font-bold text-white transition-colors duration-200 hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          강의 신청하기
+          {isLoading ? "신청하는 중..." : "강의 신청하기"}
         </button>
 
         <div className="rounded-lg bg-gray-100 p-6 text-center">
@@ -113,9 +197,11 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
         </div>
       </div>
 
-      <EnrollmentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+      <InfoModal
+        isOpen={modalStatus !== "hidden"}
+        onClose={() => setModalStatus("hidden")}
+        onLogin={handleLogin}
+        status={modalStatus === "success" ? "success" : "login"}
       />
     </div>
   );
