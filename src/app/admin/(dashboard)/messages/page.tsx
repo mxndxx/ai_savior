@@ -1,20 +1,20 @@
 "use client";
 
-import {
-  useMessageSettings,
-  timings,
-  type Channel,
-} from "@/hooks/useMessageSettings";
-import { Edit, PlusCircle, X } from "lucide-react";
-import Image from "next/image";
+import { useMessageSettings, type Channel } from "@/hooks/useMessageSettings";
+import { convertKitApi, type ConvertKitSequence } from "@/utils/convertkit";
+import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import MessageTabs from "@/components/admin/messages/MessageTabs";
+import LectureList from "@/components/admin/messages/LectureList";
+import ChannelDisplay from "@/components/admin/messages/ChannelDisplay";
+import ChannelEditor from "@/components/admin/messages/ChannelEditor";
+import EmailEditor from "@/components/admin/messages/EmailEditor";
 
 const channelDetails: Record<Channel, { label: string }> = {
   sms: { label: "문자" },
   kakaotalk: { label: "알림톡" },
   email: { label: "메일" },
 };
-
-const channels: Channel[] = ["sms", "kakaotalk", "email"];
 
 export default function MessagesPage() {
   const {
@@ -36,6 +36,69 @@ export default function MessagesPage() {
     DEFAULT_MESSAGE,
   } = useMessageSettings();
 
+  const [selectedSequence, setSelectedSequence] =
+    useState<ConvertKitSequence | null>(null);
+
+  // ConvertKit 시퀀스 목록 가져오기
+  const {
+    data: sequences = [],
+    isLoading: sequencesLoading,
+    error: sequencesError,
+  } = useQuery({
+    queryKey: ["convertkit-sequences"],
+    queryFn: convertKitApi.getSequences,
+  });
+
+  // 저장된 시퀀스 ID가 있을 때 기본 선택 상태로 설정
+  useEffect(() => {
+    // 편집 중이 아닐 때만 자동 재설정
+    if (
+      sequences.length > 0 &&
+      notificationSettings &&
+      activeTimingKey === "kit_sequence_id" &&
+      !editing // 편집 중이 아닐 때만 실행
+    ) {
+      const savedSequenceId =
+        notificationSettings?.kit_sequence_id?.email?.content;
+
+      if (savedSequenceId && savedSequenceId !== DEFAULT_MESSAGE) {
+        const matchingSequence = sequences.find(
+          (seq) => seq.id.toString() === savedSequenceId,
+        );
+
+        if (matchingSequence) {
+          setSelectedSequence(matchingSequence);
+          setEditText(matchingSequence.id.toString());
+        }
+      } else {
+        // 저장된 시퀀스 ID가 없으면 선택 해제
+        setSelectedSequence(null);
+        setEditText("");
+      }
+    }
+  }, [
+    sequences,
+    notificationSettings,
+    activeTimingKey,
+    editing, // editing 상태 추가
+    DEFAULT_MESSAGE,
+    setEditText,
+    // selectedSequence 제거 - 무한 루프 방지
+  ]);
+
+  // 탭이 변경될 때 선택 상태 초기화 (kit_sequence_id가 아닌 경우)
+  useEffect(() => {
+    if (activeTimingKey !== "kit_sequence_id") {
+      setSelectedSequence(null);
+    }
+  }, [activeTimingKey]);
+
+  const handleSequenceSelect = (sequence: ConvertKitSequence) => {
+    console.log("시퀀스 데이터 : ", sequence);
+    setSelectedSequence(sequence);
+    setEditText(sequence.id.toString());
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       <main className="flex-1 p-4">
@@ -45,32 +108,11 @@ export default function MessagesPage() {
           style={{ height: "calc(100vh - 120px)" }}
         >
           {/* Lecture List as Tabs */}
-          <div className="w-1/3 overflow-y-auto border-r border-gray-200">
-            <nav className="space-y-1 p-2">
-              {lectures.map((lecture) => (
-                <button
-                  key={lecture.id}
-                  onClick={() => setActiveLectureId(lecture.id)}
-                  className={`group flex w-full items-center rounded-md p-2 text-sm font-medium ${
-                    activeLectureId === lecture.id
-                      ? "bg-gray-100 text-gray-900"
-                      : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                  }`}
-                >
-                  <Image
-                    src={lecture.thumbnail}
-                    alt={lecture.title}
-                    className="mr-3 h-10 w-16 flex-shrink-0 rounded-md object-cover"
-                    width={64}
-                    height={40}
-                  />
-                  <span className="line-clamp-2 flex-1 text-left">
-                    {lecture.title}
-                  </span>
-                </button>
-              ))}
-            </nav>
-          </div>
+          <LectureList
+            lectures={lectures}
+            activeLectureId={activeLectureId}
+            onLectureSelect={setActiveLectureId}
+          />
 
           {/* Settings Panel */}
           <div className="w-2/3 overflow-y-auto">
@@ -80,133 +122,79 @@ export default function MessagesPage() {
                   &quot;{activeLecture.title}&quot; 알림 설정
                 </h2>
 
-                {/* Timing Tabs */}
-                <div className="border-b border-gray-200">
-                  <nav className="-mb-px flex space-x-8" aria-label="Tabs">
-                    {timings.map((timing) => (
-                      <button
-                        key={timing.key}
-                        onClick={() => setActiveTimingKey(timing.key)}
-                        className={`border-b-2 px-1 py-4 text-sm font-medium whitespace-nowrap ${
-                          activeTimingKey === timing.key
-                            ? "border-black text-black"
-                            : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
-                        }`}
-                      >
-                        {timing.label}
-                      </button>
-                    ))}
-                  </nav>
-                </div>
+                {/* 타이밍 탭 - 분리된 컴포넌트 사용 */}
+                <MessageTabs
+                  activeTimingKey={activeTimingKey}
+                  setActiveTimingKey={setActiveTimingKey}
+                />
 
                 {/* Settings for active tab */}
                 <div className="mt-6">
                   <div className="space-y-4">
-                    {channels.map((channel) => {
-                      if (
-                        editing?.timingKey === activeTimingKey &&
-                        editing?.channel === channel
-                      ) {
-                        return (
-                          // Editing View
-                          <div
-                            key={`${channel}-editing`}
-                            className="rounded-lg border p-4"
-                          >
-                            <h3 className="font-medium text-gray-900">
-                              {channelDetails[channel].label}
-                            </h3>
-                            <textarea
+                    {(() => {
+                      // activeTimingKey에 따라 보여줄 채널 결정
+                      const channelsToShow =
+                        activeTimingKey === "kit_sequence_id"
+                          ? (["email"] as Channel[])
+                          : (["sms", "kakaotalk"] as Channel[]);
+
+                      return channelsToShow.map((channel) => {
+                        const isEditing =
+                          editing?.timingKey === activeTimingKey &&
+                          editing?.channel === channel;
+
+                        if (isEditing) {
+                          if (channel === "email") {
+                            return (
+                              <EmailEditor
+                                key={`${activeTimingKey}-email-editor`}
+                                selectedSequence={selectedSequence}
+                                onSequenceSelect={handleSequenceSelect}
+                                onCancel={handleCancelClick}
+                                onSave={handleSaveClick}
+                                isLoading={isUpdating || isCreating}
+                                sequences={sequences}
+                                sequencesLoading={sequencesLoading}
+                                sequencesError={sequencesError}
+                              />
+                            );
+                          }
+                          return (
+                            <ChannelEditor
+                              key={`${activeTimingKey}-${channel}-editing`}
+                              channelLabel={channelDetails[channel].label}
                               value={editText}
-                              onChange={(e) => setEditText(e.target.value)}
-                              className="mt-2 block w-full rounded-md border border-gray-300 p-2 text-sm focus:border-black focus:ring-black"
-                              rows={4}
-                              placeholder="전송할 메시지 내용을 입력하세요."
+                              onChange={setEditText}
+                              onCancel={handleCancelClick}
+                              onSave={handleSaveClick}
+                              isLoading={isUpdating || isCreating}
                             />
-                            <div className="mt-2 flex justify-end gap-2">
-                              <button
-                                onClick={handleCancelClick}
-                                className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
-                              >
-                                <X size={16} />
-                              </button>
-                              <button
-                                onClick={handleSaveClick}
-                                disabled={isUpdating || isCreating}
-                                className="rounded-md border border-transparent bg-black px-3 py-1 text-sm text-white hover:bg-gray-800 disabled:opacity-50"
-                              >
-                                {isUpdating || isCreating
-                                  ? "저장 중..."
-                                  : "저장"}
-                              </button>
-                            </div>
-                          </div>
+                          );
+                        }
+
+                        const content =
+                          notificationSettings?.[activeTimingKey]?.[channel]
+                            ?.content;
+
+                        return (
+                          <ChannelDisplay
+                            key={channel}
+                            channelLabel={channelDetails[channel].label}
+                            content={content}
+                            defaultMessage={DEFAULT_MESSAGE}
+                            onEdit={() =>
+                              handleOpenEditor(
+                                activeTimingKey,
+                                channel,
+                                !content || content === DEFAULT_MESSAGE,
+                              )
+                            }
+                            isEmail={channel === "email"}
+                            sequences={sequences}
+                          />
                         );
-                      }
-
-                      const content =
-                        notificationSettings?.[activeTimingKey]?.[channel]
-                          ?.content;
-                      const isMessageEmpty =
-                        !content || content === DEFAULT_MESSAGE;
-
-                      return (
-                        // Display View
-                        <div
-                          key={channel}
-                          className="flex items-center justify-between rounded-lg border p-4"
-                        >
-                          {isMessageEmpty ? (
-                            <div className="flex w-full items-center justify-between">
-                              <div>
-                                <h3 className="font-medium text-gray-900">
-                                  {channelDetails[channel].label}
-                                </h3>
-                                <p className="text-sm text-gray-400 italic">
-                                  메시지가 설정되지 않았습니다.
-                                </p>
-                              </div>
-                              <button
-                                onClick={() =>
-                                  handleOpenEditor(
-                                    activeTimingKey,
-                                    channel,
-                                    true,
-                                  )
-                                }
-                                className="flex-shrink-0 rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
-                              >
-                                <PlusCircle className="h-4 w-4" />
-                              </button>
-                            </div>
-                          ) : (
-                            <>
-                              <div className="flex-1 pr-4">
-                                <h3 className="font-medium text-gray-900">
-                                  {channelDetails[channel].label}
-                                </h3>
-                                <p className="mt-1 text-sm whitespace-pre-wrap text-gray-500">
-                                  {content}
-                                </p>
-                              </div>
-
-                              <button
-                                onClick={() =>
-                                  handleOpenEditor(
-                                    activeTimingKey,
-                                    channel,
-                                    false,
-                                  )
-                                }
-                                className="flex-shrink-0 rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      );
-                    })}
+                      });
+                    })()}
                   </div>
                 </div>
               </div>
