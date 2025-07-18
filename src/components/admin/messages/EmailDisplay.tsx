@@ -17,7 +17,7 @@ export const EmailDisplay = ({
 }: EmailDisplayProps) => {
   // content가 broadcast ID인지 확인
   const isBroadcastId = content && /^\d+$/.test(content);
-  
+
   const { data: selectedBroadcast } = useQuery({
     queryKey: ["convertkit-broadcast", content],
     queryFn: () => convertKitApi.getBroadcastById(content!),
@@ -50,7 +50,7 @@ export const EmailDisplay = ({
       <div className="flex-1 pr-4">
         <h3 className="font-medium text-gray-900">{channelLabel}</h3>
         {isBroadcastId ? (
-          <div className="mt-1">
+          <div className="mt-1 space-y-2">
             <p className="text-sm font-medium text-gray-700">
               브로드캐스트 ID: {content}
             </p>
