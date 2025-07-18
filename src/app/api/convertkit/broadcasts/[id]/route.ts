@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  props: { params: Promise<{ id: string }> }
 ) {
   const CONVERTKIT_API_KEY = process.env.CONVERTKIT_API_KEY;
   const CONVERTKIT_BASE_URL = "https://api.kit.com/v4";
@@ -14,9 +14,12 @@ export async function GET(
     );
   }
 
+  const params = await props.params;
+  const { id } = params;
+
   try {
     const response = await fetch(
-      `${CONVERTKIT_BASE_URL}/broadcasts/${params.id}`,
+      `${CONVERTKIT_BASE_URL}/broadcasts/${id}`,
       {
         headers: {
           "X-Kit-Api-Key": CONVERTKIT_API_KEY,
