@@ -1,29 +1,38 @@
-interface ConvertKitSequence {
+interface ConvertKitBroadcast {
   id: number;
   name: string;
-  hold: boolean;
-  repeat: boolean;
+  subject: string;
   created_at: string;
+  content?: string;
+}
+
+interface BroadcastsResponse {
+  broadcasts: ConvertKitBroadcast[];
+  nextCursor: string | null;
 }
 
 export const convertKitApi = {
-  async getSequences(): Promise<ConvertKitSequence[]> {
+  async getBroadcasts(cursor?: string): Promise<BroadcastsResponse> {
     try {
-      const response = await fetch("/api/convertkit/sequences");
+      const url = cursor 
+        ? `/api/convertkit/broadcasts?cursor=${cursor}`
+        : "/api/convertkit/broadcasts";
+      
+      const response = await fetch(url);
 
       if (!response.ok) {
         const errorData = await response.json();
         throw new Error(errorData.error || `API 오류: ${response.status}`);
       }
 
-      const sequences: ConvertKitSequence[] = await response.json();
-      console.log("ConvertKit 시퀀스 데이터 : ", sequences);
-      return sequences;
+      const data: BroadcastsResponse = await response.json();
+      console.log(`ConvertKit 브로드캐스트 데이터: `, data);
+      return data;
     } catch (error) {
-      console.error("ConvertKit 시퀀스 가져오기 실패:", error);
+      console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
       throw error;
     }
   },
 };
 
-export type { ConvertKitSequence };
+export type { ConvertKitBroadcast };

@@ -8,7 +8,9 @@ import { type LectureWithCoach } from "@/types/lectures";
 
 const DEFAULT_MESSAGE = "설정된 메시지가 없습니다.";
 
-export const timings = [
+export type TimingKey = "immediate" | "after_6" | "before_24" | "before_8" | "before_1" | "start";
+
+export const timings: Array<{ key: TimingKey; label: string }> = [
   { key: "immediate", label: "신청 즉시" },
   { key: "after_6", label: "신청 6시간 후" },
   { key: "before_24", label: "강의 24시간 전" },
@@ -64,11 +66,11 @@ const transformMessagesToSettings = (
 export const useMessageSettings = () => {
   const queryClient = useQueryClient();
   const [activeLectureId, setActiveLectureId] = useState<string | null>(null);
-  const [activeTimingKey, setActiveTimingKey] = useState<string>(
+  const [activeTimingKey, setActiveTimingKey] = useState<TimingKey>(
     timings[0].key,
   );
   const [editing, setEditing] = useState<{
-    timingKey: string;
+    timingKey: TimingKey;
     channel: Channel;
     isNew: boolean;
   } | null>(null);
@@ -153,7 +155,7 @@ export const useMessageSettings = () => {
   );
 
   const handleOpenEditor = (
-    timingKey: string,
+    timingKey: TimingKey,
     channel: Channel,
     isNew: boolean,
   ) => {

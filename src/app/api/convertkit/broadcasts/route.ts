@@ -1,3 +1,4 @@
+import { ConvertKitBroadcast } from "@/utils/convertkit";
 import { NextResponse } from "next/server";
 
 interface ConvertKitSequence {
@@ -8,8 +9,8 @@ interface ConvertKitSequence {
   created_at: string;
 }
 
-interface ConvertKitSequencesResponse {
-  sequences: ConvertKitSequence[];
+interface ConvertKitBroadcastsResponse {
+  broadcasts: ConvertKitBroadcast[];
   pagination: {
     has_previous_page: boolean;
     has_next_page: boolean;
@@ -19,7 +20,9 @@ interface ConvertKitSequencesResponse {
   };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const cursor = searchParams.get("cursor");
   const CONVERTKIT_API_KEY = process.env.CONVERTKIT_API_KEY;
   const CONVERTKIT_BASE_URL = "https://api.kit.com/v4";
 
@@ -32,7 +35,14 @@ export async function GET() {
 
   try {
     // Kit v4 API는 X-Kit-Api-Key 헤더를 사용합니다
-    const response = await fetch(`${CONVERTKIT_BASE_URL}/sequences`, {
+    // per_page 파라미터로 10개만 요청, cursor가 있으면 추가
+    const url = new URL(`${CONVERTKIT_BASE_URL}/broadcasts`);
+    url.searchParams.append("per_page", "10");
+    if (cursor) {
+      url.searchParams.append("after", cursor);
+    }
+    
+    const response = await fetch(url.toString(), {
       headers: {
         "X-Kit-Api-Key": CONVERTKIT_API_KEY,
         "Content-Type": "application/json",
@@ -61,8 +71,11 @@ export async function GET() {
       );
     }
 
-    const data: ConvertKitSequencesResponse = await response.json();
-    return NextResponse.json(data.sequences);
+    const data: ConvertKitBroadcastsResponse = await response.json();
+    return NextResponse.json({
+      broadcasts: data.broadcasts,
+      nextCursor: data.pagination.has_next_page ? data.pagination.end_cursor : null,
+    });
   } catch (error) {
     console.error("ConvertKit 시퀀스 가져오기 실패:", error);
     return NextResponse.json(
