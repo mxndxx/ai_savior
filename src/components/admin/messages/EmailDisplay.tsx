@@ -21,14 +21,14 @@ export const EmailDisplay = ({
     initialPageParam: undefined as string | undefined,
     getNextPageParam: (lastPage) => lastPage.nextCursor,
   });
-  
-  const broadcasts = data?.pages.flatMap(page => page.broadcasts) ?? [];
 
-  // content가 broadcast ID 형식인지 확인
-  const broadcastMatch = content?.match(/^broadcast:(\d+)$/);
-  const selectedBroadcast = broadcastMatch 
-    ? broadcasts.find(b => b.id === parseInt(broadcastMatch[1]))
-    : null;
+  const broadcasts = data?.pages.flatMap((page) => page.broadcasts) ?? [];
+
+  // content가 broadcast ID인지 확인 (숫자만 있는 경우 포함)
+  const selectedBroadcast =
+    content && /^\d+$/.test(content)
+      ? broadcasts.find((b) => b.id === parseInt(content))
+      : null;
 
   if (isEmpty) {
     return (
@@ -55,14 +55,16 @@ export const EmailDisplay = ({
     <div className="flex items-center justify-between rounded-lg border p-4">
       <div className="flex-1 pr-4">
         <h3 className="font-medium text-gray-900">{channelLabel}</h3>
-        {selectedBroadcast ? (
+        {content && /^\d+$/.test(content) ? (
           <div className="mt-1">
             <p className="text-sm font-medium text-gray-700">
-              ConvertKit 브로드캐스트: {selectedBroadcast.name}
+              브로드캐스트 ID: {content}
             </p>
-            <p className="text-sm text-gray-500">
-              제목: {selectedBroadcast.subject}
-            </p>
+            {selectedBroadcast && (
+              <p className="text-sm text-gray-500">
+                {selectedBroadcast.name} - {selectedBroadcast.subject}
+              </p>
+            )}
           </div>
         ) : (
           <p className="mt-1 text-sm whitespace-pre-wrap text-gray-500">

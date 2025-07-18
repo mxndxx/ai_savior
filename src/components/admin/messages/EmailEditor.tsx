@@ -13,7 +13,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
     editText,
     setEditText,
     handleCancelClick,
-    handleSaveClick,
+    handleEmailSaveClick,
     isUpdating,
     isCreating,
   } = useMessageSettingsContext();
@@ -39,10 +39,11 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
   const broadcasts = data?.pages.flatMap((page) => page.broadcasts) ?? [];
 
   useEffect(() => {
-    // editText가 broadcast ID 형식인지 확인
-    const broadcastMatch = editText.match(/^broadcast:(\d+)$/);
-    if (broadcastMatch) {
-      setSelectedBroadcastId(broadcastMatch[1]);
+    // editText가 숫자만 있으면 broadcast ID로 간주
+    if (editText && /^\d+$/.test(editText)) {
+      setSelectedBroadcastId(editText);
+    } else {
+      setSelectedBroadcastId("");
     }
   }, [editText]);
 
@@ -64,7 +65,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
   const handleBroadcastSelect = (broadcast: ConvertKitBroadcast | null) => {
     if (broadcast) {
       setSelectedBroadcastId(broadcast.id.toString());
-      setEditText(`broadcast:${broadcast.id}`);
+      setEditText(broadcast.id.toString()); // 숫자만 저장
     } else {
       setSelectedBroadcastId("");
       setEditText("");
@@ -213,7 +214,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
           <X size={16} />
         </button>
         <button
-          onClick={handleSaveClick}
+          onClick={handleEmailSaveClick}
           disabled={isLoading || (!editText && !selectedBroadcastId)}
           className="rounded-md border border-transparent bg-black px-3 py-1 text-sm text-white hover:bg-gray-800 disabled:opacity-50"
         >
