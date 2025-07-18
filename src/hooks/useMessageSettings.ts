@@ -17,6 +17,7 @@ export const timings: Array<{ key: TimingKey; label: string }> = [
   { key: "before_8", label: "강의 8시간 전" },
   { key: "before_1", label: "강의 1시간 전" },
   { key: "start", label: "강의 시작" },
+  { key: "kit_sequence_id", label: "이메일" },
 ];
 
 interface NotificationChannelSetting {
@@ -65,7 +66,14 @@ const transformMessagesToSettings = (
       if (messageData[key] && newSettings[key]) {
         const content = messageData[key];
         const setting = newSettings[key] as NotificationTimingSetting;
-        setting.sms.content = content;
+
+        // kit_sequence_id는 이메일 전용이므로 email 채널에 저장
+        if (key === "kit_sequence_id") {
+          setting.email.content = content;
+        } else {
+          // 다른 timing들은 SMS에 저장 (기존 로직 유지)
+          setting.sms.content = content;
+        }
       }
       
       // 이메일 타이밍 키들 처리
