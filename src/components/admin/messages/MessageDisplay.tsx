@@ -38,9 +38,9 @@ export const MessageDisplay = ({
     <div className="flex items-center justify-between rounded-lg border p-4">
       <div className="flex-1 pr-4">
         <h3 className="font-medium text-gray-900">{channelLabel}</h3>
-        <p className="mt-1 text-sm whitespace-pre-wrap text-gray-500">
-          {content}
-        </p>
+        <div className="mt-1 max-h-24 overflow-y-auto rounded-md bg-gray-100 p-3 text-sm text-gray-500">
+          <p className="text-sm whitespace-pre-wrap text-gray-500">{content}</p>
+        </div>
       </div>
       <button
         onClick={onEdit}
