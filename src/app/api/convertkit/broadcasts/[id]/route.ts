@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 export async function GET(
   request: Request,
-  props: { params: Promise<{ id: string }> }
+  props: { params: Promise<{ id: string }> },
 ) {
   const CONVERTKIT_API_KEY = process.env.CONVERTKIT_API_KEY;
   const CONVERTKIT_BASE_URL = "https://api.kit.com/v4";
@@ -18,15 +18,12 @@ export async function GET(
   const { id } = params;
 
   try {
-    const response = await fetch(
-      `${CONVERTKIT_BASE_URL}/broadcasts/${id}`,
-      {
-        headers: {
-          "X-Kit-Api-Key": CONVERTKIT_API_KEY,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${CONVERTKIT_BASE_URL}/broadcasts/${id}`, {
+      headers: {
+        "X-Kit-Api-Key": CONVERTKIT_API_KEY,
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       const errorText = await response.text();
@@ -35,7 +32,7 @@ export async function GET(
       if (response.status === 404) {
         return NextResponse.json(
           { error: "브로드캐스트를 찾을 수 없습니다." },
-          { status: 404 }
+          { status: 404 },
         );
       }
 
@@ -44,7 +41,7 @@ export async function GET(
           error: `ConvertKit API 오류: ${response.status}`,
           details: errorText,
         },
-        { status: response.status }
+        { status: response.status },
       );
     }
 
@@ -57,7 +54,7 @@ export async function GET(
         error: "브로드캐스트를 가져오는 중 오류가 발생했습니다.",
         details: error instanceof Error ? error.message : "알 수 없는 오류",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
