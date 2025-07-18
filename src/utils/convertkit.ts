@@ -26,7 +26,25 @@ export const convertKitApi = {
       }
 
       const data: BroadcastsResponse = await response.json();
-      console.log(`ConvertKit 브로드캐스트 데이터: `, data);
+      console.log("ConvertKit 브로드캐스트 전체 데이터: ", data);
+      return data;
+    } catch (error) {
+      console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
+      throw error;
+    }
+  },
+
+  async getBroadcastById(id: string): Promise<ConvertKitBroadcast> {
+    try {
+      const response = await fetch(`/api/convertkit/broadcasts/${id}`);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || `API 오류: ${response.status}`);
+      }
+
+      const data: ConvertKitBroadcast = await response.json();
+      console.log("브로드캐스트 개별 데이터: ", data);
       return data;
     } catch (error) {
       console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);

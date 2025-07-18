@@ -1,5 +1,5 @@
 import { Edit, PlusCircle } from "lucide-react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { convertKitApi } from "@/utils/convertkit";
 
 interface EmailDisplayProps {
@@ -15,20 +15,14 @@ export const EmailDisplay = ({
   isEmpty,
   onEdit,
 }: EmailDisplayProps) => {
-  const { data } = useInfiniteQuery({
-    queryKey: ["convertkit-broadcasts"],
-    queryFn: ({ pageParam }) => convertKitApi.getBroadcasts(pageParam),
-    initialPageParam: undefined as string | undefined,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
+  // content가 broadcast ID인지 확인
+  const isBroadcastId = content && /^\d+$/.test(content);
+  
+  const { data: selectedBroadcast } = useQuery({
+    queryKey: ["convertkit-broadcast", content],
+    queryFn: () => convertKitApi.getBroadcastById(content!),
+    enabled: !!isBroadcastId,
   });
-
-  const broadcasts = data?.pages.flatMap((page) => page.broadcasts) ?? [];
-
-  // content가 broadcast ID인지 확인 (숫자만 있는 경우 포함)
-  const selectedBroadcast =
-    content && /^\d+$/.test(content)
-      ? broadcasts.find((b) => b.id === parseInt(content))
-      : null;
 
   if (isEmpty) {
     return (
@@ -55,7 +49,7 @@ export const EmailDisplay = ({
     <div className="flex items-center justify-between rounded-lg border p-4">
       <div className="flex-1 pr-4">
         <h3 className="font-medium text-gray-900">{channelLabel}</h3>
-        {content && /^\d+$/.test(content) ? (
+        {isBroadcastId ? (
           <div className="mt-1">
             <p className="text-sm font-medium text-gray-700">
               브로드캐스트 ID: {content}
