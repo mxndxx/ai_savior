@@ -42,8 +42,16 @@ export const ChannelSettings = () => {
             );
           }
 
-          const content =
-            notificationSettings?.[activeTimingKey]?.[channel]?.content;
+          // 이메일 채널인 경우 timingKey_email에서 데이터 가져오기
+          let content: string | undefined;
+          if (channel === "email") {
+            const emailTimingKey = `${activeTimingKey}_email` as keyof typeof notificationSettings;
+            content = notificationSettings?.[emailTimingKey]?.[channel]?.content;
+            
+          } else {
+            content = notificationSettings?.[activeTimingKey]?.[channel]?.content;
+          }
+          
           const isEmpty = !content || content === DEFAULT_MESSAGE;
 
           // 이메일 채널인 경우 EmailDisplay 사용

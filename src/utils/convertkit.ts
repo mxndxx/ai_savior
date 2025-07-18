@@ -14,10 +14,10 @@ interface BroadcastsResponse {
 export const convertKitApi = {
   async getBroadcasts(cursor?: string): Promise<BroadcastsResponse> {
     try {
-      const url = cursor 
+      const url = cursor
         ? `/api/convertkit/broadcasts?cursor=${cursor}`
         : "/api/convertkit/broadcasts";
-      
+
       const response = await fetch(url);
 
       if (!response.ok) {
