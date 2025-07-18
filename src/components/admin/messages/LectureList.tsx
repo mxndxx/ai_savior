@@ -1,29 +1,15 @@
 import Image from "next/image";
+import { useMessageSettingsContext } from "./MessageSettingsContext";
 
-interface Lecture {
-  id: string;
-  title: string;
-  thumbnail: string;
-}
-
-interface LectureListProps {
-  lectures: Lecture[];
-  activeLectureId: string | null;
-  onLectureSelect: (lectureId: string) => void;
-}
-
-export default function LectureList({
-  lectures,
-  activeLectureId,
-  onLectureSelect,
-}: LectureListProps) {
+export const LectureList = () => {
+  const { lectures, activeLectureId, setActiveLectureId } = useMessageSettingsContext();
   return (
-    <div className="w-1/3 overflow-y-auto border-r border-gray-200">
+    <div className="w-1/3 flex-shrink-0 overflow-y-auto border-r border-gray-200">
       <nav className="space-y-1 p-2">
         {lectures.map((lecture) => (
           <button
             key={lecture.id}
-            onClick={() => onLectureSelect(lecture.id)}
+            onClick={() => setActiveLectureId(lecture.id)}
             className={`group flex w-full items-center rounded-md p-2 text-sm font-medium ${
               activeLectureId === lecture.id
                 ? "bg-gray-100 text-gray-900"
@@ -45,4 +31,4 @@ export default function LectureList({
       </nav>
     </div>
   );
-}
+};
