@@ -1,14 +1,6 @@
 import { ConvertKitBroadcast } from "@/utils/convertkit";
 import { NextResponse } from "next/server";
 
-interface ConvertKitSequence {
-  id: number;
-  name: string;
-  hold: boolean;
-  repeat: boolean;
-  created_at: string;
-}
-
 interface ConvertKitBroadcastsResponse {
   broadcasts: ConvertKitBroadcast[];
   pagination: {
@@ -41,7 +33,7 @@ export async function GET(request: Request) {
     if (cursor) {
       url.searchParams.append("after", cursor);
     }
-    
+
     const response = await fetch(url.toString(), {
       headers: {
         "X-Kit-Api-Key": CONVERTKIT_API_KEY,
@@ -74,7 +66,9 @@ export async function GET(request: Request) {
     const data: ConvertKitBroadcastsResponse = await response.json();
     return NextResponse.json({
       broadcasts: data.broadcasts,
-      nextCursor: data.pagination.has_next_page ? data.pagination.end_cursor : null,
+      nextCursor: data.pagination.has_next_page
+        ? data.pagination.end_cursor
+        : null,
     });
   } catch (error) {
     console.error("ConvertKit 시퀀스 가져오기 실패:", error);

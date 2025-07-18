@@ -11,71 +11,10 @@ const channelDetails: Record<Channel, { label: string }> = {
   email: { label: "메일" },
 };
 
+const channels: Channel[] = ["sms", "kakaotalk", "email"];
+
 export default function MessagesPage() {
   const messageSettings = useMessageSettings();
-
-  const [selectedSequence, setSelectedSequence] =
-    useState<ConvertKitSequence | null>(null);
-
-  // ConvertKit 시퀀스 목록 가져오기
-  const {
-    data: sequences = [],
-    isLoading: sequencesLoading,
-    error: sequencesError,
-  } = useQuery({
-    queryKey: ["convertkit-sequences"],
-    queryFn: convertKitApi.getSequences,
-  });
-
-  // 저장된 시퀀스 ID가 있을 때 기본 선택 상태로 설정
-  useEffect(() => {
-    // 편집 중이 아닐 때만 자동 재설정
-    if (
-      sequences.length > 0 &&
-      notificationSettings &&
-      activeTimingKey === "kit_sequence_id" &&
-      !editing // 편집 중이 아닐 때만 실행
-    ) {
-      const savedSequenceId =
-        notificationSettings?.kit_sequence_id?.email?.content;
-
-      if (savedSequenceId && savedSequenceId !== DEFAULT_MESSAGE) {
-        const matchingSequence = sequences.find(
-          (seq) => seq.id.toString() === savedSequenceId,
-        );
-
-        if (matchingSequence) {
-          setSelectedSequence(matchingSequence);
-          setEditText(matchingSequence.id.toString());
-        }
-      } else {
-        // 저장된 시퀀스 ID가 없으면 선택 해제
-        setSelectedSequence(null);
-        setEditText("");
-      }
-    }
-  }, [
-    sequences,
-    notificationSettings,
-    activeTimingKey,
-    editing, // editing 상태 추가
-    DEFAULT_MESSAGE,
-    setEditText,
-    // selectedSequence 제거 - 무한 루프 방지
-  ]);
-
-  // 탭이 변경될 때 선택 상태 초기화 (kit_sequence_id가 아닌 경우)
-  useEffect(() => {
-    if (activeTimingKey !== "kit_sequence_id") {
-      setSelectedSequence(null);
-    }
-  }, [activeTimingKey]);
-
-  const handleSequenceSelect = (sequence: ConvertKitSequence) => {
-    console.log("시퀀스 데이터 : ", sequence);
-    setSelectedSequence(sequence);
-    setEditText(sequence.id.toString());
-  };
 
   return (
     <MessageSettingsProvider

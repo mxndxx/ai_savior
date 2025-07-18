@@ -8,7 +8,13 @@ import { type LectureWithCoach } from "@/types/lectures";
 
 const DEFAULT_MESSAGE = "설정된 메시지가 없습니다.";
 
-export type TimingKey = "immediate" | "after_6" | "before_24" | "before_8" | "before_1" | "start";
+export type TimingKey =
+  | "immediate"
+  | "after_6"
+  | "before_24"
+  | "before_8"
+  | "before_1"
+  | "start";
 
 export const timings: Array<{ key: TimingKey; label: string }> = [
   { key: "immediate", label: "신청 즉시" },
@@ -17,7 +23,6 @@ export const timings: Array<{ key: TimingKey; label: string }> = [
   { key: "before_8", label: "강의 8시간 전" },
   { key: "before_1", label: "강의 1시간 전" },
   { key: "start", label: "강의 시작" },
-  { key: "kit_sequence_id", label: "이메일" },
 ];
 
 interface NotificationChannelSetting {
@@ -48,7 +53,7 @@ const transformMessagesToSettings = (
       kakaotalk: { content: DEFAULT_MESSAGE },
       email: { content: DEFAULT_MESSAGE },
     };
-    
+
     // 이메일용 타이밍 키도 초기화
     const emailKey = `${timing.key}_email` as keyof LectureNotificationSettings;
     newSettings[emailKey] = {
@@ -67,22 +72,18 @@ const transformMessagesToSettings = (
         const content = messageData[key];
         const setting = newSettings[key] as NotificationTimingSetting;
 
-        // kit_sequence_id는 이메일 전용이므로 email 채널에 저장
-        if (key === "kit_sequence_id") {
-          setting.email.content = content;
-        } else {
-          // 다른 timing들은 SMS에 저장 (기존 로직 유지)
-          setting.sms.content = content;
-        }
+        setting.sms.content = content;
       }
-      
+
       // 이메일 타이밍 키들 처리
       const emailKey = `${key}_email`;
       if (messageData[emailKey]) {
         const emailTimingKey = emailKey as keyof LectureNotificationSettings;
         if (newSettings[emailTimingKey]) {
           const content = messageData[emailKey];
-          const setting = newSettings[emailTimingKey] as NotificationTimingSetting;
+          const setting = newSettings[
+            emailTimingKey
+          ] as NotificationTimingSetting;
           setting.email.content = content;
         }
       }
@@ -195,16 +196,17 @@ export const useMessageSettings = () => {
       setEditText("");
     } else {
       if (!notificationSettings) return;
-      
+
       // 이메일 채널인 경우 timingKey_email로 저장된 값을 가져옴
       let content: string | undefined;
       if (channel === "email") {
-        const emailTimingKey = `${timingKey}_email` as keyof typeof notificationSettings;
+        const emailTimingKey =
+          `${timingKey}_email` as keyof typeof notificationSettings;
         content = notificationSettings[emailTimingKey]?.[channel]?.content;
       } else {
         content = notificationSettings[timingKey]?.[channel]?.content;
       }
-      
+
       setEditText(content === DEFAULT_MESSAGE ? "" : (content ?? ""));
     }
   };
