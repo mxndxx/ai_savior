@@ -26,7 +26,7 @@ export const convertKitApi = {
       }
 
       const data: BroadcastsResponse = await response.json();
-      console.log("ConvertKit 브로드캐스트 전체 데이터: ", data);
+      // console.log("ConvertKit 브로드캐스트 전체 데이터: ", data);
       return data;
     } catch (error) {
       console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
@@ -44,7 +44,7 @@ export const convertKitApi = {
       }
 
       const data: ConvertKitBroadcast = await response.json();
-      console.log("브로드캐스트 개별 데이터: ", data);
+      // console.log("브로드캐스트 개별 데이터: ", data);
       return data;
     } catch (error) {
       console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
