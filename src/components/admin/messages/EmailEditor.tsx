@@ -97,9 +97,9 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
 
       <div className="mt-2 space-y-2">
         <div ref={dropdownRef} className="relative">
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          {/* <label className="mb-1 block text-sm font-medium text-gray-700">
             ConvertKit 브로드캐스트 선택
-          </label>
+          </label> */}
 
           {/* 커스텀 셀렉트 박스 */}
           <button
@@ -111,7 +111,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
             <span className="block truncate">
               {selectedBroadcast
                 ? `${selectedBroadcast.id} - ${selectedBroadcast.subject}`
-                : "브로드캐스트를 선택하세요"}
+                : "컨버트킷 브로드캐스트를 선택하세요"}
             </span>
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
               <ChevronDown
@@ -174,23 +174,21 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
 
         {selectedBroadcast && (
           <div className="rounded-md bg-gray-50 p-3">
-            <h4 className="mb-1 text-sm font-medium text-gray-700">
-              브로드캐스트 내용:
-            </h4>
-            <div className="max-h-64 overflow-x-hidden overflow-y-auto rounded border border-gray-200 bg-white p-4">
+            <h4 className="mb-1 text-sm font-medium text-gray-700">내용:</h4>
+            <div className="max-h-64 overflow-x-hidden overflow-y-auto rounded border border-gray-200 bg-white">
               {selectedBroadcast.content ? (
                 <div
-                  className="prose prose-sm max-w-none text-gray-600 [&_img]:max-w-full [&_img]:h-auto"
+                  className="prose prose-sm max-w-none px-4 text-gray-600 [&_img]:h-auto [&_img]:max-w-full [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
                   dangerouslySetInnerHTML={{
                     __html: selectedBroadcast.content.replace(
                       /src="(https?:\/\/[^"]+)"/g,
                       (match, url) => {
                         // 네이버 이미지는 프록시 통해 가져오기
-                        if (url.includes('pstatic.net')) {
+                        if (url.includes("pstatic.net")) {
                           return `src="/api/proxy/image?url=${encodeURIComponent(url)}"`;
                         }
                         return match;
-                      }
+                      },
                     ),
                   }}
                 />
