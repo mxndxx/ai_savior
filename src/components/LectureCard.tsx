@@ -23,13 +23,9 @@ export default function LectureCard({
         <LectureImage src={thumbnail} alt={title} />
 
         {/* 뱃지들 - 이미지 밑에 배치 */}
-        <div className="py-2">
-          <div className="py-2 text-2xl">
-            <h3 className="mb-2 line-clamp-2 leading-tight font-bold">
-              {title}
-            </h3>
-            <p className="text-gray mb-3 text-sm">{coach}</p>
-          </div>
+        <div className="py-2 text-2xl">
+          <h3 className="mb-2 line-clamp-2 leading-tight font-bold">{title}</h3>
+          <p className="text-gray mb-3 text-sm">{coach}</p>
         </div>
       </div>
     </Link>
