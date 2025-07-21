@@ -25,7 +25,7 @@ export default function LectureCard({
         {/* 뱃지들 - 이미지 밑에 배치 */}
         <div className="py-2 text-2xl">
           <h3 className="mb-2 line-clamp-2 leading-tight font-bold">{title}</h3>
-          <p className="text-gray mb-3 text-sm">{coach}</p>
+          <p className="text-gray text-sm">{coach}</p>
         </div>
       </div>
     </Link>

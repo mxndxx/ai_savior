@@ -34,14 +34,13 @@ export default function LectureImage({
   }
 
   return (
-    <div className="flex w-full justify-center">
-      <Image
-        src={src}
-        alt={alt}
-        width={width || 480}
-        height={height || 400}
-        className={`rounded-4xl object-contain ${className}`.trim()}
-      />
-    </div>
+    <Image
+      src={src}
+      alt={alt}
+      width={width || 480}
+      height={height || 400}
+      className={`w-full rounded-4xl object-cover ${className}`.trim()}
+      style={{ aspectRatio: "16/9", height: "auto" }}
+    />
   );
 }
