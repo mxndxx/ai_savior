@@ -160,7 +160,7 @@ export default function LectureCarousel({
         onTouchEnd={handleTouchEnd}
       >
         <div
-          className="flex transition-transform duration-500 ease-in-out"
+          className="-mx-2 flex transition-transform duration-500 ease-in-out"
           style={{
             transform: `translateX(-${
               (currentSlide * 100) / currentItemsPerSlide
@@ -168,7 +168,7 @@ export default function LectureCarousel({
             cursor: isDragging ? "grabbing" : "grab",
           }}
         >
-          {lectures.map((lecture, index) => (
+          {lectures.map((lecture) => (
             <div
               key={lecture.id}
               className="flex-shrink-0 px-2"
