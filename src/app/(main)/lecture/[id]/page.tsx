@@ -150,8 +150,8 @@ export default function CourseDetailPage() {
                 <LectureSidebar lecture={lecture} />
               </div>
 
-              <div className="z-10 mt-4 bg-white py-1">
-                <nav className="sticky top-24 flex justify-center bg-white">
+              <div className="z-10 mt-4 bg-white">
+                <nav className="sticky top-24 flex justify-center bg-white py-1 font-bold">
                   {[
                     { id: "intro", label: "강의 소개" },
                     { id: "instructor", label: "강사 소개" },
@@ -159,7 +159,7 @@ export default function CourseDetailPage() {
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
-                      className={`flex-1 px-2 py-4 text-sm font-medium transition-all duration-500 ease-in-out hover:border-b-2 hover:border-violet-600 hover:text-violet-600 ${
+                      className={`flex-1 p-2 text-sm font-bold transition-all duration-500 ease-in-out hover:border-b-2 hover:border-violet-600 hover:text-violet-600 sm:text-base ${
                         activeTab === tab.id
                           ? "border-b-2 border-violet-600 text-violet-600"
                           : "border-b-2 border-transparent text-gray-500 hover:text-gray-700"
