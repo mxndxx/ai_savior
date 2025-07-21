@@ -44,8 +44,8 @@ export function MobileFloatingBar({
           : "pointer-events-none translate-y-full opacity-0"
       }`}
     >
-      <CountdownTimer deadline={lecture.apply_deadline} variant="mobile" />
-      <div className="mx-auto flex w-full max-w-[900px] items-center justify-between rounded-xl bg-[#121212] shadow-md md:border md:border-neutral-800 md:p-[10px] md:pl-[30px]">
+      <CountdownTimer deadline={lecture.apply_deadline} />
+      <div className="mx-auto mt-1 flex w-full max-w-[900px] items-center justify-between rounded-xl bg-[#121212] shadow-md md:border md:border-neutral-800 md:p-[10px] md:pl-[30px]">
         <div className="hidden items-end gap-x-5 md:flex">
           <span className="text-lg font-semibold text-red-500">무료</span>
           <div className="flex items-end gap-x-2">

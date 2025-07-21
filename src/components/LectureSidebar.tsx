@@ -106,10 +106,10 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
 
         <div className="space-y-1 border-b border-gray-200 pb-6">
           <p className="text-sm font-bold text-gray-600">강의정보</p>
-          <div className="flex justify-between">
+          {/* <div className="flex justify-between">
             <span className="font-semibold text-gray-600">카테고리</span>
-            {/* <span>{lecture.category}</span> */}
-          </div>
+            <span>{lecture.category}</span>
+          </div> */}
           <div className="flex justify-between">
             <span className="font-semibold text-gray-600">강사명</span>
             <span>{lecture.coach.name}</span>
@@ -127,12 +127,12 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
         <button
           onClick={handleApplyClick}
           disabled={isLoading}
-          className="hidden w-full rounded-lg bg-violet-600 px-6 py-4 text-lg font-bold text-white transition-colors duration-200 hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50 lg:block"
+          className="w-full rounded-lg bg-violet-600 px-6 py-4 text-lg font-bold text-white transition-colors duration-200 hover:bg-violet-700 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {isLoading ? "신청하는 중..." : "강의 신청하기"}
+          {isLoading ? "신청하는 중..." : "무료강의 신청하기"}
         </button>
 
-        <CountdownTimer deadline={lecture.apply_deadline} variant="desktop" />
+        <CountdownTimer deadline={lecture.apply_deadline} />
       </div>
 
       <InfoModal
