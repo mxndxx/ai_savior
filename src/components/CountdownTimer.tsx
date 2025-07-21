@@ -1,97 +1,86 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 
-export default function CountdownTimer() {
-  const [mounted, setMounted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState({
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
+interface CountdownTimerProps {
+  deadline: string | null;
+  variant?: "desktop" | "mobile";
+}
 
-  useEffect(() => {
-    setMounted(true);
+export function CountdownTimer({ deadline, variant = "desktop" }: CountdownTimerProps) {
+  const timeLeft = useCountdownTimer(deadline);
 
-    const calculateTimeLeft = () => {
-      const targetDate = new Date();
-      targetDate.setDate(targetDate.getDate() + 1);
-      targetDate.setHours(0, 0, 0, 0);
-
-      const now = new Date().getTime();
-      const distance = targetDate.getTime() - now;
-
-      if (distance < 0) {
-        return { hours: 0, minutes: 0, seconds: 0 };
-      }
-
-      const hours = Math.floor(
-        (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-      );
-      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-      return { hours, minutes, seconds };
-    };
-
-    setTimeLeft(calculateTimeLeft());
-
-    const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
-    }, 1000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  if (!mounted) {
+  if (variant === "mobile") {
     return (
-      <div className="mb-8 text-center">
-        <p className="mb-4 text-gray-400">무료 시크릿 특강 신청 마감까지</p>
-        <div className="flex items-center justify-center gap-4 text-4xl font-bold">
-          <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-            <span className="animate-pulse-slow text-blue-500">--</span>
-            <p className="mt-1 text-sm text-gray-400">시간</p>
-          </div>
-          <span className="animate-pulse-slow text-2xl">:</span>
-          <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-            <span className="animate-pulse-slow text-blue-500">--</span>
-            <p className="mt-1 text-sm text-gray-400">분</p>
-          </div>
-          <span className="animate-pulse-slow text-2xl">:</span>
-          <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-            <span className="animate-pulse-slow text-blue-500">--</span>
-            <p className="mt-1 text-sm text-gray-400">초</p>
-          </div>
+      <div className="flex flex-row items-center justify-center gap-2 rounded-[10px] bg-[#F3F4F6] p-2 w-full flex-wrap md:p-4">
+        <div className="hidden text-[20px] font-bold md:block">
+          무료강의 시작까지 남은 시간
         </div>
+        <div className="flex items-center gap-1">
+          <span className="flex items-center gap-1 flex-nowrap">
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.days).padStart(2, "0")[0]}
+            </span>
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.days).padStart(2, "0")[1]}
+            </span>
+            <span className="text-sm font-bold text-gray-500 md:text-lg">
+              일
+            </span>
+          </span>
+          <span className="font-bold text-violet-600 md:text-[32px]"> : </span>
+          <span className="flex items-center gap-1 flex-nowrap">
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.hours).padStart(2, "0")[0]}
+            </span>
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.hours).padStart(2, "0")[1]}
+            </span>
+            <span className="text-sm font-bold text-gray-500 md:text-lg">
+              시
+            </span>
+          </span>
+          <span className="font-bold text-violet-600 md:text-[32px]"> : </span>
+          <span className="flex items-center gap-1 flex-nowrap">
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.minutes).padStart(2, "0")[0]}
+            </span>
+            <span className="aspect-square size-8 flex shrink-0 items-center justify-center rounded-sm bg-white p-1 text-violet-600 font-bold md:size-10 md:rounded-md md:text-2xl">
+              {String(timeLeft.minutes).padStart(2, "0")[1]}
+            </span>
+            <span className="text-sm font-bold text-gray-500 md:text-lg">
+              분
+            </span>
+          </span>
+        </div>
+        <div className="text-sm">선착순 모집! 공 마감됩니다</div>
       </div>
     );
   }
 
   return (
-    <div className="mb-8 text-center">
-      <p className="mb-4 text-gray-400">무료 시크릿 특강 신청 마감까지</p>
-      <div className="flex items-center justify-center gap-4 text-4xl font-bold">
-        <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-          <span className="animate-pulse-slow text-blue-500">
-            {String(timeLeft.hours).padStart(2, "0")}
-          </span>
-          <p className="mt-1 text-sm text-gray-400">시간</p>
-        </div>
-        <span className="animate-pulse-slow text-2xl">:</span>
-        <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-          <span className="animate-pulse-slow text-blue-500">
-            {String(timeLeft.minutes).padStart(2, "0")}
-          </span>
-          <p className="mt-1 text-sm text-gray-400">분</p>
-        </div>
-        <span className="animate-pulse-slow text-2xl">:</span>
-        <div className="min-w-[80px] rounded-lg bg-gray-900 p-4 transition-all hover:bg-gray-800">
-          <span className="animate-pulse-slow text-blue-500">
-            {String(timeLeft.seconds).padStart(2, "0")}
-          </span>
-          <p className="mt-1 text-sm text-gray-400">초</p>
-        </div>
+    <div className="rounded-lg bg-gray-100 p-6 text-center">
+      <p className="mb-2 text-gray-600">강의 시작까지 남은 시간</p>
+      <div className="mb-1 font-bold">
+        <p className="inline-block rounded-lg bg-white p-1 text-3xl text-violet-600">
+          {String(timeLeft.days).padStart(2, "0")}
+        </p>
+        일
       </div>
+      <div className="flex items-center justify-center gap-1 text-3xl font-bold">
+        <p className="inline-block rounded-lg bg-white p-1 text-violet-600">
+          {String(timeLeft.hours).padStart(2, "0")}
+        </p>
+        :{" "}
+        <p className="inline-block rounded-lg bg-white p-1 text-violet-600">
+          {String(timeLeft.minutes).padStart(2, "0")}
+        </p>
+        :{" "}
+        <p className="inline-block rounded-lg bg-white p-1 text-violet-600">
+          {String(timeLeft.seconds).padStart(2, "0")}
+        </p>
+      </div>
+      <p className="mt-2 text-sm">선착순 모집! 곱 마감됩니다</p>
     </div>
   );
 }
