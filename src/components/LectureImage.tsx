@@ -40,7 +40,8 @@ export default function LectureImage({
         alt={alt}
         width={width || 480}
         height={height || 400}
-        className={`rounded-4xl object-contain ${className}`.trim()}
+        className={`mx-auto block rounded-4xl object-cover ${className}`.trim()}
+        style={{ aspectRatio: "16/9", maxWidth: "100%", height: "auto" }}
       />
     </div>
   );
