@@ -135,7 +135,7 @@ export default function CourseDetailPage() {
   return (
     <>
       <div className="min-h-screen bg-white">
-        <div className="mx-auto max-w-6xl">
+        <div className="mx-auto">
           <div className="relative flex flex-col gap-8 lg:flex-row">
             <div className="w-full space-y-4 lg:w-3/5">
               <LectureImage
