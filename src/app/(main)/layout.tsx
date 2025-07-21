@@ -8,7 +8,7 @@ export default function MainLayout({
 }) {
   return (
     <>
-      <div className="mx-5 sm:mx-8 2xl:mx-40">
+      <div className="mx-1 sm:mx-8 2xl:mx-40">
         <Header />
         <div className="min-h-screen pt-28">{children}</div>
       </div>
