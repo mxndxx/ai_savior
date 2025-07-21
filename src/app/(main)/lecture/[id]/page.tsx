@@ -125,7 +125,14 @@ export default function CourseDetailPage() {
   }, [lectureId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-4 border-gray-100 border-t-violet-300"></div>
+          <p className="text-sm text-gray-600">강의 정보를 불러오는 중...</p>
+        </div>
+      </div>
+    );
   }
 
   if (!lecture) {
