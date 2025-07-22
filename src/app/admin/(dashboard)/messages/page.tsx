@@ -6,12 +6,12 @@ import { LectureList } from "@/components/admin/messages/LectureList";
 import { SettingsPanel } from "@/components/admin/messages/SettingsPanel";
 
 const channelDetails: Record<Channel, { label: string }> = {
-  sms: { label: "문자" },
-  kakaotalk: { label: "알림톡" },
+  mms: { label: "문자" },
+  kakao: { label: "알림톡" },
   email: { label: "메일" },
 };
 
-const channels: Channel[] = ["sms", "kakaotalk", "email"];
+const channels: Channel[] = ["mms", "kakao", "email"];
 
 export default function MessagesPage() {
   const messageSettings = useMessageSettings();
