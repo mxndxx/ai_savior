@@ -13,7 +13,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
     editText,
     setEditText,
     handleCancelClick,
-    handleEmailSaveClick,
+    handleSaveClick,
     isUpdating,
     isCreating,
   } = useMessageSettingsContext();
@@ -214,7 +214,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
           <X size={16} />
         </button>
         <button
-          onClick={handleEmailSaveClick}
+          onClick={handleSaveClick}
           disabled={isLoading || (!editText && !selectedBroadcastId)}
 
           className="rounded-md border border-transparent bg-black px-3 py-1 text-sm text-white hover:bg-gray-800 disabled:opacity-50"

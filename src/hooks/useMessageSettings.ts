@@ -29,11 +29,11 @@ interface NotificationChannelSetting {
   content: string;
 }
 
-export type Channel = "sms" | "kakaotalk" | "email";
+export type Channel = "mms" | "kakao" | "email";
 
 interface NotificationTimingSetting {
-  sms: NotificationChannelSetting;
-  kakaotalk: NotificationChannelSetting;
+  mms: NotificationChannelSetting;
+  kakao: NotificationChannelSetting;
   email: NotificationChannelSetting;
 }
 
@@ -49,16 +49,8 @@ const transformMessagesToSettings = (
   // 기본 타이밍 키들 초기화
   timings.forEach((timing) => {
     newSettings[timing.key] = {
-      sms: { content: DEFAULT_MESSAGE },
-      kakaotalk: { content: DEFAULT_MESSAGE },
-      email: { content: DEFAULT_MESSAGE },
-    };
-
-    // 이메일용 타이밍 키도 초기화
-    const emailKey = `${timing.key}_email` as keyof LectureNotificationSettings;
-    newSettings[emailKey] = {
-      sms: { content: DEFAULT_MESSAGE },
-      kakaotalk: { content: DEFAULT_MESSAGE },
+      mms: { content: DEFAULT_MESSAGE },
+      kakao: { content: DEFAULT_MESSAGE },
       email: { content: DEFAULT_MESSAGE },
     };
   });
@@ -68,24 +60,17 @@ const transformMessagesToSettings = (
 
     // 기본 타이밍 키들 처리
     timings.forEach(({ key }) => {
-      if (messageData[key] && newSettings[key]) {
-        const content = messageData[key];
+      if (newSettings[key]) {
         const setting = newSettings[key] as NotificationTimingSetting;
 
-        setting.sms.content = content;
-      }
-
-      // 이메일 타이밍 키들 처리
-      const emailKey = `${key}_email`;
-      if (messageData[emailKey]) {
-        const emailTimingKey = emailKey as keyof LectureNotificationSettings;
-        if (newSettings[emailTimingKey]) {
-          const content = messageData[emailKey];
-          const setting = newSettings[
-            emailTimingKey
-          ] as NotificationTimingSetting;
-          setting.email.content = content;
-        }
+        // 각 채널별로 데이터 설정
+        const channels: Channel[] = ["mms", "kakao", "email"];
+        channels.forEach((channel) => {
+          const dbKey = `${channel}_${key}`;
+          if (messageData[dbKey]) {
+            setting[channel].content = messageData[dbKey];
+          }
+        });
       }
     });
   }
@@ -197,15 +182,8 @@ export const useMessageSettings = () => {
     } else {
       if (!notificationSettings) return;
 
-      // 이메일 채널인 경우 timingKey_email로 저장된 값을 가져옴
-      let content: string | undefined;
-      if (channel === "email") {
-        const emailTimingKey =
-          `${timingKey}_email` as keyof typeof notificationSettings;
-        content = notificationSettings[emailTimingKey]?.[channel]?.content;
-      } else {
-        content = notificationSettings[timingKey]?.[channel]?.content;
-      }
+      // 현재 설정에서 해당 채널의 컨텐츠 가져오기
+      const content = notificationSettings[timingKey]?.[channel]?.content;
 
       setEditText(content === DEFAULT_MESSAGE ? "" : (content ?? ""));
     }
@@ -218,29 +196,16 @@ export const useMessageSettings = () => {
 
   const handleSaveClick = async () => {
     if (!editing || !activeLectureId) return;
-    const { timingKey, isNew } = editing;
+    const { timingKey, channel, isNew } = editing;
+
+    // 채널별로 prefix 적용 (channel이 곧 prefix)
+    const dbTimingKey = `${channel}_${timingKey}`;
 
     const mutation = isNew ? createMessageMutation : updateMessageMutation;
 
     mutation.mutate({
       lectureId: activeLectureId,
-      timingKey,
-      content: editText,
-    });
-  };
-
-  const handleEmailSaveClick = async () => {
-    if (!editing || !activeLectureId) return;
-    const { timingKey, isNew } = editing;
-
-    // 이메일 채널일 때는 timingKey에 _email 붙이기
-    const emailTimingKey = `${timingKey}_email`;
-
-    const mutation = isNew ? createMessageMutation : updateMessageMutation;
-
-    mutation.mutate({
-      lectureId: activeLectureId,
-      timingKey: emailTimingKey,
+      timingKey: dbTimingKey,
       content: editText,
     });
   };
@@ -259,7 +224,6 @@ export const useMessageSettings = () => {
     handleOpenEditor,
     handleCancelClick,
     handleSaveClick,
-    handleEmailSaveClick,
     createMessageMutation,
     updateMessageMutation,
     isCreating: createMessageMutation.isPending,
