@@ -7,6 +7,7 @@ import InfoModal from "@/components/InfoModal";
 import { supabase } from "@/utils/supabase";
 import { leadsApi } from "@/app/api/leads";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { getKakaoUserInfo, updateUserMetadata } from "@/utils/kakao-auth";
 
 export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
   const [modalStatus, setModalStatus] = useState<
@@ -17,11 +18,14 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
   const [user, setUser] = useState<User | null>(null);
   const [applyAfterLogin, setApplyAfterLogin] = useState(false);
 
-  // TODO 에러 처리 필요
+  // TODO 에러 처리 및 비지니스 로직 분리 필
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "kakao",
       options: {
+        queryParams: {
+          scope: "name account_email phone_number",
+        },
         redirectTo: `${window.location.origin}${window.location.pathname}${window.location.search}`,
       },
     });
@@ -39,8 +43,9 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
 
       try {
         await leadsApi.createLead({
-          name: currentUser.user_metadata?.full_name || currentUser.email || "",
+          name: currentUser.user_metadata?.name || "",
           email: currentUser.email || "",
+          phone_number: currentUser.user_metadata?.phone_number || "",
           subscribe: lecture.id,
         });
         setModalStatus("success");
@@ -74,15 +79,75 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
   }, [error]);
 
   useEffect(() => {
+    // 초기 로그인 상태 확인
+    const checkInitialAuth = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (user) {
+        setUser(user);
+
+        // 초기 로드시에도 카카오 API 호출
+        if (
+          user.app_metadata?.provider === "kakao" &&
+          session?.provider_token
+        ) {
+          getKakaoUserInfo(session.provider_token).then((kakaoInfo) => {
+            if (kakaoInfo) {
+              // 전화번호나 이름이 다르면 업데이트
+              const needsUpdate =
+                (kakaoInfo.phoneNumber &&
+                  kakaoInfo.phoneNumber !== user.user_metadata?.phone_number) ||
+                (kakaoInfo.name &&
+                  kakaoInfo.name !== user.user_metadata?.full_name);
+
+              if (needsUpdate) {
+                updateUserMetadata(kakaoInfo.phoneNumber, kakaoInfo.name);
+              }
+            }
+          });
+        }
+      }
+    };
+    checkInitialAuth();
+
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
 
-      if (event === "SIGNED_IN" && session && applyAfterLogin) {
-        setApplyAfterLogin(false);
-        setModalStatus("hidden");
-        handleApply(session.user);
+      if (event === "SIGNED_IN" && session) {
+        // 카카오 로그인 시 추가 사용자 정보 가져오기
+        if (
+          session.user.app_metadata?.provider === "kakao" &&
+          session.provider_token
+        ) {
+          getKakaoUserInfo(session.provider_token).then((kakaoInfo) => {
+            if (kakaoInfo) {
+              // 전화번호나 이름이 다르면 업데이트
+              const needsUpdate =
+                (kakaoInfo.phoneNumber &&
+                  kakaoInfo.phoneNumber !==
+                    session.user.user_metadata?.phone_number) ||
+                (kakaoInfo.name &&
+                  kakaoInfo.name !== session.user.user_metadata?.full_name);
+
+              if (needsUpdate) {
+                updateUserMetadata(kakaoInfo.phoneNumber, kakaoInfo.name);
+              }
+            }
+          });
+        }
+
+        if (applyAfterLogin) {
+          setApplyAfterLogin(false);
+          setModalStatus("hidden");
+          handleApply(session.user);
+        }
       }
     });
 
