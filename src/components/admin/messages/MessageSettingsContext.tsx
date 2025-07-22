@@ -36,7 +36,6 @@ interface MessageSettingsContextType {
   ) => void;
   handleCancelClick: () => void;
   handleSaveClick: () => void;
-  handleEmailSaveClick: () => void;
 }
 
 const MessageSettingsContext = createContext<MessageSettingsContextType | null>(

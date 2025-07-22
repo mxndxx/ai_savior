@@ -15,8 +15,8 @@ export const ChannelSettings = () => {
     DEFAULT_MESSAGE,
   } = useMessageSettingsContext();
   return (
-    <div className="mt-6 relative">
-      <div className="space-y-4 relative">
+    <div className="relative mt-6">
+      <div className="relative space-y-4">
         {channels.map((channel) => {
           const isEditing =
             editing?.timingKey === activeTimingKey &&
@@ -32,7 +32,7 @@ export const ChannelSettings = () => {
                 />
               );
             }
-            
+
             // 다른 채널은 기본 MessageEditor 사용
             return (
               <MessageEditor
@@ -42,16 +42,9 @@ export const ChannelSettings = () => {
             );
           }
 
-          // 이메일 채널인 경우 timingKey_email에서 데이터 가져오기
-          let content: string | undefined;
-          if (channel === "email") {
-            const emailTimingKey = `${activeTimingKey}_email` as keyof typeof notificationSettings;
-            content = notificationSettings?.[emailTimingKey]?.[channel]?.content;
-            
-          } else {
-            content = notificationSettings?.[activeTimingKey]?.[channel]?.content;
-          }
-          
+          const content =
+            notificationSettings?.[activeTimingKey]?.[channel]?.content;
+
           const isEmpty = !content || content === DEFAULT_MESSAGE;
 
           // 이메일 채널인 경우 EmailDisplay 사용
@@ -76,9 +69,7 @@ export const ChannelSettings = () => {
               content={content}
               channelLabel={channelDetails[channel].label}
               isEmpty={isEmpty}
-              onEdit={() =>
-                handleOpenEditor(activeTimingKey, channel, isEmpty)
-              }
+              onEdit={() => handleOpenEditor(activeTimingKey, channel, isEmpty)}
             />
           );
         })}
