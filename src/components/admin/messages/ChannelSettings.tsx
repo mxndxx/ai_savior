@@ -1,8 +1,11 @@
-import { MessageEditor } from "./MessageEditor";
-import { MessageDisplay } from "./MessageDisplay";
-import { EmailEditor } from "./EmailEditor";
-import { EmailDisplay } from "./EmailDisplay";
-import { useMessageSettingsContext } from "./MessageSettingsContext";
+// TODO 컴포넌트 리팩토링 후 절대경로로 통일하기
+import { MessageEditor } from "@/components/admin/messages/MessageEditor";
+import { MessageDisplay } from "@/components/admin/messages/MessageDisplay";
+import { EmailEditor } from "@/components/admin/messages/EmailEditor";
+import { EmailDisplay } from "@/components/admin/messages/EmailDisplay";
+import { KakaoEditor } from "@/components/admin/messages/KakaoEditor";
+import { KakaoDisplay } from "@/components/admin/messages/KakaoDisplay";
+import { useMessageSettingsContext } from "@/components/admin/messages/MessageSettingsContext";
 
 export const ChannelSettings = () => {
   const {
@@ -33,6 +36,16 @@ export const ChannelSettings = () => {
               );
             }
 
+            // 카카오 채널인 경우 KakaoEditor 사용
+            if (channel === "kakao") {
+              return (
+                <KakaoEditor
+                  key={`${channel}-editing`}
+                  channelLabel={channelDetails[channel].label}
+                />
+              );
+            }
+
             // 다른 채널은 기본 MessageEditor 사용
             return (
               <MessageEditor
@@ -51,6 +64,21 @@ export const ChannelSettings = () => {
           if (channel === "email") {
             return (
               <EmailDisplay
+                key={channel}
+                content={content}
+                channelLabel={channelDetails[channel].label}
+                isEmpty={isEmpty}
+                onEdit={() =>
+                  handleOpenEditor(activeTimingKey, channel, isEmpty)
+                }
+              />
+            );
+          }
+
+          // 카카오 채널인 경우 KakaoDisplay 사용
+          if (channel === "kakao") {
+            return (
+              <KakaoDisplay
                 key={channel}
                 content={content}
                 channelLabel={channelDetails[channel].label}
