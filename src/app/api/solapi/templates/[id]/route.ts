@@ -11,7 +11,7 @@ function generateSignature(apiSecret: string, date: string, salt: string) {
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     if (!SOLAPI_API_KEY || !SOLAPI_API_SECRET) {
@@ -21,7 +21,7 @@ export async function GET(
       );
     }
 
-    const templateId = params.id;
+    const { id: templateId } = await params;
 
     // Generate auth headers
     const date = new Date().toISOString();
