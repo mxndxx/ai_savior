@@ -31,13 +31,13 @@ export const KakaoDisplay = ({
     if (template) {
       return (
         <div className="space-y-2">
-          <div className="text-xs text-gray-500">
-            템플릿 ID: {template.templateId}
-          </div>
-          <div className="font-medium">{template.name}</div>
-          <div className="text-sm whitespace-pre-wrap text-gray-600">
-            {template.emphasizeTitle}
-            {template.content}
+          <div className="text-xs text-gray-500">ID: {template.templateId}</div>
+          <div className="font-medium">제목 : {template.name}</div>
+          <div className="max-h-48 max-w-none space-y-1 overflow-y-auto rounded-xl bg-gray-50 p-2 text-sm whitespace-pre-wrap text-gray-600">
+            <p>{template.emphasizeSubtitle}</p>
+            <p className="text-lg font-bold">{template.emphasizeTitle}</p>
+            <hr />
+            <p>{template.content}</p>
           </div>
         </div>
       );
