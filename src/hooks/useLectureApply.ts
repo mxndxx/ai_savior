@@ -4,7 +4,6 @@ import { supabase } from "@/utils/supabase";
 import { leadsApi } from "@/app/api/leads";
 import { getKakaoUserInfo, updateUserMetadata } from "@/utils/kakao-auth";
 import { LectureWithCoach } from "@/types/lectures";
-import { getURL } from "@/utils/helpers";
 
 export function useLectureApply(lecture: LectureWithCoach | null) {
   const [modalStatus, setModalStatus] = useState<
@@ -18,12 +17,11 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
   const handleLogin = async () => {
     // 현재 페이지 경로를 저장
     const currentPath = window.location.pathname + window.location.search;
-    
-    // 배포 환경에서는 getURL()이 https://cddmh.pro/ 를 반환
-    // 개발 환경에서는 http://localhost:3000/ 를 반환
-    const baseURL = getURL();
-    const redirectTo = `${baseURL}api/auth/callback?next=${encodeURIComponent(currentPath)}`;
-    
+
+    // 브라우저의 현재 origin을 사용하여 더 안전하게 처리
+    const baseURL = window.location.origin;
+    const redirectTo = `${baseURL}/api/auth/callback?next=${encodeURIComponent(currentPath)}`;
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "kakao",
       options: {
