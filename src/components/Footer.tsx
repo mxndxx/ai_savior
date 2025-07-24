@@ -98,7 +98,7 @@ export default function Footer() {
               개인정보 보호방침
             </Link>
             <Link
-              href="/terms-of-use"
+              href="/terms-of-service"
               className="hover:text-teal transition-colors"
             >
               이용약관
