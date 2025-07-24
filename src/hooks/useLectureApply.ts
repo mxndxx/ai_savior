@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/utils/supabase";
 import { leadsApi } from "@/app/api/leads";
-import { getKakaoUserInfo, updateUserMetadata } from "@/utils/kakao-auth";
 import { LectureWithCoach } from "@/types/lectures";
 
 export function useLectureApply(lecture: LectureWithCoach | null) {
@@ -88,25 +87,6 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        // 카카오 사용자 정보 업데이트 체크
-        if (
-          user.app_metadata?.provider === "kakao" &&
-          user.user_metadata?.provider_token
-        ) {
-          const kakaoInfo = await getKakaoUserInfo(
-            user.user_metadata.provider_token,
-          );
-          if (kakaoInfo && (kakaoInfo.name || kakaoInfo.phoneNumber)) {
-            const needsUpdate =
-              (kakaoInfo.phoneNumber &&
-                kakaoInfo.phoneNumber !== user.user_metadata?.phone_number) ||
-              (kakaoInfo.name && kakaoInfo.name !== user.user_metadata?.name);
-
-            if (needsUpdate) {
-              await updateUserMetadata(kakaoInfo.phoneNumber, kakaoInfo.name);
-            }
-          }
-        }
         setUser(user);
       }
     };
@@ -119,36 +99,19 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
       if (session?.user) {
         setUser(session.user);
 
-        // 카카오 로그인 시 추가 사용자 정보 가져오기
-        if (
-          event === "SIGNED_IN" &&
-          session.user.app_metadata?.provider === "kakao"
-        ) {
-          const providerToken =
-            session.provider_token ||
-            session.user.user_metadata?.provider_token;
-          if (providerToken) {
-            const kakaoInfo = await getKakaoUserInfo(providerToken);
-            if (kakaoInfo && (kakaoInfo.name || kakaoInfo.phoneNumber)) {
-              const needsUpdate =
-                (kakaoInfo.phoneNumber &&
-                  kakaoInfo.phoneNumber !==
-                    session.user.user_metadata?.phone_number) ||
-                (kakaoInfo.name &&
-                  kakaoInfo.name !== session.user.user_metadata?.name);
-
-              if (needsUpdate) {
-                await updateUserMetadata(kakaoInfo.phoneNumber, kakaoInfo.name);
-              }
-            }
-          }
-        }
-
         // 로그인 후 자동 신청
         if (event === "SIGNED_IN" && applyAfterLogin) {
-          setApplyAfterLogin(false);
-          setModalStatus("hidden");
-          handleApply(session.user);
+          // 서버에서 사용자 정보를 업데이트한 후 최신 정보 가져오기
+          const {
+            data: { user: updatedUser },
+          } = await supabase.auth.getUser();
+
+          if (updatedUser) {
+            setUser(updatedUser);
+            setApplyAfterLogin(false);
+            setModalStatus("hidden");
+            handleApply(updatedUser);
+          }
         }
       } else {
         setUser(null);
