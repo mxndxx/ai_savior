@@ -69,11 +69,45 @@ export async function GET(request: NextRequest) {
               updates.name = kakaoData.kakao_account.name;
             }
 
-            // 메타데이터 업데이트
-            if (Object.keys(updates).length > 0) {
-              await supabase.auth.updateUser({
-                data: updates,
-              });
+            // 필수 정보가 없으면 에러 발생
+            if (!updates.name || !updates.phone_number) {
+              console.error(
+                "Critical: Missing required user info from Kakao:",
+                {
+                  kakaoAccount: kakaoData.kakao_account,
+                  properties: kakaoData.properties,
+                  updates: updates,
+                },
+              );
+
+              // 에러 페이지로 리다이렉트
+              return NextResponse.redirect(
+                `${requestUrl.origin}/error?message=${encodeURIComponent("카카오 계정에서 필수 정보(이름, 전화번호)를 가져올 수 없습니다. 카카오 계정 설정을 확인해주세요.")}`,
+              );
+            }
+
+            // profiles 테이블에 데이터 저장
+            const profileData = {
+              id: session.user.id,
+              email: session.user.email || "",
+              name: updates.name,
+              phone_number: updates.phone_number,
+              updated_at: new Date().toISOString(),
+            };
+
+            const { data: profileResult, error: profileError } = await supabase
+              .from("profiles")
+              .upsert(profileData)
+              .select();
+
+            // TODO 에러 핸들링 공통 분리
+            if (profileError) {
+              console.error("Profile upsert error:", profileError);
+            } else {
+              console.log(
+                "Profile created/updated successfully:",
+                profileResult,
+              );
             }
           }
         } catch (error) {
