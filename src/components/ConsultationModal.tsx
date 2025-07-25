@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { useEffect } from "react";
 import ModalPortal from "@/components/ModalPortal";
+import KakaoLoginButton from "@/components/KakaoLoginButton";
+import { useFunnelApply } from "@/hooks/useFunnelApply";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -14,18 +14,17 @@ export default function ConsultationModal({
   isOpen,
   onClose,
 }: ConsultationModalProps) {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
+  const { handleKakaoLogin, isLoading, error } = useFunnelApply();
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    sessionStorage.setItem("userName", formData.name);
-    router.push("/detail");
-    onClose();
+    handleKakaoLogin();
   };
 
   if (!isOpen) return null;
@@ -64,49 +63,12 @@ export default function ConsultationModal({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="이름을 입력해주세요"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  placeholder="이메일을 입력해주세요"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  placeholder="연락처를 입력해주세요"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="flex h-14 w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] text-lg font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
+              <KakaoLoginButton
+                onClick={handleKakaoLogin}
+                isLoading={isLoading}
               >
-                AI 최대표에게 제출하기
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
+                카카오로 3초 만에 시작하기
+              </KakaoLoginButton>
             </form>
 
             <div className="rounded-lg bg-gray-50 p-3 text-center text-sm text-gray-500">
