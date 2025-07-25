@@ -1,11 +1,7 @@
 import { supabase } from "@/utils/supabase";
 
-interface LeadData {
-  subscribe: string;
-}
-
 export const leadsApi = {
-  createLead: async (leadData: LeadData): Promise<void> => {
+  createLead: async (subscribe?: string | null): Promise<void> => {
     const {
       data: { user },
       error: authError,
@@ -18,7 +14,7 @@ export const leadsApi = {
     const { error } = await supabase.from("leads").insert([
       {
         user_id: user.id,
-        subscribe: leadData.subscribe,
+        subscribe: subscribe,
       },
     ]);
 

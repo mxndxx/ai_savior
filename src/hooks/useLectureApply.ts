@@ -18,9 +18,7 @@ export function useLectureApply(lectureId: string | null) {
     setApplyError(null);
 
     try {
-      await leadsApi.createLead({
-        subscribe: lectureId,
-      });
+      await leadsApi.createLead(lectureId);
       setModalStatus("success");
     } catch (err) {
       if (err instanceof Error) {

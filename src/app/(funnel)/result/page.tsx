@@ -3,9 +3,13 @@
 import { useState, useEffect } from "react";
 import { Suspense } from "react";
 import { CheckCircle, ArrowRight, Zap, Target, TrendingUp } from "lucide-react";
+import { leadsApi } from "@/app/api/leads";
+import ModalPortal from "@/components/ModalPortal";
 
 function ResultPageContent() {
   const [name, setName] = useState("회원");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // sessionStorage에서 이름 가져오기
   useEffect(() => {
@@ -14,6 +18,21 @@ function ResultPageContent() {
       setName(userName);
     }
   }, []);
+
+  const handleApply = async () => {
+    setIsLoading(true);
+    try {
+      await leadsApi.createLead();
+      // 성공 시 모달 표시
+      setShowSuccessModal(true);
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : "신청 중 오류가 발생했습니다.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -206,9 +225,19 @@ function ResultPageContent() {
               </div>
             </div>
 
-            <button className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl">
-              지금 비법서 받기
-              <ArrowRight className="ml-3 h-6 w-6" />
+            <button
+              onClick={handleApply}
+              disabled={isLoading}
+              className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLoading ? (
+                "처리 중..."
+              ) : (
+                <>
+                  지금 비법서 받기
+                  <ArrowRight className="ml-3 h-6 w-6" />
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -223,6 +252,39 @@ function ResultPageContent() {
           </div>
         </div>
       </footer>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <ModalPortal>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+              <div className="absolute top-4 right-4">
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="cursor-pointer text-2xl text-gray-400 hover:text-gray-600"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="mt-2 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
+                </div>
+                <h2 className="mb-2 text-xl font-bold">비법서 신청 완료!</h2>
+                <p className="mb-6 whitespace-pre-line text-gray-600">
+                  {"비법서 신청이 완료되었습니다.\n 카카오톡으로 전송됩니다."}
+                </p>
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-4 py-3 font-bold text-white transition-all hover:from-[#B91C1C] hover:to-[#991B1B]"
+                >
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
+      )}
     </div>
   );
 }
