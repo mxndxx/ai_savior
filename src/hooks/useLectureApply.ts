@@ -37,33 +37,27 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
     }
   };
 
-  const handleApply = useCallback(
-    async (currentUser: User) => {
-      if (!lecture) return;
+  const handleApply = useCallback(async () => {
+    if (!lecture) return;
 
-      setIsLoading(true);
-      setError(null);
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        await leadsApi.createLead({
-          name: currentUser.user_metadata?.name || "",
-          email: currentUser.email || "",
-          phone_number: currentUser.user_metadata?.phone_number || "",
-          subscribe: lecture.id,
-        });
-        setModalStatus("success");
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError("알 수 없는 오류가 발생하여 신청에 실패했습니다.");
-        }
-      } finally {
-        setIsLoading(false);
+    try {
+      await leadsApi.createLead({
+        subscribe: lecture.id,
+      });
+      setModalStatus("success");
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("오류가 발생하여 신청에 실패했습니다.");
       }
-    },
-    [lecture],
-  );
+    } finally {
+      setIsLoading(false);
+    }
+  }, [lecture]);
 
   const handleApplyClick = () => {
     if (!user) {
@@ -71,7 +65,7 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
       setModalStatus("login");
       return;
     }
-    handleApply(user);
+    handleApply();
   };
 
   useEffect(() => {
@@ -101,6 +95,7 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
 
         // 로그인 후 자동 신청
         if (event === "SIGNED_IN" && applyAfterLogin) {
+          // TODO 꼭 필요한 로직인지? 검증 필
           // 서버에서 사용자 정보를 업데이트한 후 최신 정보 가져오기
           const {
             data: { user: updatedUser },
@@ -110,7 +105,7 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
             setUser(updatedUser);
             setApplyAfterLogin(false);
             setModalStatus("hidden");
-            handleApply(updatedUser);
+            handleApply();
           }
         }
       } else {
