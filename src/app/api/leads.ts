@@ -1,9 +1,6 @@
 import { supabase } from "@/utils/supabase";
 
 interface LeadData {
-  name: string;
-  email: string;
-  phone_number?: string;
   subscribe: string;
 }
 
@@ -18,18 +15,9 @@ export const leadsApi = {
       throw new Error("인증이 필요합니다. 로그인 후 다시 시도해주세요.");
     }
 
-    if (user.email !== leadData.email) {
-      console.warn(
-        "Lead email does not match authenticated user email.",
-        `Authenticated: ${user.email}, Lead: ${leadData.email}`,
-      );
-    }
-
     const { error } = await supabase.from("leads").insert([
       {
-        name: leadData.name,
-        email: leadData.email,
-        phone_number: leadData.phone_number,
+        user_id: user.id,
         subscribe: leadData.subscribe,
       },
     ]);
