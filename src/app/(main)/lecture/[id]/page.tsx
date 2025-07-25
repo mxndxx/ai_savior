@@ -18,7 +18,7 @@ export default function CourseDetailPage() {
   const [loading, setLoading] = useState(true);
 
   // 커스텀 훅 사용
-  const { isLoading, handleApplyClick } = useLectureApply(lecture);
+  const { isLoading, handleApplyClick } = useLectureApply(lectureId);
 
   useEffect(() => {
     const fetchLecture = async () => {

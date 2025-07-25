@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback } from "react";
 import { User } from "@supabase/supabase-js";
 import { supabase } from "@/utils/supabase";
 import { leadsApi } from "@/app/api/leads";
-import { LectureWithCoach } from "@/types/lectures";
 
-export function useLectureApply(lecture: LectureWithCoach | null) {
+export function useLectureApply(lectureId: string | null) {
   const [modalStatus, setModalStatus] = useState<
     "hidden" | "login" | "success"
   >("hidden");
@@ -38,14 +37,14 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
   };
 
   const handleApply = useCallback(async () => {
-    if (!lecture) return;
+    if (!lectureId) return;
 
     setIsLoading(true);
     setError(null);
 
     try {
       await leadsApi.createLead({
-        subscribe: lecture.id,
+        subscribe: lectureId,
       });
       setModalStatus("success");
     } catch (err) {
@@ -57,7 +56,7 @@ export function useLectureApply(lecture: LectureWithCoach | null) {
     } finally {
       setIsLoading(false);
     }
-  }, [lecture]);
+  }, [lectureId]);
 
   const handleApplyClick = () => {
     if (!user) {
