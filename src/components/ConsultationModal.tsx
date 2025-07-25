@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import ModalPortal from "@/components/ModalPortal";
+import KakaoLoginButton from "@/components/KakaoLoginButton";
 import { useFunnelApply } from "@/hooks/useFunnelApply";
 
 interface ConsultationModalProps {
@@ -62,20 +63,12 @@ export default function ConsultationModal({
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="flex h-14 w-full transform items-center justify-center rounded-lg bg-[#FEE500] text-lg font-bold text-[#191919] shadow-lg transition-all duration-300 hover:bg-[#FDD835] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+              <KakaoLoginButton
+                onClick={handleKakaoLogin}
+                isLoading={isLoading}
               >
-                {isLoading ? (
-                  <span>로그인 중...</span>
-                ) : (
-                  <>
-                    <span className="mr-2 text-xl">💬</span>
-                    <span>카카오로 3초 만에 시작하기</span>
-                  </>
-                )}
-              </button>
+                카카오로 3초 만에 시작하기
+              </KakaoLoginButton>
             </form>
 
             <div className="rounded-lg bg-gray-50 p-3 text-center text-sm text-gray-500">
