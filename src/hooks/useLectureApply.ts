@@ -10,6 +10,7 @@ export function useLectureApply(lectureId: string | null) {
   const [isApplying, setIsApplying] = useState(false);
   const [applyError, setApplyError] = useState<string | null>(null);
   const [applyAfterLogin, setApplyAfterLogin] = useState(false);
+  const [isApplied, setIsApplied] = useState(false);
 
   const handleApply = useCallback(async () => {
     if (!lectureId) return;
@@ -20,6 +21,7 @@ export function useLectureApply(lectureId: string | null) {
     try {
       await leadsApi.createLead(lectureId);
       setModalStatus("success");
+      setIsApplied(true); // 신청 성공 시 상태 업데이트
     } catch (err) {
       if (err instanceof Error) {
         setApplyError(err.message);
@@ -31,19 +33,31 @@ export function useLectureApply(lectureId: string | null) {
     }
   }, [lectureId]);
 
-  const onLoginSuccess = useCallback((user: User) => {
-    if (applyAfterLogin) {
-      setApplyAfterLogin(false);
-      setModalStatus("hidden");
-      handleApply();
-    }
-  }, [applyAfterLogin, handleApply]);
+  const onLoginSuccess = useCallback(
+    (user: User) => {
+      if (applyAfterLogin) {
+        setApplyAfterLogin(false);
+        setModalStatus("hidden");
+        handleApply();
+      }
+    },
+    [applyAfterLogin, handleApply],
+  );
 
   const { user, handleKakaoLogin, error, isLoading } = useKakaoAuth({
     onLoginSuccess,
   });
 
+  // 신청 여부 확인
+  useEffect(() => {
+    if (user && lectureId) {
+      leadsApi.isApplied(lectureId).then(setIsApplied);
+    }
+  }, [user, lectureId]);
+
   const handleApplyClick = () => {
+    if (isApplied) return;
+
     if (!user) {
       setApplyAfterLogin(true);
       setModalStatus("login");
@@ -73,5 +87,6 @@ export function useLectureApply(lectureId: string | null) {
     user,
     handleLogin: handleKakaoLogin,
     handleApplyClick,
+    isApplied,
   };
 }
