@@ -12,7 +12,7 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
     isLoading,
     handleLogin,
     handleApplyClick,
-  } = useLectureApply(lecture);
+  } = useLectureApply(lecture.id);
 
   return (
     <div className="h-fit lg:sticky lg:top-28">
