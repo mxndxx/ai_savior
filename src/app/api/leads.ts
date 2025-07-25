@@ -1,6 +1,31 @@
 import { supabase } from "@/utils/supabase";
 
 export const leadsApi = {
+  isApplied: async (lectureId: string): Promise<boolean> => {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from("leads")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("subscribe", lectureId)
+      .single();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Error checking lead:", error);
+      return false;
+    }
+
+    return !!data;
+  },
+
   createLead: async (subscribe?: string | null): Promise<void> => {
     const {
       data: { user },
