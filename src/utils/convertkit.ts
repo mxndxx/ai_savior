@@ -26,7 +26,7 @@ export const convertKitApi = {
 
       const data: EmailTemplatesResponse = await response.json();
 
-      console.log(data);
+      // console.log(data);
       return data;
     } catch (error) {
       console.error("ConvertKit 이메일 템플릿 가져오기 실패:", error);

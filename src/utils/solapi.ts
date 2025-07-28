@@ -46,7 +46,7 @@ export const solapiApi = {
       }
 
       const data: SolapiTemplate = await response.json();
-      console.log("솔라피 api 단일 호출 : ", data);
+      // console.log("솔라피 api 단일 호출 : ", data);
       return data;
     } catch (error) {
       console.error("Solapi 알림톡 템플릿 가져오기 실패:", error);
