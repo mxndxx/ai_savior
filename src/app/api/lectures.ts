@@ -4,7 +4,7 @@ import { storageApi } from "@/app/api/storage";
 
 export interface CreateLectureParams {
   formData: CreateLectureForm;
-  thumbnailFile: File;
+  thumbnailFile?: File;
   contentImageFiles?: File[];
   isDuplicate?: boolean;
 }
