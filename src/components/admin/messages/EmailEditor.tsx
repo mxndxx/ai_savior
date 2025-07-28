@@ -19,13 +19,6 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
     };
   };
 
-  const renderContent = (template: { id: string | number; title: string }) => {
-    return (
-      <div className="p-4 text-sm text-gray-600">
-        <p className="font-medium">{template.title}</p>
-      </div>
-    );
-  };
 
   // Store template metadata for saving later
   const handleTemplateSelect = (template: any) => {
@@ -44,7 +37,6 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
       channelLabel={channelLabel}
       channel="email"
       fetchTemplates={fetchTemplates}
-      renderContent={renderContent}
       onTemplateSelect={handleTemplateSelect}
     />
   );

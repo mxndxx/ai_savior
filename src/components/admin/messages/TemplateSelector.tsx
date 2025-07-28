@@ -195,18 +195,11 @@ export const TemplateSelector = ({
           )}
         </div>
 
-        {selectedTemplate && (
+        {renderContent && selectedTemplate && (
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-gray-700">미리보기</h4>
             <div className="max-h-64 overflow-x-hidden overflow-y-auto rounded-xl border border-gray-200 bg-gray-50">
-              {renderContent ? (
-                renderContent(selectedTemplate)
-              ) : (
-                <p className="p-4 text-sm text-gray-600">
-                  {selectedTemplate.content ||
-                    `제목: ${selectedTemplate.title}`}
-                </p>
-              )}
+              {renderContent(selectedTemplate)}
             </div>
           </div>
         )}
