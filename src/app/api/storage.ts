@@ -1,6 +1,27 @@
 import { supabase } from "@/utils/supabase";
 
 export const storageApi = {
+  downloadAndUploadFile: async (
+    imageUrl: string,
+    bucket: string,
+  ): Promise<string> => {
+    try {
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error(`이미지 다운로드 실패: ${response.statusText}`);
+      }
+
+      const blob = await response.blob();
+      const fileName = `${Date.now()}-duplicated-${Math.random().toString(36).substring(7)}.${blob.type.split('/')[1] || 'jpg'}`;
+      
+      const file = new File([blob], fileName, { type: blob.type });
+      return await storageApi.uploadFile(file, bucket);
+    } catch (error) {
+      console.error('이미지 복제 중 오류:', error);
+      throw new Error('이미지 복제에 실패했습니다.');
+    }
+  },
+
   uploadFile: async (
     file: File,
     bucket: string,
