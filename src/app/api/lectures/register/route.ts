@@ -79,7 +79,8 @@ export async function POST(request: Request) {
       },
     );
 
-    return NextResponse.json({ success: true });
+    const result = await webhookResponse.json();
+    return NextResponse.json(result);
   } catch (error) {
     console.error("Webhook 호출 오류:", error);
     return NextResponse.json(
