@@ -21,11 +21,8 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
 
   const renderContent = (template: { id: string | number; title: string }) => {
     return (
-      <div className="text-sm text-gray-600 p-4">
+      <div className="p-4 text-sm text-gray-600">
         <p className="font-medium">{template.title}</p>
-        <p className="text-xs text-gray-400 mt-2">
-          (이메일 템플릿 내용은 ConvertKit에서 관리됩니다)
-        </p>
       </div>
     );
   };
@@ -35,7 +32,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
     if (template) {
       setEmailTemplateMetadata({
         id: template.id as number,
-        name: template.title
+        name: template.title,
       });
     } else {
       setEmailTemplateMetadata(null);
