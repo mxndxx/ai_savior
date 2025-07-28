@@ -49,7 +49,7 @@ export async function GET(
 
     const template = await response.json();
 
-    console.log("Solapi template API response:", template);
+    // console.log("Solapi template API response:", template);
 
     // Transform the response to match our interface
     return NextResponse.json({

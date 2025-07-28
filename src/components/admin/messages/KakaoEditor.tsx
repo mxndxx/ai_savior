@@ -9,7 +9,7 @@ interface KakaoEditorProps {
 export const KakaoEditor = ({ channelLabel }: KakaoEditorProps) => {
   const fetchTemplates = async (cursor?: string) => {
     const data = await solapiApi.getTemplates(cursor);
-    console.log(data);
+
     return {
       templates: data.templates.map((t) => ({
         id: t.templateId,
