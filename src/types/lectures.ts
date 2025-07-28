@@ -35,7 +35,6 @@ export interface Lecture {
   content_text: string;
   url: string;
   start_date: string; // ISO string format
-  apply_deadline: string; // ISO string format (date only)
   price: string;
   coach_id: string; // 강사 ID 추가
   updated_at?: string;
@@ -50,7 +49,6 @@ export interface CreateLectureForm {
   content_text?: string;
   url: string;
   start_date: string;
-  apply_deadline: string;
   price: string;
   coach_id: string; // 강사 ID 추가
 }

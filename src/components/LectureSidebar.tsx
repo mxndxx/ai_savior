@@ -62,7 +62,7 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
               : "무료강의 신청하기"}
         </button>
 
-        <CountdownTimer deadline={lecture.apply_deadline} />
+        <CountdownTimer deadline={lecture.start_date} />
       </div>
 
       <InfoModal

@@ -4,16 +4,18 @@ import { storageApi } from "@/app/api/storage";
 
 export interface CreateLectureParams {
   formData: CreateLectureForm;
-  thumbnailFile: File;
+  thumbnailFile?: File;
   contentImageFiles?: File[];
+  isDuplicate?: boolean;
 }
 
 export const lecturesApi = {
-  // 강의 생성
+  // 강의 생성 (복제 포함)
   createLecture: async ({
     formData,
     thumbnailFile,
     contentImageFiles,
+    isDuplicate = false,
   }: CreateLectureParams): Promise<Lecture> => {
     try {
       // 1. 현재 사용자 인증 상태 확인
@@ -26,19 +28,31 @@ export const lecturesApi = {
         throw new Error("인증이 필요합니다. 로그인 후 다시 시도해주세요.");
       }
 
-      // 2. 이미지 파일들 업로드
-      const thumbnailUrl = await storageApi.uploadFile(
-        thumbnailFile,
-        "lecture-thumbnails",
-      );
-
+      let thumbnailUrl: string | null;
       let contentImagesUrl: string | null = null;
-      if (contentImageFiles && contentImageFiles.length > 0) {
-        const uploadPromises = contentImageFiles.map((file) =>
-          storageApi.uploadFile(file, "lecture-content-images"),
+
+      if (isDuplicate) {
+        // 복제 모드: 기존 이미지 URL 사용
+        thumbnailUrl = formData.thumbnail;
+        contentImagesUrl = formData.content_image;
+      } else {
+        // 일반 생성 모드: 새 이미지 업로드
+        if (!thumbnailFile) {
+          throw new Error("썸네일 이미지는 필수입니다.");
+        }
+
+        thumbnailUrl = await storageApi.uploadFile(
+          thumbnailFile,
+          "lecture-thumbnails",
         );
-        const urls = await Promise.all(uploadPromises);
-        contentImagesUrl = urls.join(",");
+
+        if (contentImageFiles && contentImageFiles.length > 0) {
+          const uploadPromises = contentImageFiles.map((file) =>
+            storageApi.uploadFile(file, "lecture-content-images"),
+          );
+          const urls = await Promise.all(uploadPromises);
+          contentImagesUrl = urls.join(",");
+        }
       }
 
       // 2. 데이터베이스에 강의 데이터 삽입
@@ -51,7 +65,6 @@ export const lecturesApi = {
         content_url: formData.content_url,
         url: formData.url,
         start_date: formData.start_date,
-        apply_deadline: formData.apply_deadline,
         price: formData.price,
         coach_id: formData.coach_id,
       };
@@ -76,7 +89,6 @@ export const lecturesApi = {
         content_url: insertedLecture.content_url,
         url: insertedLecture.url,
         start_date: insertedLecture.start_date,
-        apply_deadline: insertedLecture.apply_deadline,
         price: insertedLecture.price,
         coach_id: insertedLecture.coach_id,
         updated_at: insertedLecture.updated_at,
@@ -225,7 +237,6 @@ export const lecturesApi = {
         content_url: updatedLecture.content_url,
         url: updatedLecture.url,
         start_date: updatedLecture.start_date,
-        apply_deadline: updatedLecture.apply_deadline,
         price: updatedLecture.price,
         coach_id: updatedLecture.coach_id,
         updated_at: updatedLecture.updated_at,
