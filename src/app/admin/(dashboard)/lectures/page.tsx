@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { LectureWithCoach } from "@/types/lectures";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Copy } from "lucide-react";
 import Image from "next/image";
 import LectureModal from "@/components/admin/lectures/LectureModal";
 import { lecturesApi } from "@/app/api/lectures";
@@ -11,6 +11,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 export default function LecturesPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [isDuplicateMode, setIsDuplicateMode] = useState(false);
   const [selectedLecture, setSelectedLecture] =
     useState<LectureWithCoach | null>(null);
   const queryClient = useQueryClient();
@@ -57,10 +58,17 @@ export default function LecturesPage() {
     }
   };
 
-  // 모달 열기 (생성/수정 통합)
-  const openModal = (lecture: LectureWithCoach | null = null) => {
-    setIsEditMode(!!lecture); // lecture가 있으면 수정 모드, 없으면 생성 모드
-    setSelectedLecture(lecture);
+  // 모달 열기 (생성/수정/복제 통합)
+  const openModal = (lecture: LectureWithCoach | null = null, duplicate: boolean = false) => {
+    if (duplicate && lecture) {
+      setIsEditMode(false);
+      setIsDuplicateMode(true);
+      setSelectedLecture(lecture);
+    } else {
+      setIsEditMode(!!lecture && !duplicate);
+      setIsDuplicateMode(false);
+      setSelectedLecture(lecture);
+    }
     setIsModalOpen(true);
   };
 
@@ -68,6 +76,7 @@ export default function LecturesPage() {
   const closeModal = () => {
     setIsModalOpen(false);
     setIsEditMode(false);
+    setIsDuplicateMode(false);
     setSelectedLecture(null);
   };
 
@@ -179,12 +188,21 @@ export default function LecturesPage() {
                           <button
                             onClick={() => openModal(lecture)}
                             className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
+                            title="수정"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
+                            onClick={() => openModal(lecture, true)}
+                            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-green-600"
+                            title="복제"
+                          >
+                            <Copy className="h-4 w-4" />
+                          </button>
+                          <button
                             onClick={() => handleDeleteLecture(lecture)}
                             className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600"
+                            title="삭제"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
@@ -203,6 +221,7 @@ export default function LecturesPage() {
         isOpen={isModalOpen}
         onClose={closeModal}
         isEdit={isEditMode}
+        isDuplicate={isDuplicateMode}
         lectureData={selectedLecture}
       />
     </div>
