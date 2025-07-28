@@ -2,7 +2,7 @@
  * 전화번호를 010 형식으로 포맷팅하는 유틸리티 함수
  * 
  * @param phoneNumber - 포맷팅할 전화번호 (예: "+82 10-8013-3731", "+821080133731", "010-8013-3731")
- * @returns 010-XXXX-XXXX 형식의 전화번호
+ * @returns 01012345678 형식의 전화번호 (하이픈 없음)
  */
 export function formatPhoneNumberToKorean(phoneNumber: string): string {
   if (!phoneNumber) {
@@ -18,7 +18,7 @@ export function formatPhoneNumberToKorean(phoneNumber: string): string {
     
     // +82 10으로 시작하는 경우
     if (withoutCountryCode.startsWith("10") && withoutCountryCode.length === 10) {
-      return `010-${withoutCountryCode.substring(2, 6)}-${withoutCountryCode.substring(6)}`;
+      return `010${withoutCountryCode.substring(2)}`;
     }
   }
   
@@ -27,18 +27,18 @@ export function formatPhoneNumberToKorean(phoneNumber: string): string {
     const withoutCountryCode = numbersOnly.substring(2);
     
     if (withoutCountryCode.startsWith("10") && withoutCountryCode.length === 10) {
-      return `010-${withoutCountryCode.substring(2, 6)}-${withoutCountryCode.substring(6)}`;
+      return `010${withoutCountryCode.substring(2)}`;
     }
   }
 
   // 010으로 시작하는 경우 (이미 한국 형식)
   if (numbersOnly.startsWith("010") && numbersOnly.length === 11) {
-    return `010-${numbersOnly.substring(3, 7)}-${numbersOnly.substring(7)}`;
+    return numbersOnly;
   }
 
   // 10으로 시작하고 10자리인 경우 (010에서 0 누락)
   if (numbersOnly.startsWith("10") && numbersOnly.length === 10) {
-    return `010-${numbersOnly.substring(2, 6)}-${numbersOnly.substring(6)}`;
+    return `010${numbersOnly.substring(2)}`;
   }
 
   // 포맷팅할 수 없는 경우 원본 반환
@@ -55,7 +55,7 @@ export function formatPhoneNumberToKorean(phoneNumber: string): string {
 export function isValidKoreanMobileNumber(phoneNumber: string): boolean {
   const formatted = formatPhoneNumberToKorean(phoneNumber);
   
-  // 010-XXXX-XXXX 형식인지 확인
-  const koreanMobilePattern = /^010-\d{4}-\d{4}$/;
+  // 01012345678 형식인지 확인 (하이픈 없음)
+  const koreanMobilePattern = /^010\d{8}$/;
   return koreanMobilePattern.test(formatted);
 }
