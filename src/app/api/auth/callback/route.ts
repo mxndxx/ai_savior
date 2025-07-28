@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import { formatPhoneNumberToKorean } from "@/utils/phoneNumber";
 
 export async function GET(request: NextRequest) {
   const requestUrl = new URL(request.url);
@@ -59,9 +60,9 @@ export async function GET(request: NextRequest) {
 
             const updates: { phone_number?: string; name?: string } = {};
 
-            // 전화번호 추출
+            // 전화번호 추출 및 포맷팅
             if (kakaoData.kakao_account?.phone_number) {
-              updates.phone_number = kakaoData.kakao_account.phone_number;
+              updates.phone_number = formatPhoneNumberToKorean(kakaoData.kakao_account.phone_number);
             }
 
             // 이름 추출
