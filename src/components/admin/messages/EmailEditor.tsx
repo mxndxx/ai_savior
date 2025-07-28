@@ -1,52 +1,45 @@
 import { TemplateSelector } from "./TemplateSelector";
 import { convertKitApi } from "@/utils/convertkit";
+import { useMessageSettingsContext } from "./MessageSettingsContext";
 
 interface EmailEditorProps {
   channelLabel: string;
 }
 
 export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
+  const { setEmailTemplateMetadata } = useMessageSettingsContext();
   const fetchTemplates = async (cursor?: string) => {
-    const data = await convertKitApi.getBroadcasts(cursor);
+    const data = await convertKitApi.getEmailTemplates(cursor);
     return {
-      templates: data.broadcasts.map((b) => ({
-        id: b.id,
-        title: b.subject,
-        content: b.content,
+      templates: data.email_templates.map((template) => ({
+        id: template.id,
+        title: template.name,
       })),
       nextCursor: data.nextCursor,
     };
   };
 
-  const renderContent = (template: { id: string | number; title: string; content?: string }) => {
-    if (template.content) {
-      return (
-        <div
-          className="prose prose-sm max-w-none px-4 text-gray-600 [&_img]:h-auto [&_img]:max-w-full [&>*:first-child]:!mt-0 [&>*:last-child]:!mb-0"
-          dangerouslySetInnerHTML={{
-            __html: template.content.replace(
-              /src="(https?:\/\/[^"]+)"/g,
-              (match, url) => {
-                // 네이버 이미지는 프록시 통해 가져오기
-                if (url.includes("pstatic.net")) {
-                  return `src="/api/proxy/image?url=${encodeURIComponent(url)}"`;
-                }
-                return match;
-              },
-            ),
-          }}
-        />
-      );
-    }
-    
+  const renderContent = (template: { id: string | number; title: string }) => {
     return (
-      <p className="text-sm text-gray-600 p-4">
-        제목: {template.title}
-        <br />
-        <br />
-        (브로드캐스트 내용은 ConvertKit에서 관리됩니다)
-      </p>
+      <div className="text-sm text-gray-600 p-4">
+        <p className="font-medium">{template.title}</p>
+        <p className="text-xs text-gray-400 mt-2">
+          (이메일 템플릿 내용은 ConvertKit에서 관리됩니다)
+        </p>
+      </div>
     );
+  };
+
+  // Store template metadata for saving later
+  const handleTemplateSelect = (template: any) => {
+    if (template) {
+      setEmailTemplateMetadata({
+        id: template.id as number,
+        name: template.title
+      });
+    } else {
+      setEmailTemplateMetadata(null);
+    }
   };
 
   return (
@@ -55,6 +48,7 @@ export const EmailEditor = ({ channelLabel }: EmailEditorProps) => {
       channel="email"
       fetchTemplates={fetchTemplates}
       renderContent={renderContent}
+      onTemplateSelect={handleTemplateSelect}
     />
   );
 };

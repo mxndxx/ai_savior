@@ -17,6 +17,7 @@ interface TemplateSelectorProps {
     nextCursor: any;
   }>;
   renderContent?: (template: Template) => React.ReactNode;
+  onTemplateSelect?: (template: Template | null) => void;
 }
 
 export const TemplateSelector = ({
@@ -24,6 +25,7 @@ export const TemplateSelector = ({
   channel,
   fetchTemplates,
   renderContent,
+  onTemplateSelect,
 }: TemplateSelectorProps) => {
   const {
     editText,
@@ -87,6 +89,7 @@ export const TemplateSelector = ({
       setEditText("");
     }
     setIsOpen(false);
+    onTemplateSelect?.(template);
   };
 
   const handleScroll = useCallback(
@@ -110,7 +113,7 @@ export const TemplateSelector = ({
 
   const placeholderText =
     channel === "email"
-      ? "컨버트킷 브로드캐스트를 선택하세요"
+      ? "컨버트킷 이메일 템플릿을 선택하세요"
       : "솔라피 알림톡 템플릿을 선택하세요";
 
   return (
