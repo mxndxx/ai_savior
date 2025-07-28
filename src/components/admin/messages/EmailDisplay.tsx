@@ -1,6 +1,6 @@
 import { Edit3 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { convertKitApi } from "@/utils/convertkit";
+import { emailTemplatesApi } from "@/app/api/email-templates";
 
 interface EmailDisplayProps {
   content: string | undefined;
@@ -15,13 +15,13 @@ export const EmailDisplay = ({
   isEmpty,
   onEdit,
 }: EmailDisplayProps) => {
-  // content가 broadcast ID인지 확인
-  const isBroadcastId = content && /^\d+$/.test(content);
+  // content가 email template ID인지 확인
+  const isTemplateId = content && /^\d+$/.test(content);
 
-  const { data: selectedBroadcast } = useQuery({
-    queryKey: ["convertkit-broadcast", content],
-    queryFn: () => convertKitApi.getBroadcastById(content!),
-    enabled: !!isBroadcastId,
+  const { data: selectedTemplate } = useQuery({
+    queryKey: ["email-template", content],
+    queryFn: () => emailTemplatesApi.getEmailTemplateById(parseInt(content!)),
+    enabled: !!isTemplateId,
   });
 
   const displayContent = () => {
@@ -29,33 +29,19 @@ export const EmailDisplay = ({
       return <span className="text-gray-400">미설정</span>;
     }
 
-    if (isBroadcastId && selectedBroadcast) {
+    if (isTemplateId && selectedTemplate) {
       return (
         <div className="space-y-2">
-          <div className="text-xs text-gray-500">브로드캐스트 ID: {content}</div>
-          <div className="font-medium">제목: {selectedBroadcast.subject || "제목 없음"}</div>
-          <div
-            className="prose prose-sm max-h-48 max-w-none overflow-y-auto rounded-xl bg-gray-50 p-2 text-sm text-gray-600 [&_img]:h-auto [&_img]:max-w-full"
-            dangerouslySetInnerHTML={{
-              __html:
-                selectedBroadcast.content?.replace(
-                  /src="(https?:\/\/[^"]+)"/g,
-                  (match, url) => {
-                    // 네이버 이미지는 프록시 통해 가져오기
-                    if (url.includes("pstatic.net")) {
-                      return `src="/api/proxy/image?url=${encodeURIComponent(url)}"`;
-                    }
-                    return match;
-                  },
-                ) || "",
-            }}
-          />
+          <div className="text-xs text-gray-500">ID: {content}</div>
+          <div className="font-medium">
+            {selectedTemplate.name || "이름 없음"}
+          </div>
         </div>
       );
     }
 
-    if (isBroadcastId) {
-      return <span className="text-gray-600">브로드캐스트 ID: {content}</span>;
+    if (isTemplateId) {
+      return <span className="text-gray-600">ID: {content}</span>;
     }
 
     return (

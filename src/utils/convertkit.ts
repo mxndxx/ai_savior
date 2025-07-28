@@ -1,22 +1,21 @@
-interface ConvertKitBroadcast {
+interface ConvertKitEmailTemplate {
   id: number;
   name: string;
-  subject: string;
-  created_at: string;
-  content?: string;
+  is_default: boolean;
+  category: string;
 }
 
-interface BroadcastsResponse {
-  broadcasts: ConvertKitBroadcast[];
+interface EmailTemplatesResponse {
+  email_templates: ConvertKitEmailTemplate[];
   nextCursor: string | null;
 }
 
 export const convertKitApi = {
-  async getBroadcasts(cursor?: string): Promise<BroadcastsResponse> {
+  async getEmailTemplates(cursor?: string): Promise<EmailTemplatesResponse> {
     try {
       const url = cursor
-        ? `/api/convertkit/broadcasts?cursor=${cursor}`
-        : "/api/convertkit/broadcasts";
+        ? `/api/convertkit/email-templates?cursor=${cursor}`
+        : "/api/convertkit/email-templates";
 
       const response = await fetch(url);
 
@@ -25,32 +24,15 @@ export const convertKitApi = {
         throw new Error(errorData.error || `API 오류: ${response.status}`);
       }
 
-      const data: BroadcastsResponse = await response.json();
-      // console.log("ConvertKit 브로드캐스트 전체 데이터: ", data);
+      const data: EmailTemplatesResponse = await response.json();
+
+      // console.log(data);
       return data;
     } catch (error) {
-      console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
-      throw error;
-    }
-  },
-
-  async getBroadcastById(id: string): Promise<ConvertKitBroadcast> {
-    try {
-      const response = await fetch(`/api/convertkit/broadcasts/${id}`);
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || `API 오류: ${response.status}`);
-      }
-
-      const data: ConvertKitBroadcast = await response.json();
-      // console.log("브로드캐스트 개별 데이터: ", data);
-      return data;
-    } catch (error) {
-      console.error("ConvertKit 브로드캐스트 가져오기 실패:", error);
+      console.error("ConvertKit 이메일 템플릿 가져오기 실패:", error);
       throw error;
     }
   },
 };
 
-export type { ConvertKitBroadcast };
+export type { ConvertKitEmailTemplate };
