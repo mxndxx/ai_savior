@@ -10,8 +10,6 @@ export const emailTemplatesApi = {
           {
             id: id,
             name: name,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
           },
           {
             onConflict: "id",
