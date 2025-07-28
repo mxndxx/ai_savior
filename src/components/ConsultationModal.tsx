@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import ModalPortal from "@/components/ModalPortal";
 import KakaoLoginButton from "@/components/KakaoLoginButton";
 import { useFunnelApply } from "@/hooks/useFunnelApply";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -15,6 +16,9 @@ export default function ConsultationModal({
   onClose,
 }: ConsultationModalProps) {
   const { handleKakaoLogin, isLoading, error } = useFunnelApply();
+  
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(isOpen);
 
   useEffect(() => {
     if (error) {
@@ -33,7 +37,6 @@ export default function ConsultationModal({
     <ModalPortal>
       <div
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
       >
         <div
           className="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl"

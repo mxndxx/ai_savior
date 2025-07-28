@@ -5,11 +5,15 @@ import { Suspense } from "react";
 import { CheckCircle, ArrowRight, Zap, Target, TrendingUp } from "lucide-react";
 import { leadsApi } from "@/app/api/leads";
 import ModalPortal from "@/components/ModalPortal";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 function ResultPageContent() {
   const [name, setName] = useState("회원");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(showSuccessModal);
 
   // sessionStorage에서 이름 가져오기
   useEffect(() => {
@@ -257,7 +261,8 @@ function ResultPageContent() {
       {showSuccessModal && (
         <ModalPortal>
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+            <div className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl"
+                 onClick={(e) => e.stopPropagation()}>
               <div className="absolute top-4 right-4">
                 <button
                   onClick={() => setShowSuccessModal(false)}

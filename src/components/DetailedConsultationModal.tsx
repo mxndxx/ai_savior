@@ -11,6 +11,7 @@ import {
   LucideIcon,
 } from "lucide-react";
 import ModalPortal from "@/components/ModalPortal";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 interface DetailedConsultationModalProps {
   isOpen: boolean;
@@ -76,6 +77,9 @@ export default function DetailedConsultationModal({
   onShowProgress,
 }: DetailedConsultationModalProps) {
   const [name, setName] = useState("고객");
+  
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(isOpen);
 
   useEffect(() => {
     const userName = sessionStorage.getItem("userName");
@@ -151,7 +155,6 @@ export default function DetailedConsultationModal({
     <ModalPortal>
       <div
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
       >
         <div
           className="relative flex h-[85vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl bg-white shadow-2xl"

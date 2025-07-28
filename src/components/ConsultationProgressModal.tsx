@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Sparkles } from "lucide-react";
 import ModalPortal from "@/components/ModalPortal";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 interface ConsultationProgressModalProps {
   isOpen: boolean;
@@ -19,6 +20,9 @@ export default function ConsultationProgressModal({
   const [currentStep, setCurrentStep] = useState(0);
   const [showFinalMessage, setShowFinalMessage] = useState(false);
   const [countdown, setCountdown] = useState(3);
+  
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(isOpen);
 
   const steps = [
     `📌 당신의 경력과 관심사를 분석 중입니다…`,
@@ -86,7 +90,6 @@ export default function ConsultationProgressModal({
     <ModalPortal>
       <div
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
       >
         <div
           className="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl"
