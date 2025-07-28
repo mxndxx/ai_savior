@@ -81,7 +81,7 @@ export default function LectureModal({
       setValue("url", lectureData.url);
       setValue("content_url", lectureData.content_url || "");
       setValue("content_text", lectureData.content_text || "");
-      
+
       // 복제 모드에서는 시작 날짜를 비워두고, 편집 모드에서는 기존 날짜 사용
       if (isDuplicate) {
         setValue("start_date", "");
@@ -91,7 +91,7 @@ export default function LectureModal({
           new Date(lectureData.start_date).toISOString().slice(0, 16),
         );
       }
-      
+
       setValue("price", lectureData.price.toString());
 
       // 복제 모드에서도 이미지를 그대로 복사
@@ -167,7 +167,9 @@ export default function LectureModal({
   };
 
   const { mutate, isPending: isSubmitting } = useMutation({
-    mutationFn: (data: CreateLectureForm) => {
+    mutationFn: async (data: CreateLectureForm) => {
+      let result;
+
       if (isEdit && lectureData && !isDuplicate) {
         // 편집 모드
         const originalImages = Array.isArray(lectureData.content_image)
@@ -177,7 +179,7 @@ export default function LectureModal({
           (url) => !deletedImageUrls.includes(url),
         );
 
-        return lecturesApi.updateLecture(
+        result = await lecturesApi.updateLecture(
           lectureData.id,
           data,
           thumbnailFile || undefined,
@@ -193,8 +195,8 @@ export default function LectureModal({
           thumbnail: data.thumbnail || lectureData.thumbnail,
           content_image: data.content_image || lectureData.content_image,
         };
-        
-        return lecturesApi.createLecture({
+
+        result = await lecturesApi.createLecture({
           formData: duplicateData,
           thumbnailFile: undefined,
           contentImageFiles: [],
@@ -202,13 +204,31 @@ export default function LectureModal({
         });
       } else {
         // 생성 모드
-        return lecturesApi.createLecture({
+        result = await lecturesApi.createLecture({
           formData: data,
           thumbnailFile: thumbnailFile!,
           contentImageFiles: contentImageFiles,
           isDuplicate: false,
         });
       }
+
+      // 강의 생성/복제 후 ConvertKit 태그 생성 (편집 모드 제외)
+      if (!isEdit || isDuplicate) {
+        try {
+          await fetch("/api/convertkit/tags", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: result.id.toString() }),
+          });
+        } catch (tagError) {
+          console.error("ConvertKit 태그 생성 실패:", tagError);
+          // 태그 생성 실패는 전체 프로세스를 실패시키지 않음
+        }
+      }
+
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminLectures"] });
@@ -256,16 +276,18 @@ export default function LectureModal({
 
   return (
     <ModalPortal>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      >
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div
           className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold">
-              {isEdit ? "강의 수정" : isDuplicate ? "강의 복제" : "새 강의 추가"}
+              {isEdit
+                ? "강의 수정"
+                : isDuplicate
+                  ? "강의 복제"
+                  : "새 강의 추가"}
             </h2>
             <button
               onClick={handleClose}
