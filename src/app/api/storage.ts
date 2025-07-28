@@ -15,7 +15,7 @@ export const storageApi = {
       const fileName = `${Date.now()}-duplicated-${Math.random().toString(36).substring(7)}.${blob.type.split('/')[1] || 'jpg'}`;
       
       const file = new File([blob], fileName, { type: blob.type });
-      return await storageApi.uploadFile(file, bucket);
+      return await storageApi.uploadFile(file, bucket, fileName);
     } catch (error) {
       console.error('이미지 복제 중 오류:', error);
       throw new Error('이미지 복제에 실패했습니다.');
