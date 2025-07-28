@@ -16,7 +16,7 @@ export const leadsApi = {
       .select("id")
       .eq("user_id", user.id)
       .eq("subscribe", lectureId)
-      .single();
+      .maybeSingle();
 
     if (error && error.code !== "PGRST116") {
       console.error("Error checking lead:", error);
