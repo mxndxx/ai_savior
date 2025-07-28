@@ -51,7 +51,6 @@ export const lecturesApi = {
         content_url: formData.content_url,
         url: formData.url,
         start_date: formData.start_date,
-        apply_deadline: formData.apply_deadline,
         price: formData.price,
         coach_id: formData.coach_id,
       };
@@ -76,7 +75,6 @@ export const lecturesApi = {
         content_url: insertedLecture.content_url,
         url: insertedLecture.url,
         start_date: insertedLecture.start_date,
-        apply_deadline: insertedLecture.apply_deadline,
         price: insertedLecture.price,
         coach_id: insertedLecture.coach_id,
         updated_at: insertedLecture.updated_at,
@@ -225,7 +223,6 @@ export const lecturesApi = {
         content_url: updatedLecture.content_url,
         url: updatedLecture.url,
         start_date: updatedLecture.start_date,
-        apply_deadline: updatedLecture.apply_deadline,
         price: updatedLecture.price,
         coach_id: updatedLecture.coach_id,
         updated_at: updatedLecture.updated_at,

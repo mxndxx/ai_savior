@@ -50,7 +50,6 @@ export default function LectureModal({
       content_text: "",
       url: "",
       start_date: "",
-      apply_deadline: "",
       price: "",
       coach_id: "",
     },
@@ -83,10 +82,6 @@ export default function LectureModal({
       setValue(
         "start_date",
         new Date(lectureData.start_date).toISOString().slice(0, 16),
-      );
-      setValue(
-        "apply_deadline",
-        new Date(lectureData.apply_deadline).toISOString().slice(0, 10),
       );
       setValue("price", lectureData.price.toString());
 
@@ -526,44 +521,23 @@ export default function LectureModal({
               )}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* 시작 날짜 */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  시작 날짜 *
-                </label>
-                <input
-                  type="datetime-local"
-                  {...register("start_date", {
-                    required: "시작 날짜는 필수입니다.",
-                  })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-                {errors.start_date && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {errors.start_date.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 신청 마감일 */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  신청 마감일 *
-                </label>
-                <input
-                  type="date"
-                  {...register("apply_deadline", {
-                    required: "신청 마감일은 필수입니다.",
-                  })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-                {errors.apply_deadline && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {errors.apply_deadline.message}
-                  </p>
-                )}
-              </div>
+            {/* 시작 날짜 */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                시작 날짜 *
+              </label>
+              <input
+                type="datetime-local"
+                {...register("start_date", {
+                  required: "시작 날짜는 필수입니다.",
+                })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              />
+              {errors.start_date && (
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.start_date.message}
+                </p>
+              )}
             </div>
 
             {/* 가격 */}

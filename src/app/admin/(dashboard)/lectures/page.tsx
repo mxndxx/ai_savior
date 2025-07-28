@@ -151,13 +151,22 @@ export default function LecturesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="text-sm text-gray-900">
-                          {new Date(lecture.start_date).toLocaleDateString()}
-                        </div>
-                        <div className="text-sm text-gray-500">
-                          신청마감:{" "}
-                          {new Date(
-                            lecture.apply_deadline,
-                          ).toLocaleDateString()}
+                          {(() => {
+                            const dateStr = lecture.start_date;
+                            const date = dateStr.substring(0, 10);
+                            const time = dateStr.substring(11, 16);
+                            const [hour, minute] = time.split(":");
+                            const hourNum = parseInt(hour);
+                            const period = hourNum >= 12 ? "오후" : "오전";
+                            const displayHour =
+                              hourNum > 12
+                                ? hourNum - 12
+                                : hourNum === 0
+                                  ? 12
+                                  : hourNum;
+
+                            return `${date} ${period} ${displayHour.toString().padStart(2, "0")}:${minute}`;
+                          })()}
                         </div>
                       </td>
                       <td className="px-6 py-4">
