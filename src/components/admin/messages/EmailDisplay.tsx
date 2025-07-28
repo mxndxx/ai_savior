@@ -34,10 +34,7 @@ export const EmailDisplay = ({
         <div className="space-y-2">
           <div className="text-xs text-gray-500">ID: {content}</div>
           <div className="font-medium">
-            템플릿: {selectedTemplate.name || "이름 없음"}
-          </div>
-          <div className="mt-2 text-xs text-gray-400">
-            (이메일 템플릿 내용은 ConvertKit에서 관리됩니다)
+            {selectedTemplate.name || "이름 없음"}
           </div>
         </div>
       );
