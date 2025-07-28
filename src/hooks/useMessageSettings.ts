@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { lecturesApi } from "@/app/api/lectures";
 import { messagesApi } from "@/app/api/messages";
+import { emailTemplatesApi } from "@/app/api/email-templates";
 import { type LectureWithCoach } from "@/types/lectures";
 
 const DEFAULT_MESSAGE = "설정된 메시지가 없습니다.";
@@ -90,6 +91,7 @@ export const useMessageSettings = () => {
     isNew: boolean;
   } | null>(null);
   const [editText, setEditText] = useState("");
+  const [emailTemplateMetadata, setEmailTemplateMetadata] = useState<{ id: number; name: string } | null>(null);
 
   const { data: lectures = [] } = useQuery<LectureWithCoach[]>({
     queryKey: ["lectures"],
@@ -192,11 +194,24 @@ export const useMessageSettings = () => {
   const handleCancelClick = () => {
     setEditing(null);
     setEditText("");
+    setEmailTemplateMetadata(null);
   };
 
   const handleSaveClick = async () => {
     if (!editing || !activeLectureId) return;
     const { timingKey, channel, isNew } = editing;
+
+    // Save email template metadata if it's an email channel
+    if (channel === "email" && emailTemplateMetadata) {
+      try {
+        await emailTemplatesApi.createEmailTemplate(
+          emailTemplateMetadata.id,
+          emailTemplateMetadata.name
+        );
+      } catch (error) {
+        console.error("Failed to save email template:", error);
+      }
+    }
 
     // 채널별로 prefix 적용 (channel이 곧 prefix)
     const dbTimingKey = `${channel}_${timingKey}`;
@@ -229,5 +244,7 @@ export const useMessageSettings = () => {
     isCreating: createMessageMutation.isPending,
     isUpdating: updateMessageMutation.isPending,
     DEFAULT_MESSAGE,
+    emailTemplateMetadata,
+    setEmailTemplateMetadata,
   };
 };
