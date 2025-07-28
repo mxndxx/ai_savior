@@ -32,9 +32,27 @@ export const lecturesApi = {
       let contentImagesUrl: string | null = null;
 
       if (isDuplicate) {
-        // 복제 모드: 기존 이미지 URL 사용
-        thumbnailUrl = formData.thumbnail;
-        contentImagesUrl = formData.content_image;
+        // 복제 모드: 기존 이미지를 다운로드하여 새로 업로드
+        if (formData.thumbnail) {
+          thumbnailUrl = await storageApi.downloadAndUploadFile(
+            formData.thumbnail,
+            "lecture-thumbnails"
+          );
+        } else {
+          thumbnailUrl = null;
+        }
+
+        if (formData.content_image) {
+          const imageUrls = formData.content_image.split(",").filter(url => url.trim());
+          if (imageUrls.length > 0) {
+            const duplicatedUrls = await Promise.all(
+              imageUrls.map(url => 
+                storageApi.downloadAndUploadFile(url.trim(), "lecture-content-images")
+              )
+            );
+            contentImagesUrl = duplicatedUrls.join(",");
+          }
+        }
       } else {
         // 일반 생성 모드: 새 이미지 업로드
         if (!thumbnailFile) {
