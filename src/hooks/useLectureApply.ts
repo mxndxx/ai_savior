@@ -19,7 +19,26 @@ export function useLectureApply(lectureId: string | null) {
     setApplyError(null);
 
     try {
+      // 1. leads 테이블에 신청 정보 저장
       await leadsApi.createLead(lectureId);
+
+      // 2. webhook 호출 (실패해도 신청은 성공으로 처리)
+      try {
+        const response = await fetch("/api/lectures/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ lectureId }),
+        });
+
+        if (!response.ok) {
+          console.error("Webhook 호출 실패:", await response.text());
+        }
+      } catch (webhookError) {
+        console.error("Webhook 호출 중 오류:", webhookError);
+      }
+
       setModalStatus("success");
       setIsApplied(true); // 신청 성공 시 상태 업데이트
     } catch (err) {
