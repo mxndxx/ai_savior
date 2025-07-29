@@ -47,7 +47,7 @@ export default function LecturePage() {
   }
 
   return (
-    <main className="container mx-auto px-4 pt-8 pb-40">
+    <main className="pt-8 pb-40">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-black md:text-4xl">클래스</h1>
         {/* <p className="mt-2 text-lg text-gray-600">

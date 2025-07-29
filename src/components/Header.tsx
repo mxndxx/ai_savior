@@ -110,6 +110,12 @@ export default function Header() {
                 홈
               </Link>
               <Link
+                href="/lecture"
+                className="text-gray-700 transition-colors hover:text-blue-600"
+              >
+                클래스
+              </Link>
+              {/* <Link
                 href="/system"
                 className="text-lg text-gray-700 transition-colors hover:text-blue-600"
                 onClick={() => setIsMenuOpen(false)}
@@ -136,10 +142,10 @@ export default function Header() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 AI 도구
-              </Link>
+              </Link> */}
 
               {/* 고객지원 섹션 */}
-              <div className="mt-2 border-t border-gray-100 pt-4">
+              {/* <div className="mt-2 border-t border-gray-100 pt-4">
                 <div className="mb-3 text-sm font-medium text-gray-500">
                   고객지원
                 </div>
@@ -167,7 +173,7 @@ export default function Header() {
                     1:1문의
                   </Link>
                 </div>
-              </div>
+              </div> */}
             </div>
           </nav>
         </div>
