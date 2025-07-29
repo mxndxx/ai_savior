@@ -5,11 +5,15 @@ import { Suspense } from "react";
 import { CheckCircle, ArrowRight, Zap, Target, TrendingUp } from "lucide-react";
 import { leadsApi } from "@/app/api/leads";
 import ModalPortal from "@/components/ModalPortal";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 function ResultPageContent() {
   const [name, setName] = useState("회원");
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(showSuccessModal);
 
   // sessionStorage에서 이름 가져오기
   useEffect(() => {
@@ -75,12 +79,11 @@ function ResultPageContent() {
                   <Target className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-lg leading-relaxed">
-                  당신의 과거 경력 (마케팅 업무),{" "}
+                  당신의 과거 경력, 현재 상태,
                   <span className="block sm:inline">
-                    현재 상태 (콘텐츠 제작),
+                    그리고 선택한 관심분야를 바탕으로
                   </span>
-                  그리고 선택한 관심분야를 바탕으로
-                  <br />
+                  <br className="hidden sm:block" />
                   <span className="font-semibold text-red-500">AI 최대표</span>
                   는 다음 전략을 추천드립니다:
                 </div>
@@ -257,7 +260,10 @@ function ResultPageContent() {
       {showSuccessModal && (
         <ModalPortal>
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-            <div className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl">
+            <div
+              className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="absolute top-4 right-4">
                 <button
                   onClick={() => setShowSuccessModal(false)}
@@ -272,7 +278,7 @@ function ResultPageContent() {
                 </div>
                 <h2 className="mb-2 text-xl font-bold">비법서 신청 완료!</h2>
                 <p className="mb-6 whitespace-pre-line text-gray-600">
-                  {"비법서 신청이 완료되었습니다.\n 카카오톡으로 전송됩니다."}
+                  {"비법서 신청이 완료되었습니다."}
                 </p>
                 <button
                   onClick={() => setShowSuccessModal(false)}

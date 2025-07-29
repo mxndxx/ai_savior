@@ -43,8 +43,8 @@ export default function LandingPage() {
               <Sparkles className="mr-2 h-4 w-4" />
               AI최대표의 맞춤형 수익 시스템
             </div>
-            <h1 className="text-4xl leading-tight font-bold sm:text-5xl">
-              딱 1분, <br />
+            <h1 className="text-center text-3xl leading-tight font-bold sm:text-5xl">
+              딱 1분, <br className="block sm:hidden" />
               수익화는 꿈도 못꾸던{" "}
               <span className="block sm:inline">
                 노베이스에 평범한 직장인이
@@ -53,19 +53,24 @@ export default function LandingPage() {
               1달만에 <span className="text-red-500">월 5,000만원</span> 벌게 된
               비법을 모두 받아가세요!
               <br /> 오직 당신에게만 적용되는{" "}
-              <span className="block text-[#DC2626] sm:inline">
-                월 5000 AI 자동수익 전략 까지
-                <br />
+              <span className="block sm:inline">
+                <span className="text-[#DC2626]">
+                  월 5000 AI 자동 수익 전략
+                </span>
+                까지 <br className="hidden sm:block" />
+                무료로 설계해드립니다.
               </span>
-              <span className="block sm:inline">무료로 설계해드립니다.</span>
             </h1>
-            <p className="text-xl leading-relaxed text-gray-300">
-              경험 없음, 기술 없음 괜찮습니다.
+            <p className="text-center text-xl leading-relaxed text-gray-300">
+              경험 없음, 기술 없음 괜찮습니다.{" "}
               <span className="sm:hidden">
                 <br />
               </span>
-              당신의 일과 삶을 바탕으로 지금 가장 빠르게 자동화 수익을 만들 수
-              있는 전략을 A 최대표가 직접 제안해드립니다.
+              당신의 일과 삶을 바탕으로 지금 가장{" "}
+              <span className="block sm:inline">
+                빠르게 자동화 수익을 만들 수 있는 전략을
+              </span>{" "}
+              AI 최대표가 직접 제안해드립니다.
             </p>
             <div className="flex flex-row items-center justify-center gap-2 text-center text-sm sm:gap-6">
               <div className="flex items-center gap-1 rounded-lg bg-white/10 px-2 py-2 backdrop-blur-sm sm:px-4">
@@ -197,62 +202,61 @@ export default function LandingPage() {
         </section>
         {/* Features Section - 개선 */}
         <section className="flex flex-col gap-10 px-4 sm:px-6 sm:py-6 lg:px-32">
-          <div className="mx-auto">
-            <div className="mb-10 text-center sm:mb-24">
-              <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
-                왜 <span className="text-red-500">월5천 아이템 생성기</span>
-                인가?
-              </h2>
-              <p className="mx-auto text-lg text-gray-600 sm:text-xl">
-                단순한 아이템 제안이 아닌,{" "}
-                <span className="block sm:inline">
-                  당신의 현실 상황을 반영한{" "}
-                </span>
-                <span className="block sm:inline">
-                  맞춤형 수익 시스템을 설계합니다.
-                </span>
+          <div className="mb-10 text-center sm:mb-24">
+            <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
+              왜 <span className="text-red-500">월5천 아이템 생성기</span>
+              인가?
+            </h2>
+            <p className="mx-auto text-lg text-gray-600 sm:text-xl">
+              단순한 아이템 제안이 아닌,{" "}
+              <span className="block sm:inline">
+                당신의 현실 상황을 반영한{" "}
+              </span>
+              <span className="block sm:inline">
+                맞춤형 수익 시스템을 설계합니다.
+              </span>
+            </p>
+          </div>
+
+          <div className="grid gap-8 md:grid-cols-3">
+            <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
+                <Target className="h-8 w-8 text-white" />
+              </div>
+              <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">PRODUCT</h3>
+              <p className="leading-relaxed text-gray-600">
+                당신의 경험과 관심사를 바탕으로 한 <br />
+                개인 맞춤형 수익 아이템 생성.
+                <br /> 콘텐츠 없이도 가능한 <br />
+                200만원 자동화 수입 구조 설계.
               </p>
             </div>
 
-            <div className="grid gap-8 md:grid-cols-3">
-              <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
-                  <Target className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">
-                  PRODUCT
-                </h3>
-                <p className="leading-relaxed text-gray-600">
-                  당신의 경험과 관심사를 바탕으로 한 개인 맞춤형 수익 아이템
-                  생성. 콘텐츠 없이도 가능한 200만원 자동화 수입 구조 설계.
-                </p>
+            <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
+                <Zap className="h-8 w-8 text-white" />
               </div>
+              <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">
+                AUTOMATE
+              </h3>
+              <p className="leading-relaxed text-gray-600">
+                AI 자동화 툴 기반 설득형 페이지 구축.
+                <br /> 시간 없는 직장인도 가능한 <br />
+                자동화 루틴과 브랜드 설계까지.
+              </p>
+            </div>
 
-              <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
-                  <Zap className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">
-                  AUTOMATE
-                </h3>
-                <p className="leading-relaxed text-gray-600">
-                  AI 자동화 툴 기반 설득형 페이지 구축. 시간 없는 직장인도
-                  가능한 자동화 루틴과 브랜드 설계까지.
-                </p>
+            <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
+              <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
+                <ArrowRight className="h-8 w-8 text-white" />
               </div>
-
-              <div className="group rounded-2xl border-2 border-gray-100 bg-white p-8 text-center transition-all duration-300 hover:-translate-y-1 hover:border-[#DC2626] hover:shadow-xl">
-                <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-[#DC2626] to-[#FF4444] transition-transform duration-300 group-hover:scale-110">
-                  <ArrowRight className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">
-                  TRAFFIC
-                </h3>
-                <p className="leading-relaxed text-gray-600">
-                  인스타그램, 유튜브 유입 전략 설계. 인플루언서처럼 수익 내는
-                  채널 성장 밀착 컨설팅.
-                </p>
-              </div>
+              <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">TRAFFIC</h3>
+              <p className="leading-relaxed text-gray-600">
+                인스타그램, 유튜브 유입 전략 설계.
+                <br />
+                인플루언서처럼 수익 내는 <br />
+                채널 성장 밀착 컨설팅.
+              </p>
             </div>
           </div>
           <div className="grid gap-6 md:grid-cols-3">
@@ -262,7 +266,7 @@ export default function LandingPage() {
               { icon: "⚡", text: "신청 즉시 분석 시작 + 결과 리포트 제공" },
             ].map((item, index) => (
               <div key={index} className="flex items-center justify-center">
-                <div className="w-full rounded-full border-1 border-gray-400 bg-white px-6 py-3 text-center">
+                <div className="w-full rounded-full border-1 border-gray-400 bg-white px-4 py-3 text-center">
                   <span className="mr-2 text-xl">{item.icon}</span>
                   <span className="font-bold text-[#0D0D2B]">{item.text}</span>
                 </div>
@@ -374,7 +378,7 @@ export default function LandingPage() {
             <span className="bg-gradient-to-r from-[#DC2626] to-[#FF4444] bg-clip-text text-transparent">
               월5천 아이템 로드맵
             </span>{" "}
-            확보까지
+            <span className="block sm:inline">확보까지</span>
           </h2>
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
             본업 외 수익을 꿈꾸는{" "}
@@ -392,7 +396,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-600">
             <p>
-              &copy; 2024 월5천 아이템 생성기 by AI최대표. All rights reserved.
+              &copy; 2025 월5천 아이템 생성기 by AI최대표. All rights reserved.
             </p>
           </div>
         </div>
