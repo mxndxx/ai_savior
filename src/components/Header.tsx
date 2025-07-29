@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
+  // 메뉴 추가 시 모바일 GNB 처리를 위한 상태값
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <>
@@ -20,13 +23,17 @@ export default function Header() {
             <nav className="items-center space-x-4 text-lg sm:space-x-8 sm:text-2xl md:flex">
               <Link
                 href="/"
-                className="text-gray-700 transition-colors hover:text-blue-600"
+                className="text-gray-700 transition-colors hover:text-violet-600"
               >
                 홈
               </Link>
               <Link
                 href="/lecture"
-                className="text-gray-700 transition-colors hover:text-blue-600"
+                className={`transition-colors ${
+                  pathname === "/lecture"
+                    ? "text-violet-600"
+                    : "text-gray-700 hover:text-violet-600"
+                }`}
               >
                 클래스
               </Link>
