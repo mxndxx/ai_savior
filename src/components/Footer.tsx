@@ -9,16 +9,18 @@ export default function Footer() {
         {/* Main Footer Content */}
         <div className="mb-4 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Company Info */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2">
             {/* Contact Info */}
             <div className="space-y-2 text-sm text-gray-300">
-              <div>주식회사 에이아이사스(AISAAS Inc.)</div>
+              <div>주식회사 에이아이사스</div>
               {/* <div>서비스명: N잡 AI</div> */}
-              <div>대표자: 최서준 | 사업자등록번호: 878-81-03281</div>
+              <div>대표자: 최서준</div>
+              <div>사업자등록번호: 878-81-03281</div>
+              <div>통신판매업 신고번호: 제 2025-경기김포-0882호</div>
               <div>
                 주소: 경기도 김포시 김포한강8로 158, 6층 604-C121호(마산동)
               </div>
-              <div>연락처: 010-4049-2009</div>
+              <div>연락처: 010-2014-2125 | e-mail: cddmh11@gmail.com</div>
             </div>
           </div>
 
@@ -93,7 +95,7 @@ export default function Footer() {
               href="/privacy-policy"
               className="hover:text-teal transition-colors"
             >
-              개인정보 보호방침
+              개인정보처리방침
             </Link>
             <Link
               href="/terms-of-service"
@@ -101,12 +103,12 @@ export default function Footer() {
             >
               이용약관
             </Link>
-            <Link
+            {/* <Link
               href="/refund-policy"
               className="hover:text-teal transition-colors"
             >
               환불규정
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>
