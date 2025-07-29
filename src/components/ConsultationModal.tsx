@@ -5,6 +5,7 @@ import ModalPortal from "@/components/ModalPortal";
 import KakaoLoginButton from "@/components/KakaoLoginButton";
 import { useFunnelApply } from "@/hooks/useFunnelApply";
 import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { Check } from "lucide-react";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ export default function ConsultationModal({
   onClose,
 }: ConsultationModalProps) {
   const { handleKakaoLogin, isLoading, error } = useFunnelApply();
-  
+
   // 모달 스크롤 잠금 적용
   useModalScrollLock(isOpen);
 
@@ -35,11 +36,9 @@ export default function ConsultationModal({
 
   return (
     <ModalPortal>
-      <div
-        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-      >
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
         <div
-          className="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl"
+          className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -61,7 +60,7 @@ export default function ConsultationModal({
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="mb-2 text-2xl font-bold text-[#0D0D2B]">
-                무료 진단 시작하기
+                무료강의 신청하고 나만의 월 5천 전략 받기
               </h3>
             </div>
 
@@ -74,8 +73,34 @@ export default function ConsultationModal({
               </KakaoLoginButton>
             </form>
 
-            <div className="rounded-lg bg-gray-50 p-3 text-center text-sm text-gray-500">
-              ✅ 100% 무료 진단 ✅ 개인정보 보호 ✅ 즉시 결과 확인
+            <div className="flex justify-between gap-2 rounded-lg sm:items-center sm:justify-center sm:gap-6">
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">100% 무료</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">개인정보 보호</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">즉시 결과 확인</span>
+              </div>
             </div>
           </div>
         </div>
