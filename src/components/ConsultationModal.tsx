@@ -60,7 +60,7 @@ export default function ConsultationModal({
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="mb-2 text-2xl font-bold text-[#0D0D2B]">
-                무료강의 신청하고 나만의 월 5천 전략 받기
+                무료강의 신청하기
               </h3>
             </div>
 
