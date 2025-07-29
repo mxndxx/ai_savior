@@ -25,7 +25,7 @@ export default function Header() {
                 홈
               </Link>
               <Link
-                href="/lectures"
+                href="/lecture"
                 className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 클래스

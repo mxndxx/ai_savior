@@ -33,7 +33,7 @@ export default function Footer() {
                 N잡 AI
               </Link>
               <Link
-                href="/lectures"
+                href="/lecture"
                 className="hover:text-teal block text-gray-300 transition-colors"
               >
                 클래스
