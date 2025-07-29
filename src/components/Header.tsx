@@ -25,6 +25,12 @@ export default function Header() {
                 홈
               </Link>
               <Link
+                href="/lectures"
+                className="text-gray-700 transition-colors hover:text-blue-600"
+              >
+                클래스
+              </Link>
+              {/* <Link
                 href="/system"
                 className="text-gray-700 transition-colors hover:text-blue-600"
               >
@@ -47,8 +53,8 @@ export default function Header() {
                 className="text-gray-700 transition-colors hover:text-blue-600"
               >
                 AI 도구
-              </Link>
-              <div className="group relative">
+              </Link> */}
+              {/* <div className="group relative">
                 <button className="text-gray-700 transition-colors hover:text-blue-600">
                   고객지원
                 </button>
@@ -73,7 +79,7 @@ export default function Header() {
                     1:1문의
                   </Link>
                 </div>
-              </div>
+              </div> */}
             </nav>
 
             <div className="flex items-center space-x-4">
