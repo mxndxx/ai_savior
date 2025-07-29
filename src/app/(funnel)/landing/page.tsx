@@ -223,8 +223,10 @@ export default function LandingPage() {
                   PRODUCT
                 </h3>
                 <p className="leading-relaxed text-gray-600">
-                  당신의 경험과 관심사를 바탕으로 한 개인 맞춤형 수익 아이템
-                  생성. 콘텐츠 없이도 가능한 200만원 자동화 수입 구조 설계.
+                  당신의 경험과 관심사를 바탕으로 한 <br />
+                  개인 맞춤형 수익 아이템 생성.
+                  <br /> 콘텐츠 없이도 가능한 <br />
+                  200만원 자동화 수입 구조 설계.
                 </p>
               </div>
 
@@ -236,8 +238,9 @@ export default function LandingPage() {
                   AUTOMATE
                 </h3>
                 <p className="leading-relaxed text-gray-600">
-                  AI 자동화 툴 기반 설득형 페이지 구축. 시간 없는 직장인도
-                  가능한 자동화 루틴과 브랜드 설계까지.
+                  AI 자동화 툴 기반 설득형 페이지 구축.
+                  <br /> 시간 없는 직장인도 가능한 <br />
+                  자동화 루틴과 브랜드 설계까지.
                 </p>
               </div>
 
@@ -249,7 +252,9 @@ export default function LandingPage() {
                   TRAFFIC
                 </h3>
                 <p className="leading-relaxed text-gray-600">
-                  인스타그램, 유튜브 유입 전략 설계. 인플루언서처럼 수익 내는
+                  인스타그램, 유튜브 유입 전략 설계.
+                  <br />
+                  인플루언서처럼 수익 내는 <br />
                   채널 성장 밀착 컨설팅.
                 </p>
               </div>
@@ -262,7 +267,7 @@ export default function LandingPage() {
               { icon: "⚡", text: "신청 즉시 분석 시작 + 결과 리포트 제공" },
             ].map((item, index) => (
               <div key={index} className="flex items-center justify-center">
-                <div className="w-full rounded-full border-1 border-gray-400 bg-white px-6 py-3 text-center">
+                <div className="w-full rounded-full border-1 border-gray-400 bg-white px-4 py-3 text-center">
                   <span className="mr-2 text-xl">{item.icon}</span>
                   <span className="font-bold text-[#0D0D2B]">{item.text}</span>
                 </div>
@@ -374,7 +379,7 @@ export default function LandingPage() {
             <span className="bg-gradient-to-r from-[#DC2626] to-[#FF4444] bg-clip-text text-transparent">
               월5천 아이템 로드맵
             </span>{" "}
-            확보까지
+            <span className="block sm:inline">확보까지</span>
           </h2>
           <p className="mx-auto max-w-2xl text-xl leading-relaxed text-gray-300">
             본업 외 수익을 꿈꾸는{" "}
@@ -392,7 +397,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center text-gray-600">
             <p>
-              &copy; 2024 월5천 아이템 생성기 by AI최대표. All rights reserved.
+              &copy; 2025 월5천 아이템 생성기 by AI최대표. All rights reserved.
             </p>
           </div>
         </div>
