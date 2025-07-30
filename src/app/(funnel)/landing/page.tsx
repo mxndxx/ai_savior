@@ -57,6 +57,7 @@ export default function LandingPage() {
                 <span className="text-[#DC2626]">
                   월 5000 AI 자동 수익 전략
                 </span>
+                <br className="block sm:hidden" />
                 까지 <br className="hidden sm:block" />
                 무료로 설계해드립니다.
               </span>
