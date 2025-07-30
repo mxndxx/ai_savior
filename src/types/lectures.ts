@@ -58,5 +58,7 @@ export interface LectureWithCoach extends Lecture {
   coach: {
     id: string;
     name: string;
+    bio?: string;
+    career?: string;
   };
 }
