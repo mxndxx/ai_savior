@@ -146,7 +146,7 @@ export const lecturesApi = {
       .select(
         `
         *,
-        coach:coaches!coach_id (id, name)
+        coach:coaches!coach_id (id, name, bio, career)
       `,
       )
       .eq("id", id)
