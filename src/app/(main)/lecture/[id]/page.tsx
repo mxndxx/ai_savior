@@ -130,12 +130,24 @@ export default function CourseDetailPage() {
                     <div className="prose min-h-[200px] max-w-none lg:min-h-96">
                       <h2 className="mb-4 text-2xl font-bold">강사 소개</h2>
                       <div className="rounded-lg bg-gray-50 p-6">
-                        <h3 className="mb-2 text-xl font-bold">
+                        <h3 className="mb-4 text-xl font-bold">
                           {lecture.coach.name}
                         </h3>
-                        {/* <p className="leading-relaxed text-gray-700">
-                          {lecture.coach.bio}
-                        </p> */}
+                        {lecture.coach.bio && (
+                          <div className="mb-4">
+                            <p className="leading-relaxed text-gray-700">
+                              {lecture.coach.bio}
+                            </p>
+                          </div>
+                        )}
+                        {lecture.coach.career && (
+                          <div>
+                            <h4 className="mb-2 font-semibold">경력</h4>
+                            <p className="leading-relaxed whitespace-pre-line text-gray-700">
+                              {lecture.coach.career}
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
