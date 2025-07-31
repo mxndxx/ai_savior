@@ -4,6 +4,7 @@ import { LectureWithCoach } from "@/types/lectures";
 import InfoModal from "@/components/InfoModal";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { useLectureApply } from "@/hooks/useLectureApply";
+import { useCountdownTimer } from "@/hooks/useCountdownTimer";
 
 export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
   const {
@@ -14,6 +15,9 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
     handleApplyClick,
     isApplied,
   } = useLectureApply(lecture.id);
+
+  const timeLeft = useCountdownTimer(lecture.start_date);
+  const isExpired = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
 
   return (
     <div className="h-fit lg:sticky lg:top-28">
@@ -50,16 +54,18 @@ export function LectureSidebar({ lecture }: { lecture: LectureWithCoach }) {
 
         <button
           onClick={handleApplyClick}
-          disabled={isLoading || isApplied}
+          disabled={isLoading || isApplied || isExpired}
           className={`w-full rounded-lg px-6 py-4 text-lg font-bold text-white transition-colors duration-200 disabled:cursor-not-allowed disabled:opacity-50 ${
-            isApplied ? "bg-gray-400" : "bg-violet-600 hover:bg-violet-700"
+            isApplied || isExpired ? "bg-gray-400" : "bg-violet-600 hover:bg-violet-700"
           }`}
         >
           {isLoading
             ? "신청하는 중..."
-            : isApplied
-              ? "무료강의 신청완료"
-              : "무료강의 신청하기"}
+            : isExpired
+              ? "신청 마감"
+              : isApplied
+                ? "무료강의 신청완료"
+                : "무료강의 신청하기"}
         </button>
 
         <CountdownTimer deadline={lecture.start_date} />
