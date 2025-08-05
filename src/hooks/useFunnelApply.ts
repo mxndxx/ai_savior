@@ -20,13 +20,32 @@ export function useFunnelApply() {
         // TODO api 함수 분리
         const { data: profile } = await supabase
           .from("profiles")
-          .select("name")
+          .select("name, email, phone_number")
           .eq("id", user.id)
           .single();
 
         const userName = profile?.name || user.email?.split("@")[0] || "사용자";
         sessionStorage.setItem("userName", userName);
         sessionStorage.removeItem(SESSION_STORAGE_KEY);
+
+        // n8n 웹훅 트리거
+        if (profile?.name && profile?.email && profile?.phone_number) {
+          try {
+            await fetch("/api/webinar-noti", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                name: profile.name,
+                email: profile.email,
+                phone_number: profile.phone_number,
+              }),
+            });
+          } catch (error) {
+            // 웹훅 호출 실패는 무시 (사용자 경험에 영향 없음)
+          }
+        }
 
         // /detail 페이지로 리다이렉트
         router.push("/detail");
