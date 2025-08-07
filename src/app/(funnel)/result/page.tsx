@@ -25,26 +25,13 @@ function ResultPageContent() {
 
   const handleApply = async () => {
     setIsLoading(true);
-    
-    // 모바일 팝업 차단 회피를 위해 사용자 제스처 직후 새 창 열기
-    const telegramWindow = window.open("", "_blank", "noopener,noreferrer");
-    
     try {
       await leadsApi.createLead();
-      // API 호출 성공 후 텔레그램 링크로 이동
-      if (telegramWindow) {
-        telegramWindow.location.href = "https://t.me/aisaas77";
-      } else {
-        // 팝업이 차단된 경우 현재 창에서 열기
-        window.location.href = "https://t.me/aisaas77";
-      }
+      // 성공 시 텔레그램 링크를 새 탭에서 열기
+      window.open("https://t.me/aisaas77", "_blank", "noopener,noreferrer");
       // 모달 표시
       setShowSuccessModal(true);
     } catch (error) {
-      // 에러 발생 시 열린 창 닫기
-      if (telegramWindow) {
-        telegramWindow.close();
-      }
       alert(
         error instanceof Error ? error.message : "신청 중 오류가 발생했습니다.",
       );
