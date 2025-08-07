@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import DetailedConsultationModal from "@/components/DetailedConsultationModal";
 import ConsultationProgressModal from "@/components/ConsultationProgressModal";
+import Image from "next/image";
 
 export default function DetailPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +33,57 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
+      {/* 축하 메시지 섹션 */}
+      <section className="py-6 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 rounded-lg bg-[#f6ff4f] p-4">
+            <p className="text-center text-black">
+              <span className="text-2xl font-bold sm:text-3xl">
+                🎁축하드립니다!🎁
+                <br />
+                AI SAAS 시스템 <br className="block sm:hidden" />
+                무료 비밀강의 신청이 <br className="block sm:hidden" />
+                완료되었습니다!🎉
+              </span>
+            </p>
+          </div>
+          <div className="mb-8">
+            <Image
+              src="https://cdn.imweb.me/thumbnail/20240601/26c88094b0c64.jpg"
+              alt="무료 비밀강의"
+              width={1000}
+              height={600}
+              className="w-full rounded-lg"
+            />
+          </div>
+          <div className="mb-8 text-center">
+            <p className="text-black">
+              <span className="text-2xl font-bold sm:text-3xl">
+                📌 월 1.6억 시스템의 비밀강의는{" "}
+                <br className="block sm:hidden" />
+                <span className="bg-[#fff850] px-1">
+                  오늘, 내일 저녁 8시에 시작됩니다
+                </span>
+                <br />
+                <br />
+                아래 비밀대기방 공지에서 <br className="block sm:hidden" />월
+                1000시스템 기밀 설계도와 <br className="block sm:hidden" />
+                비법 선물 12종을 받아가세요^^
+              </span>
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <a
+              href="https://swiy.co/t_aisaasroom"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-blue-500 px-8 py-4 text-lg font-bold text-white transition-colors hover:bg-gray-100"
+            >
+              🎈무료 12종 선물받기(클릭)
+            </a>
+          </div>
+        </div>
+      </section>
       <section className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white">
         <div className="relative mx-auto max-w-7xl space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
           <h1 className="text-center text-3xl leading-tight font-bold lg:text-5xl">
