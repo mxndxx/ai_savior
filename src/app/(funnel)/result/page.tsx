@@ -25,11 +25,15 @@ function ResultPageContent() {
 
   const handleApply = async () => {
     setIsLoading(true);
+    window.open(
+      "https://t.me/aisaas77",
+      "_blank",
+      "noopener,noreferrer",
+    );
+
     try {
       await leadsApi.createLead();
-      // 성공 시 텔레그램 링크를 새 탭에서 열기
-      window.open("https://t.me/aisaas77", "_blank", "noopener,noreferrer");
-      // 모달 표시
+      // API 성공 시 모달 표시
       setShowSuccessModal(true);
     } catch (error) {
       alert(
