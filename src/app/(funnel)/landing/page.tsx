@@ -176,7 +176,7 @@ export default function LandingPage() {
           </div>
         </div>
       </section>
-      <section className="flex flex-col items-center bg-black py-6 sm:px-6 lg:px-32">
+      <section className="flex flex-col items-center space-y-6 bg-black py-6 sm:px-6 sm:py-10 lg:px-32">
         <div className="mx-auto mb-10 text-center sm:mb-24">
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
             요즘 AI로 돈 버는 방법,{" "}
@@ -198,8 +198,6 @@ export default function LandingPage() {
             </span>
           </p>
         </div>
-      </section>
-      <section className="flex flex-col items-center bg-black sm:px-6 lg:px-32">
         <div className="mx-auto mb-10 text-center sm:mb-24">
           <h2 className="mb-6 text-3xl font-bold text-white sm:text-4xl">
             그동안 국내 내수용 저품질 부업 등에 질리신 분들은{" "}
@@ -212,8 +210,6 @@ export default function LandingPage() {
             </span>
           </p>
         </div>
-      </section>
-      <section className="flex flex-col gap-10 bg-black px-4 sm:px-6 sm:py-6 lg:px-32">
         <div className="mb-10 text-center sm:mb-24">
           <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
             왜 <span className="text-red-500">월5천 아이템 생성기</span>
@@ -281,9 +277,6 @@ export default function LandingPage() {
             </div>
           ))}
         </div>
-      </section>
-      {/* Testimonials Section - 새로 추가 */}
-      <section className="bg-black py-6 sm:px-6 lg:px-32">
         <div className="mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-10 text-center sm:mb-24">
             <h2 className="mb-4 text-3xl font-bold text-white sm:text-4xl">
@@ -350,9 +343,6 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="flex flex-col items-center justify-center bg-black py-6 sm:px-6 lg:px-32">
         <div className="mx-auto text-center">
           <h2 className="text-3xl font-bold text-white sm:text-4xl">
             수익으로 증명된 <span className="text-[#DC2626]">AI 시스템</span>{" "}
