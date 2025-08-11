@@ -207,7 +207,7 @@ function ResultPageContent() {
               지금 무료로 받으세요.
             </h2>
             <p className="text-lg leading-relaxed text-gray-300">
-              이 비법서는 지금까지 3,000명 이상의
+              이 비법서는 지금까지 3,000명 이상의{" "}
               <span className="block sm:inline">
                 N잡러들이 실행한 결과입니다.
               </span>
