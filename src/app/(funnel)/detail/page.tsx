@@ -77,7 +77,7 @@ export default function DetailPage() {
               href="https://swiy.co/t_aisaasroom"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-block rounded-full bg-blue-500 px-8 py-4 text-lg font-bold text-white transition-colors hover:bg-gray-100"
+              className="inline-block rounded-full bg-blue-500 px-8 py-4 text-lg font-bold text-white transition-colors hover:bg-blue-600"
             >
               🎈무료 12종 선물받기(클릭)
             </a>
