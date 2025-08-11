@@ -25,11 +25,7 @@ function ResultPageContent() {
 
   const handleApply = async () => {
     setIsLoading(true);
-    window.open(
-      "https://t.me/aisaas77",
-      "_blank",
-      "noopener,noreferrer",
-    );
+    window.open("https://t.me/aisaas77", "_blank", "noopener,noreferrer");
 
     try {
       await leadsApi.createLead();
@@ -211,12 +207,15 @@ function ResultPageContent() {
               지금 무료로 받으세요.
             </h2>
             <p className="text-lg leading-relaxed text-gray-300">
-              이 비법서는 지금까지 3,000명 이상의{" "}
+              이 비법서는 지금까지 3,000명 이상의
               <span className="block sm:inline">
                 N잡러들이 실행한 결과입니다.
               </span>
-              아래 버튼을 눌러 카카오톡방에서{" "}
-              <span className="block sm:inline">바로 다운로드 받으세요.</span>
+              <br className="hidden sm:block" />
+              아래 버튼을 눌러 텔레그램 비밀 대기방에서{" "}
+              <span className="block sm:inline">
+                비법서PDF 자료를 무료로 받아가세요.
+              </span>
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
@@ -284,7 +283,8 @@ function ResultPageContent() {
                 </div>
                 <h2 className="mb-2 text-xl font-bold">비법서 신청 완료!</h2>
                 <p className="mb-6 whitespace-pre-line text-gray-600">
-                  {"비법서 신청이 완료되었습니다."}
+                  기밀자료의 보안을 위해 비밀대기방 공지란에서 <br />
+                  12종 자료 안내와 비법서 PDF를 확인하세요
                 </p>
                 <button
                   onClick={() => setShowSuccessModal(false)}
