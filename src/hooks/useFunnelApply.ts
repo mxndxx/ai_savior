@@ -1,13 +1,11 @@
 import { useCallback } from "react";
 import { User } from "@supabase/supabase-js";
-import { useRouter } from "next/navigation";
 import { useKakaoAuth } from "./useKakaoAuth";
 import { supabase } from "@/utils/supabase";
 
 const SESSION_STORAGE_KEY = "funnelKakaoLoginAttempt";
 
 export function useFunnelApply() {
-  const router = useRouter();
 
   const onLoginSuccess = useCallback(
     async (user: User) => {
@@ -46,16 +44,13 @@ export function useFunnelApply() {
             // 웹훅 호출 실패는 무시 (사용자 경험에 영향 없음)
           }
         }
-
-        // /detail 페이지로 리다이렉트
-        router.push("/detail");
       }
     },
-    [router],
+    [],
   );
 
   const { isLoading, error, user, handleKakaoLogin } = useKakaoAuth({
-    additionalParams: { funnel: "true" },
+    additionalParams: { next: "/detail" },
     sessionStorageKey: SESSION_STORAGE_KEY,
     onLoginSuccess,
   });
