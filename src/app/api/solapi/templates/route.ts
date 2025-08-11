@@ -37,6 +37,9 @@ export async function GET(request: Request) {
     // Add limit
     url.searchParams.append("limit", "10");
 
+    // Add status filter - APPROVED templates only
+    url.searchParams.append("status", "APPROVED");
+
     const response = await fetch(url.toString(), {
       method: "GET",
       headers: {
@@ -55,7 +58,7 @@ export async function GET(request: Request) {
     }
 
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     // Transform the response to match our interface
     const templates =

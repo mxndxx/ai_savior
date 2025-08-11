@@ -3,9 +3,17 @@
 import { useState, useEffect } from "react";
 import { Suspense } from "react";
 import { CheckCircle, ArrowRight, Zap, Target, TrendingUp } from "lucide-react";
+import { leadsApi } from "@/app/api/leads";
+import ModalPortal from "@/components/ModalPortal";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
 
 function ResultPageContent() {
   const [name, setName] = useState("회원");
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(showSuccessModal);
 
   // sessionStorage에서 이름 가져오기
   useEffect(() => {
@@ -14,6 +22,23 @@ function ResultPageContent() {
       setName(userName);
     }
   }, []);
+
+  const handleApply = async () => {
+    setIsLoading(true);
+    window.open("https://t.me/aisaas77", "_blank", "noopener,noreferrer");
+
+    try {
+      await leadsApi.createLead();
+      // API 성공 시 모달 표시
+      setShowSuccessModal(true);
+    } catch (error) {
+      alert(
+        error instanceof Error ? error.message : "신청 중 오류가 발생했습니다.",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -56,12 +81,11 @@ function ResultPageContent() {
                   <Target className="h-8 w-8 text-white" />
                 </div>
                 <div className="text-lg leading-relaxed">
-                  당신의 과거 경력 (마케팅 업무),{" "}
+                  당신의 과거 경력, 현재 상태,
                   <span className="block sm:inline">
-                    현재 상태 (콘텐츠 제작),
+                    그리고 선택한 관심분야를 바탕으로
                   </span>
-                  그리고 선택한 관심분야를 바탕으로
-                  <br />
+                  <br className="hidden sm:block" />
                   <span className="font-semibold text-red-500">AI 최대표</span>
                   는 다음 전략을 추천드립니다:
                 </div>
@@ -187,8 +211,11 @@ function ResultPageContent() {
               <span className="block sm:inline">
                 N잡러들이 실행한 결과입니다.
               </span>
-              아래 버튼을 눌러 카카오톡방에서{" "}
-              <span className="block sm:inline">바로 다운로드 받으세요.</span>
+              <br className="hidden sm:block" />
+              아래 버튼을 눌러 텔레그램 비밀 대기방에서{" "}
+              <span className="block sm:inline">
+                비법서PDF 자료를 무료로 받아가세요.
+              </span>
             </p>
 
             <div className="flex flex-col items-center justify-center gap-4 md:flex-row">
@@ -206,9 +233,19 @@ function ResultPageContent() {
               </div>
             </div>
 
-            <button className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl">
-              지금 비법서 받기
-              <ArrowRight className="ml-3 h-6 w-6" />
+            <button
+              onClick={handleApply}
+              disabled={isLoading}
+              className="inline-flex h-16 transform items-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-12 text-xl font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {isLoading ? (
+                "처리 중..."
+              ) : (
+                <>
+                  지금 비법서 받기
+                  <ArrowRight className="ml-3 h-6 w-6" />
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -223,6 +260,43 @@ function ResultPageContent() {
           </div>
         </div>
       </footer>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <ModalPortal>
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+            <div
+              className="relative w-full max-w-sm rounded-lg bg-white p-6 shadow-xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="absolute top-4 right-4">
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="cursor-pointer text-2xl text-gray-400 hover:text-gray-600"
+                >
+                  &times;
+                </button>
+              </div>
+              <div className="mt-2 text-center">
+                <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+                  <CheckCircle className="h-8 w-8 text-green-600" />
+                </div>
+                <h2 className="mb-2 text-xl font-bold">비법서 신청 완료!</h2>
+                <p className="mb-6 whitespace-pre-line text-gray-600">
+                  기밀자료의 보안을 위해 비밀대기방 공지란에서 <br />
+                  12종 자료 안내와 비법서 PDF를 확인하세요
+                </p>
+                <button
+                  onClick={() => setShowSuccessModal(false)}
+                  className="w-full cursor-pointer rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] px-4 py-3 font-bold text-white transition-all hover:from-[#B91C1C] hover:to-[#991B1B]"
+                >
+                  확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </ModalPortal>
+      )}
     </div>
   );
 }

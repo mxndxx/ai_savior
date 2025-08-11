@@ -4,23 +4,23 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="rounded-t-4xl bg-gray-800 py-6 text-white">
-      <div className="container mx-auto px-4">
+    <footer className="rounded-t-4xl bg-black py-6 text-white">
+      <div className="container mx-auto p-4">
         {/* Main Footer Content */}
-        <div className="mb-4 grid grid-cols-1 gap-8 lg:grid-cols-4">
+        <div className="mb-4 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Company Info */}
-          <div className="lg:col-span-2">
+          <div className="sm:col-span-2">
             {/* Contact Info */}
             <div className="space-y-2 text-sm text-gray-300">
-              <div>상호명: N잡 AI</div>
-              <div>대표자: 김○○</div>
-              <div>사업자등록번호: 339-87-03570</div>
-              <div>통신판매업신고번호: 제2025-서울-01438호</div>
+              <div>주식회사 에이아이사스</div>
+              {/* <div>서비스명: N잡 AI</div> */}
+              <div>대표자: 최서준</div>
+              <div>사업자등록번호: 878-81-03281</div>
+              <div>통신판매업 신고번호: 제 2025-경기김포-0882호</div>
               <div>
-                주소: 서울특별시 강남구 테헤란로 138, 202-2a, 202-2b(역삼동,
-                아센디오타워)
+                주소: 경기도 김포시 김포한강8로 158, 6층 604-C121호(마산동)
               </div>
-              <div>연락처: 010-9485-7624</div>
+              <div>연락처: 010-2014-2125 | e-mail: cddmh11@gmail.com</div>
             </div>
           </div>
 
@@ -35,12 +35,12 @@ export default function Footer() {
                 N잡 AI
               </Link>
               <Link
-                href="/course"
+                href="/lecture"
                 className="hover:text-teal block text-gray-300 transition-colors"
               >
                 클래스
               </Link>
-              <Link
+              {/* <Link
                 href="/course"
                 className="hover:text-teal block text-gray-300 transition-colors"
               >
@@ -51,12 +51,12 @@ export default function Footer() {
                 className="hover:text-teal block text-gray-300 transition-colors"
               >
                 강사진
-              </Link>
+              </Link> */}
             </div>
           </div>
 
           {/* Support & Legal */}
-          <div>
+          {/* <div>
             <h3 className="mb-4 text-lg font-semibold">고객지원</h3>
             <div className="space-y-3">
               <Link
@@ -85,7 +85,7 @@ export default function Footer() {
                 강사 신청 및 협업제안
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Legal Links */}
@@ -95,20 +95,20 @@ export default function Footer() {
               href="/privacy-policy"
               className="hover:text-teal transition-colors"
             >
-              개인정보 보호방침
+              개인정보처리방침
             </Link>
             <Link
-              href="/terms-of-use"
+              href="/terms-of-service"
               className="hover:text-teal transition-colors"
             >
               이용약관
             </Link>
-            <Link
+            {/* <Link
               href="/refund-policy"
               className="hover:text-teal transition-colors"
             >
               환불규정
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

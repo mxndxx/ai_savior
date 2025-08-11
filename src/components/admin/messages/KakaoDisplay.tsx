@@ -22,7 +22,6 @@ export const KakaoDisplay = ({
     enabled: !!content && content !== "설정되지 않음",
   });
 
-  console.log(template);
   const displayContent = () => {
     if (isEmpty || !content) {
       return <span className="text-gray-400">미설정</span>;

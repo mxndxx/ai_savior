@@ -2,6 +2,8 @@ import { supabase } from "@/utils/supabase";
 
 export async function getKakaoUserInfo(providerToken: string) {
   try {
+    console.log("Fetching Kakao user info with token:", providerToken.substring(0, 10) + "...");
+    
     const response = await fetch("https://kapi.kakao.com/v2/user/me", {
       headers: {
         Authorization: `Bearer ${providerToken}`,
@@ -10,10 +12,17 @@ export async function getKakaoUserInfo(providerToken: string) {
     });
 
     if (!response.ok) {
+      console.error("Kakao API response not ok:", response.status, response.statusText);
       throw new Error("Failed to fetch Kakao user info");
     }
 
     const data = await response.json();
+    console.log("Kakao user data:", {
+      hasPhoneNumber: !!data.kakao_account?.phone_number,
+      hasName: !!data.kakao_account?.name,
+      hasEmail: !!data.kakao_account?.email,
+    });
+    
     return {
       phoneNumber: data.kakao_account?.phone_number,
       name: data.kakao_account?.name,

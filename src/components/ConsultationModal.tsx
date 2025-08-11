@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight } from "lucide-react";
+import { useEffect } from "react";
 import ModalPortal from "@/components/ModalPortal";
+import KakaoLoginButton from "@/components/KakaoLoginButton";
+import { useFunnelApply } from "@/hooks/useFunnelApply";
+import { useModalScrollLock } from "@/hooks/useModalScrollLock";
+import { Check } from "lucide-react";
 
 interface ConsultationModalProps {
   isOpen: boolean;
@@ -14,30 +16,29 @@ export default function ConsultationModal({
   isOpen,
   onClose,
 }: ConsultationModalProps) {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
+  const { handleKakaoLogin, isLoading, error } = useFunnelApply();
+
+  // 모달 스크롤 잠금 적용
+  useModalScrollLock(isOpen);
+
+  useEffect(() => {
+    if (error) {
+      alert(error);
+    }
+  }, [error]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    sessionStorage.setItem("userName", formData.name);
-    router.push("/detail");
-    onClose();
+    handleKakaoLogin();
   };
 
   if (!isOpen) return null;
 
   return (
     <ModalPortal>
-      <div
-        className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4"
-        onClick={onClose}
-      >
+      <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
         <div
-          className="relative w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl"
+          className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl"
           onClick={(e) => e.stopPropagation()}
         >
           <button
@@ -59,58 +60,47 @@ export default function ConsultationModal({
           <div className="space-y-6">
             <div className="text-center">
               <h3 className="mb-2 text-2xl font-bold text-[#0D0D2B]">
-                무료 진단 시작하기
+                무료강의 신청하기
               </h3>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <input
-                  type="text"
-                  placeholder="이름을 입력해주세요"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="email"
-                  placeholder="이메일을 입력해주세요"
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <div>
-                <input
-                  type="tel"
-                  placeholder="연락처를 입력해주세요"
-                  value={formData.phone}
-                  onChange={(e) =>
-                    setFormData({ ...formData, phone: e.target.value })
-                  }
-                  className="h-12 w-full rounded-lg border-2 border-gray-300 px-4 text-lg transition-all duration-200 outline-none focus:border-[#DC2626] focus:ring-2 focus:ring-[#DC2626]/20"
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="flex h-14 w-full transform items-center justify-center rounded-lg bg-gradient-to-r from-[#DC2626] to-[#B91C1C] text-lg font-bold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:from-[#B91C1C] hover:to-[#991B1B] hover:shadow-xl"
+              <KakaoLoginButton
+                onClick={handleKakaoLogin}
+                isLoading={isLoading}
               >
-                AI 최대표에게 제출하기
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </button>
+                카카오로 3초 만에 시작하기
+              </KakaoLoginButton>
             </form>
 
-            <div className="rounded-lg bg-gray-50 p-3 text-center text-sm text-gray-500">
-              ✅ 100% 무료 진단 ✅ 개인정보 보호 ✅ 즉시 결과 확인
+            <div className="flex justify-between gap-2 rounded-lg sm:items-center sm:justify-center sm:gap-6">
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">100% 무료</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">개인정보 보호</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-gray-700 sm:gap-2 sm:text-sm">
+                <div className="flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-green-500 sm:h-5 sm:w-5">
+                  <Check
+                    className="h-2.5 w-2.5 text-white sm:h-3 sm:w-3"
+                    strokeWidth={3}
+                  />
+                </div>
+                <span className="font-medium">즉시 결과 확인</span>
+              </div>
             </div>
           </div>
         </div>

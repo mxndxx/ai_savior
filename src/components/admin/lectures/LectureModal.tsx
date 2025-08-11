@@ -14,6 +14,7 @@ interface LectureModalProps {
   isOpen: boolean;
   onClose: () => void;
   isEdit?: boolean;
+  isDuplicate?: boolean;
   lectureData?: LectureWithCoach | null;
 }
 
@@ -21,6 +22,7 @@ export default function LectureModal({
   isOpen,
   onClose,
   isEdit = false,
+  isDuplicate = false,
   lectureData = null,
 }: LectureModalProps) {
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
@@ -50,8 +52,7 @@ export default function LectureModal({
       content_text: "",
       url: "",
       start_date: "",
-      apply_deadline: "",
-      price: "",
+      price: "무료",
       coach_id: "",
     },
   });
@@ -72,25 +73,28 @@ export default function LectureModal({
     console.error("강사 목록 조회 실패:", coachesError);
   }
 
-  // 편집 모드일 때 폼 데이터 초기화
+  // 편집 모드 또는 복제 모드일 때 폼 데이터 초기화
   useEffect(() => {
-    if (isEdit && lectureData && isOpen) {
+    if ((isEdit || isDuplicate) && lectureData && isOpen) {
       setValue("title", lectureData.title);
       setValue("description", lectureData.description);
       setValue("url", lectureData.url);
       setValue("content_url", lectureData.content_url || "");
       setValue("content_text", lectureData.content_text || "");
-      setValue(
-        "start_date",
-        new Date(lectureData.start_date).toISOString().slice(0, 16),
-      );
-      setValue(
-        "apply_deadline",
-        new Date(lectureData.apply_deadline).toISOString().slice(0, 10),
-      );
+
+      // 복제 모드에서는 시작 날짜를 비워두고, 편집 모드에서는 기존 날짜 사용
+      if (isDuplicate) {
+        setValue("start_date", "");
+      } else {
+        setValue(
+          "start_date",
+          new Date(lectureData.start_date).toISOString().slice(0, 16),
+        );
+      }
+
       setValue("price", lectureData.price.toString());
 
-      // 기존 이미지 URL을 폼 필드에도 설정
+      // 복제 모드에서도 이미지를 그대로 복사
       setValue("thumbnail", lectureData.thumbnail || null);
       // lectureData.content_image는 콤마로 구분된 문자열이므로, 이를 배열로 변환합니다.
       const existingImages = lectureData.content_image
@@ -105,20 +109,20 @@ export default function LectureModal({
       if (lectureData.content_image) {
         setContentImagePreviews(existingImages);
       }
-    } else if (!isEdit) {
+    } else if (!isEdit && !isDuplicate) {
       reset();
       setThumbnailPreview("");
       setContentImagePreviews([]);
       setDeletedImageUrls([]);
     }
-  }, [isEdit, lectureData, isOpen, setValue, reset]);
+  }, [isEdit, isDuplicate, lectureData, isOpen, setValue, reset]);
 
   // 코치 목록이 로드된 후 coach_id 설정
   useEffect(() => {
-    if (isEdit && lectureData && coaches.length > 0) {
+    if ((isEdit || isDuplicate) && lectureData && coaches.length > 0) {
       setValue("coach_id", lectureData.coach_id.toString());
     }
-  }, [isEdit, lectureData, coaches, setValue]);
+  }, [isEdit, isDuplicate, lectureData, coaches, setValue]);
 
   // 미리보기 URL 정리 (메모리 누수 방지)
   useEffect(() => {
@@ -163,8 +167,10 @@ export default function LectureModal({
   };
 
   const { mutate, isPending: isSubmitting } = useMutation({
-    mutationFn: (data: CreateLectureForm) => {
-      if (isEdit && lectureData) {
+    mutationFn: async (data: CreateLectureForm) => {
+      let result;
+
+      if (isEdit && lectureData && !isDuplicate) {
         // 편집 모드
         const originalImages = Array.isArray(lectureData.content_image)
           ? lectureData.content_image
@@ -173,7 +179,7 @@ export default function LectureModal({
           (url) => !deletedImageUrls.includes(url),
         );
 
-        return lecturesApi.updateLecture(
+        result = await lecturesApi.updateLecture(
           lectureData.id,
           data,
           thumbnailFile || undefined,
@@ -182,21 +188,56 @@ export default function LectureModal({
           remainingImages, // 업데이트된 기존 이미지 목록
           deletedImageUrls, // 삭제할 이미지 URL 목록
         );
+      } else if (isDuplicate && lectureData) {
+        // 복제 모드 - 기존 이미지를 그대로 사용하여 새 강의 생성
+        const duplicateData = {
+          ...data,
+          thumbnail: data.thumbnail || lectureData.thumbnail,
+          content_image: data.content_image || lectureData.content_image,
+        };
+
+        result = await lecturesApi.createLecture({
+          formData: duplicateData,
+          thumbnailFile: undefined,
+          contentImageFiles: [],
+          isDuplicate: true,
+        });
       } else {
         // 생성 모드
-        return lecturesApi.createLecture({
+        result = await lecturesApi.createLecture({
           formData: data,
           thumbnailFile: thumbnailFile!,
           contentImageFiles: contentImageFiles,
+          isDuplicate: false,
         });
       }
+
+      // 강의 생성/복제 후 ConvertKit 태그 생성 (편집 모드 제외)
+      if (!isEdit || isDuplicate) {
+        try {
+          await fetch("/api/convertkit/tags", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name: result.id.toString() }),
+          });
+        } catch (tagError) {
+          console.error("ConvertKit 태그 생성 실패:", tagError);
+          // 태그 생성 실패는 전체 프로세스를 실패시키지 않음
+        }
+      }
+
+      return result;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["adminLectures"] });
       alert(
         isEdit
           ? "강의가 성공적으로 수정되었습니다!"
-          : "강의가 성공적으로 생성되었습니다!",
+          : isDuplicate
+            ? "강의가 성공적으로 복제되었습니다!"
+            : "강의가 성공적으로 생성되었습니다!",
       );
       handleClose();
     },
@@ -211,8 +252,8 @@ export default function LectureModal({
   });
 
   const onSubmit = (data: CreateLectureForm) => {
-    // 편집 모드가 아닐 때만 파일 필수 체크
-    if (!isEdit) {
+    // 생성 모드일 때만 파일 필수 체크
+    if (!isEdit && !isDuplicate) {
       if (!thumbnailFile) {
         alert("썸네일 이미지는 필수입니다.");
         return;
@@ -235,16 +276,18 @@ export default function LectureModal({
 
   return (
     <ModalPortal>
-      <div
-        className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      >
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
         <div
           className="relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white p-6"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-lg font-semibold">
-              {isEdit ? "강의 수정" : "새 강의 추가"}
+              {isEdit
+                ? "강의 수정"
+                : isDuplicate
+                  ? "강의 복제"
+                  : "새 강의 추가"}
             </h2>
             <button
               onClick={handleClose}
@@ -332,7 +375,7 @@ export default function LectureModal({
             {/* 썸네일 이미지 */}
             <div>
               <label className="mb-1 block text-sm font-medium text-gray-700">
-                썸네일 이미지 {!isEdit && "*"}
+                썸네일 이미지 {!isEdit && !isDuplicate && "*"}
               </label>
               <input
                 type="file"
@@ -357,7 +400,7 @@ export default function LectureModal({
                     setThumbnailPreview("");
                   }
                 }}
-                required={!isEdit}
+                required={!isEdit && !isDuplicate}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm file:mr-4 file:rounded-lg file:border-0 file:bg-gray-50 file:px-4 file:py-2 file:text-sm file:font-medium file:text-gray-700 hover:file:bg-gray-100 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
               />
 
@@ -385,12 +428,12 @@ export default function LectureModal({
                 </div>
               )}
 
-              {!isEdit && !thumbnailFile && (
+              {!isEdit && !isDuplicate && !thumbnailFile && (
                 <p className="mt-1 text-xs text-red-500">
                   썸네일 이미지는 필수입니다.
                 </p>
               )}
-              {isEdit && (
+              {(isEdit || isDuplicate) && (
                 <p className="mt-1 text-xs text-gray-500">
                   새 이미지를 선택하지 않으면 기존 이미지가 유지됩니다.
                 </p>
@@ -526,44 +569,23 @@ export default function LectureModal({
               )}
             </div>
 
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* 시작 날짜 */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  시작 날짜 *
-                </label>
-                <input
-                  type="datetime-local"
-                  {...register("start_date", {
-                    required: "시작 날짜는 필수입니다.",
-                  })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-                {errors.start_date && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {errors.start_date.message}
-                  </p>
-                )}
-              </div>
-
-              {/* 신청 마감일 */}
-              <div>
-                <label className="mb-1 block text-sm font-medium text-gray-700">
-                  신청 마감일 *
-                </label>
-                <input
-                  type="date"
-                  {...register("apply_deadline", {
-                    required: "신청 마감일은 필수입니다.",
-                  })}
-                  className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
-                />
-                {errors.apply_deadline && (
-                  <p className="mt-1 text-xs text-red-500">
-                    {errors.apply_deadline.message}
-                  </p>
-                )}
-              </div>
+            {/* 시작 날짜 */}
+            <div>
+              <label className="mb-1 block text-sm font-medium text-gray-700">
+                시작 날짜 *
+              </label>
+              <input
+                type="datetime-local"
+                {...register("start_date", {
+                  required: "시작 날짜는 필수입니다.",
+                })}
+                className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+              />
+              {errors.start_date && (
+                <p className="mt-1 text-xs text-red-500">
+                  {errors.start_date.message}
+                </p>
+              )}
             </div>
 
             {/* 가격 */}

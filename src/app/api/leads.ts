@@ -1,14 +1,32 @@
 import { supabase } from "@/utils/supabase";
 
-interface LeadData {
-  name: string;
-  email: string;
-  phone_number?: string;
-  subscribe: string;
-}
-
 export const leadsApi = {
-  createLead: async (leadData: LeadData): Promise<void> => {
+  isApplied: async (lectureId: string): Promise<boolean> => {
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      return false;
+    }
+
+    const { data, error } = await supabase
+      .from("leads")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("subscribe", lectureId)
+      .maybeSingle();
+
+    if (error && error.code !== "PGRST116") {
+      console.error("Error checking lead:", error);
+      return false;
+    }
+
+    return !!data;
+  },
+
+  createLead: async (subscribe?: string | null): Promise<void> => {
     const {
       data: { user },
       error: authError,
@@ -18,19 +36,10 @@ export const leadsApi = {
       throw new Error("인증이 필요합니다. 로그인 후 다시 시도해주세요.");
     }
 
-    if (user.email !== leadData.email) {
-      console.warn(
-        "Lead email does not match authenticated user email.",
-        `Authenticated: ${user.email}, Lead: ${leadData.email}`,
-      );
-    }
-
     const { error } = await supabase.from("leads").insert([
       {
-        name: leadData.name,
-        email: leadData.email,
-        phone_number: leadData.phone_number,
-        subscribe: leadData.subscribe,
+        user_id: user.id,
+        subscribe: subscribe,
       },
     ]);
 

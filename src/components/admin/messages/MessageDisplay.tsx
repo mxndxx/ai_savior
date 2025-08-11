@@ -1,4 +1,4 @@
-import { Edit, PlusCircle } from "lucide-react";
+import { Edit3 } from "lucide-react";
 
 interface MessageDisplayProps {
   content: string | undefined;
@@ -13,41 +13,35 @@ export const MessageDisplay = ({
   isEmpty,
   onEdit,
 }: MessageDisplayProps) => {
-  if (isEmpty) {
+  const displayContent = () => {
+    if (isEmpty || !content) {
+      return <span className="text-gray-400">미설정</span>;
+    }
+
     return (
-      <div className="flex items-center justify-between rounded-lg border p-4">
-        <div className="flex w-full items-center justify-between">
-          <div>
-            <h3 className="font-medium text-gray-900">{channelLabel}</h3>
-            <p className="text-sm text-gray-400 italic">
-              메시지가 설정되지 않았습니다.
-            </p>
-          </div>
-          <button
-            onClick={onEdit}
-            className="flex-shrink-0 rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
-          >
-            <PlusCircle className="h-4 w-4" />
-          </button>
-        </div>
+      <div className="max-h-48 max-w-none overflow-y-auto rounded-xl bg-gray-50 p-2 text-sm whitespace-pre-wrap text-gray-600">
+        <p>{content}</p>
       </div>
     );
-  }
+  };
 
   return (
-    <div className="flex items-center justify-between rounded-lg border p-4">
-      <div className="flex-1 pr-4">
-        <h3 className="font-medium text-gray-900">{channelLabel}</h3>
-        <div className="mt-1 max-h-24 overflow-y-auto rounded-md bg-gray-100 p-3 text-sm text-gray-500">
-          <p className="text-sm whitespace-pre-wrap text-gray-500">{content}</p>
+    <div
+      className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-md ${
+        isEmpty ? "border-gray-200 bg-gray-50" : "border-gray-300 bg-white"
+      }`}
+      onClick={onEdit}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex-1 pr-2">
+          <h3 className="font-medium text-gray-900">{channelLabel}</h3>
+          <div className="mt-1">{displayContent()}</div>
         </div>
+        <Edit3
+          size={16}
+          className="mt-0.5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100"
+        />
       </div>
-      <button
-        onClick={onEdit}
-        className="flex-shrink-0 rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
-      >
-        <Edit className="h-4 w-4" />
-      </button>
     </div>
   );
 };

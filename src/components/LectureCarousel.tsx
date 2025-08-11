@@ -59,7 +59,7 @@ export default function LectureCarousel({
     return () => window.removeEventListener("resize", handleResize);
   }, [itemsPerSlide.desktop, itemsPerSlide.tablet, itemsPerSlide.mobile]);
 
-  const totalSlides = Math.ceil(lectures.length / currentItemsPerSlide);
+  const totalSlides = Math.max(1, lectures.length - currentItemsPerSlide + 1);
 
   // 자동 슬라이드
   useEffect(() => {

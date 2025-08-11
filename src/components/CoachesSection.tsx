@@ -68,16 +68,16 @@ export default function CoachesSection() {
             </div>
             <div className="flex w-full max-w-[400px] flex-col items-start justify-end gap-4">
               <p className="text-gray-500">
-                N잡 연구소와 함께한 실제 수강생들의 생생한 수익화 여정 이야기가
-                가득 담겨있는 명예의 전당을 지금 확인해보세요!
+                N잡 AI와 함께한 실제 수강생들의 생생한 수익화 여정 이야기가 가득
+                담겨있는 명예의 전당을 지금 확인해보세요!
               </p>
-              <a
+              {/* <a
                 href="/teachers"
                 className="flex items-center gap-4 text-lg text-gray-700 transition-colors hover:text-purple-600 md:text-2xl"
               >
                 강사 이력 확인하기
                 <CircleChevronRight className="size-7 stroke-1" />
-              </a>
+              </a> */}
             </div>
           </div>
 

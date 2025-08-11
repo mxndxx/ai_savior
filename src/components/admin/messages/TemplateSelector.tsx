@@ -17,6 +17,7 @@ interface TemplateSelectorProps {
     nextCursor: any;
   }>;
   renderContent?: (template: Template) => React.ReactNode;
+  onTemplateSelect?: (template: Template | null) => void;
 }
 
 export const TemplateSelector = ({
@@ -24,6 +25,7 @@ export const TemplateSelector = ({
   channel,
   fetchTemplates,
   renderContent,
+  onTemplateSelect,
 }: TemplateSelectorProps) => {
   const {
     editText,
@@ -87,6 +89,7 @@ export const TemplateSelector = ({
       setEditText("");
     }
     setIsOpen(false);
+    onTemplateSelect?.(template);
   };
 
   const handleScroll = useCallback(
@@ -110,53 +113,53 @@ export const TemplateSelector = ({
 
   const placeholderText =
     channel === "email"
-      ? "컨버트킷 브로드캐스트를 선택하세요"
+      ? "컨버트킷 이메일 템플릿을 선택하세요"
       : "솔라피 알림톡 템플릿을 선택하세요";
 
   return (
-    <div className="rounded-lg border p-4">
-      <h3 className="font-medium text-gray-900">{channelLabel}</h3>
+    <div className="rounded-lg border border-gray-300 bg-white p-4 shadow-sm">
+      <h3 className="mb-3 font-medium text-gray-900">{channelLabel}</h3>
 
-      <div className="mt-2 space-y-2">
+      <div className="space-y-3">
         <div ref={dropdownRef} className="relative">
           {/* 커스텀 셀렉트 박스 */}
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
             disabled={isTemplatesLoading}
-            className="relative w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-left text-sm focus:border-black focus:ring-1 focus:ring-black focus:outline-none disabled:opacity-50"
+            className="relative w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-left text-sm transition-all hover:bg-gray-100 focus:border-blue-400 focus:bg-white focus:ring-2 focus:ring-blue-400/20 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
           >
             <span className="block truncate">
               {selectedTemplate
                 ? `${selectedTemplate.id} - ${selectedTemplate.title}`
                 : placeholderText}
             </span>
-            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               <ChevronDown
-                className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
               />
             </span>
           </button>
 
           {/* 드롭다운 리스트 */}
           {isOpen && (
-            <div className="absolute z-50 mt-1 w-full rounded-md bg-white shadow-lg">
+            <div className="absolute z-50 mt-2 w-full rounded-xl border border-gray-200 bg-white shadow-xl">
               <div
                 ref={listRef}
                 onScroll={handleScroll}
-                className="ring-opacity-5 max-h-60 overflow-auto rounded-md py-1 text-base ring-1 ring-black focus:outline-none sm:text-sm"
+                className="max-h-72 overflow-auto rounded-xl py-2 text-sm focus:outline-none"
               >
                 {/* 선택 해제 옵션 */}
                 <div
                   onClick={() => handleTemplateSelect(null)}
-                  className="relative cursor-pointer py-2 pr-9 pl-3 select-none hover:bg-gray-100"
+                  className="relative cursor-pointer px-4 py-2.5 transition-colors select-none hover:bg-gray-50"
                 >
                   <span className="block truncate text-gray-500">
                     선택 안함
                   </span>
                   {!selectedTemplateId && (
                     <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                      <Check className="h-4 w-4 text-black" />
+                      <Check className="h-4 w-4 text-blue-500" />
                     </span>
                   )}
                 </div>
@@ -166,7 +169,7 @@ export const TemplateSelector = ({
                   <div
                     key={template.id}
                     onClick={() => handleTemplateSelect(template)}
-                    className="relative cursor-pointer py-2 pr-9 pl-3 select-none hover:bg-gray-100"
+                    className="relative cursor-pointer px-4 py-2.5 transition-colors select-none hover:bg-gray-50"
                   >
                     <div>
                       <span className="block truncate text-xs text-gray-500">
@@ -175,7 +178,7 @@ export const TemplateSelector = ({
                     </div>
                     {template.id.toString() === selectedTemplateId && (
                       <span className="absolute inset-y-0 right-0 flex items-center pr-4">
-                        <Check className="h-4 w-4 text-black" />
+                        <Check className="h-4 w-4 text-blue-500" />
                       </span>
                     )}
                   </div>
@@ -183,7 +186,7 @@ export const TemplateSelector = ({
 
                 {/* 로딩 표시 */}
                 {isFetchingNextPage && (
-                  <div className="py-2 text-center text-sm text-gray-500">
+                  <div className="py-3 text-center text-xs text-gray-400">
                     로딩 중...
                   </div>
                 )}
@@ -192,35 +195,30 @@ export const TemplateSelector = ({
           )}
         </div>
 
-        {selectedTemplate && (
-          <div className="rounded-md bg-gray-50 p-3">
-            <h4 className="mb-1 text-sm font-medium text-gray-700">내용:</h4>
-            <div className="max-h-64 overflow-x-hidden overflow-y-auto rounded border border-gray-200 bg-white">
-              {renderContent ? (
-                renderContent(selectedTemplate)
-              ) : (
-                <p className="p-4 text-sm text-gray-600">
-                  {selectedTemplate.content ||
-                    `제목: ${selectedTemplate.title}`}
-                </p>
-              )}
+        {renderContent && selectedTemplate && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-gray-700">미리보기</h4>
+            <div className="max-h-64 overflow-x-hidden overflow-y-auto rounded-xl border border-gray-200 bg-gray-50">
+              {renderContent(selectedTemplate)}
             </div>
           </div>
         )}
       </div>
 
-      <div className="mt-2 flex justify-end gap-2">
+      <div className="mt-4 flex justify-end gap-2">
         <button
           onClick={handleCancelClick}
-          className="rounded-md border border-gray-300 bg-white px-3 py-1 text-sm text-gray-700 hover:bg-gray-50"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
         >
           <X size={16} />
+          취소
         </button>
         <button
           onClick={handleSaveClick}
           disabled={isLoading || (!editText && !selectedTemplateId)}
-          className="rounded-md border border-transparent bg-black px-3 py-1 text-sm text-white hover:bg-gray-800 disabled:opacity-50"
+          className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-transparent bg-black px-4 py-2 text-sm font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
+          <Check size={16} />
           {isLoading ? "저장 중..." : "저장"}
         </button>
       </div>

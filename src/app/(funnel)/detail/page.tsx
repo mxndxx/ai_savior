@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import DetailedConsultationModal from "@/components/DetailedConsultationModal";
 import ConsultationProgressModal from "@/components/ConsultationProgressModal";
+import Image from "next/image";
 
 export default function DetailPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,26 +33,75 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white">
-        <div className="relative mx-auto space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-6 lg:px-32 lg:py-24">
-          <h1 className="text-center text-4xl leading-tight font-bold lg:text-5xl">
-            앞으로 <span className="text-[#DC2626]">AI 시대</span>에서{" "}
-            <span className="block sm:inline">
-              수익을 만드려면{" "}
-              <span className="block sm:inline">
-                어떻게 해야 할까요?
+      {/* 축하 메시지 섹션 */}
+      <section className="py-6 sm:py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 rounded-lg bg-[#f6ff4f] p-4">
+            <p className="text-center text-black">
+              <span className="text-2xl font-bold sm:text-3xl">
+                🎁축하드립니다!🎁
                 <br />
-              </span>{" "}
-            </span>
-            <span className="block sm:inline">그리고 여러분처럼 </span>
+                AI SAAS 시스템 <br className="block sm:hidden" />
+                무료 비밀강의 신청이 <br className="block sm:hidden" />
+                완료되었습니다!🎉
+              </span>
+            </p>
+          </div>
+          <div className="mb-8">
+            <Image
+              src="https://cdn.imweb.me/thumbnail/20240601/26c88094b0c64.jpg"
+              alt="무료 비밀강의"
+              width={1000}
+              height={600}
+              className="w-full rounded-lg"
+            />
+          </div>
+          <div className="mb-8 text-center">
+            <p className="text-black">
+              <span className="text-2xl font-bold sm:text-3xl">
+                📌 월 1.6억 시스템의 비밀강의는{" "}
+                <br className="block sm:hidden" />
+                <span className="bg-[#fff850] px-1">
+                  오늘, 내일 저녁 8시에 시작됩니다
+                </span>
+                <br />
+                <br />
+                아래 비밀대기방 공지에서 <br className="block sm:hidden" />월
+                1000시스템 기밀 설계도와 <br className="block sm:hidden" />
+                비법 선물 12종을 받아가세요^^
+              </span>
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <a
+              href="https://swiy.co/t_aisaasroom"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block rounded-full bg-blue-500 px-8 py-4 text-lg font-bold text-white transition-colors hover:bg-blue-600"
+            >
+              🎈무료 12종 선물받기(클릭)
+            </a>
+          </div>
+        </div>
+      </section>
+      <section className="relative items-center overflow-hidden bg-gradient-to-br from-[#0D0D2B] via-[#1a1a3a] to-[#0D0D2B] text-white">
+        <div className="relative mx-auto max-w-7xl space-y-4 px-4 py-10 sm:space-y-10 sm:px-6 sm:py-20 lg:px-8 lg:py-24">
+          <h1 className="text-center text-3xl leading-tight font-bold lg:text-5xl">
+            앞으로 <span className="text-[#DC2626]">AI 시대</span>에서{" "}
+            <br className="block sm:hidden" />
+            수익을 만드려면 <br className="block sm:hidden" />
+            어떻게 해야 할까요?
+            <br />
+            그리고 여러분처럼 <br className="block sm:hidden" />
             <span className="text-[#DC2626]">
               추가수입을 원하는 사람들이
             </span>{" "}
+            <br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">
-              줄어들까요?
-            </span>{" "}
-            <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
-              늘어날까요?
+              줄어들까요?{" "}
+              <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
+                늘어날까요?
+              </span>
             </span>
           </h1>
 
@@ -96,7 +146,9 @@ export default function DetailPage() {
             </div>
             <div className="space-y-2">
               <div className="text-3xl font-bold text-[#DC2626]">2.3배</div>
-              <div className="text-gray-600">AI 도구 사용률</div>
+              <div className="block text-gray-600 sm:inline">
+                AI 도구 사용률
+              </div>
               <div className="text-xs text-gray-500">최근 1년간 급증</div>
             </div>
             <div className="space-y-2">
@@ -111,16 +163,26 @@ export default function DetailPage() {
       </section>
 
       {/* Features Section - N잡 성공 요소 */}
-      <section className="flex flex-col gap-10 py-20">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mb-16 text-center">
             <h2 className="mb-4 text-3xl font-bold text-[#0D0D2B] lg:text-4xl">
-              왜 지금이{" "}
-              <span className="text-[#DC2626]">AI로 새로운 수익을 만들</span>{" "}
-              최적기일까요?
+              <span className="lg:hidden">
+                왜 지금이
+                <br />
+                <span className="text-[#DC2626]">AI로 새로운 수익을 만들</span>
+                <br />
+                최적기일까요?
+              </span>
+              <span className="hidden lg:inline">
+                왜 지금이{" "}
+                <span className="text-[#DC2626]">AI로 새로운 수익을 만들</span>{" "}
+                최적기일까요?
+              </span>
             </h2>
             <p className="mx-auto max-w-3xl text-xl text-gray-600">
-              경제적 불확실성과 AI 기술 발전이 만든 새로운 기회의 시대입니다.
+              경제적 불확실성과 AI 기술 발전이 만든{" "}
+              <span className="block sm:inline">새로운 기회의 시대입니다.</span>
             </p>
           </div>
 
@@ -133,8 +195,13 @@ export default function DetailPage() {
                 경제 환경
               </h3>
               <p className="leading-relaxed text-gray-600">
-                인플레이션과 고용 불안정으로 추가 수입원의 필요성이 급증.
-                안정적인 부수입 확보가 필수가 된 시대입니다.
+                인플레이션과 고용 불안정으로{" "}
+                <span className="block sm:inline">
+                  추가 수입원의 필요성이 급증.
+                  <br className="hidden sm:block" />
+                </span>
+                안정적인 부수입 확보가{" "}
+                <span className="block sm:inline">필수가 된 시대입니다.</span>
               </p>
             </div>
 
@@ -144,8 +211,13 @@ export default function DetailPage() {
               </div>
               <h3 className="mb-4 text-xl font-bold text-[#0D0D2B]">AI 혁신</h3>
               <p className="leading-relaxed text-gray-600">
-                누구나 쉽게 접근할 수 있는 AI 도구들의 대중화로 개인도 전문가
-                수준의 결과물 창출이 가능합니다.
+                누구나 쉽게 접근할 수 있는{" "}
+                <span className="block sm:inline">AI 도구들의 대중화로</span>{" "}
+                <br className="hidden sm:block" />
+                개인도 전문가 수준의{" "}
+                <span className="block sm:inline">
+                  결과물 창출이 가능합니다.
+                </span>
               </p>
             </div>
 
@@ -157,8 +229,13 @@ export default function DetailPage() {
                 시장 기회
               </h3>
               <p className="leading-relaxed text-gray-600">
-                디지털 전환 가속화로 온라인 비즈니스 기회 폭증. 개인 브랜딩과
-                콘텐츠 시장의 무한 성장 가능성.
+                디지털 전환 가속화로{" "}
+                <span className="block sm:inline">
+                  온라인 비즈니스 기회 폭증.
+                </span>
+                <br className="hidden sm:block" />
+                개인 브랜딩과 콘텐츠 시장의
+                <span className="block sm:inline">무한 성장 가능성.</span>
               </p>
             </div>
           </div>
@@ -184,7 +261,7 @@ export default function DetailPage() {
                 job: "회사원 → AI 컨텐츠 제작",
                 result: "월 250만원",
                 content:
-                  "AI 도구로 유튜브 썸네일과 블로그 글을 만들어 월 250만원 수익을 만들었어요!",
+                  "AI 도구로 유튜브 썸네일과 블로그 글을  만들어 월 250만원 수익을 만들었어요!",
                 period: "3개월만에 첫 수익 달성",
               },
               {
@@ -255,7 +332,8 @@ export default function DetailPage() {
               AI 최대표의 <span className="text-[#DC2626]">실전 노하우</span>
             </h2>
             <p className="text-lg text-gray-600">
-              유튜브, 칼럼으로 검증된 전문가의 인사이트를 확인하세요
+              유튜브, 칼럼으로 검증된 전문가의{" "}
+              <span className="block sm:inline">인사이트를 확인하세요</span>
             </p>
           </div>
 
@@ -402,15 +480,15 @@ export default function DetailPage() {
 
           <div className="mb-8 flex flex-row items-center justify-center gap-2 sm:gap-4">
             <div className="flex items-center text-white">
-              <CheckCircle className="mr-2 h-5 w-5" />
+              <CheckCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-5 sm:w-5" />
               <span>1:1 맞춤 분석</span>
             </div>
             <div className="flex items-center text-white">
-              <CheckCircle className="mr-2 h-5 w-5" />
+              <CheckCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-5 sm:w-5" />
               <span>실전 액션 플랜</span>
             </div>
             <div className="flex items-center text-white">
-              <CheckCircle className="mr-2 h-5 w-5" />
+              <CheckCircle className="mr-1 h-3.5 w-3.5 sm:mr-2 sm:h-5 sm:w-5" />
               <span>AI 도구 추천</span>
             </div>
           </div>

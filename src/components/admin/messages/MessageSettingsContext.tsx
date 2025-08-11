@@ -24,6 +24,8 @@ interface MessageSettingsContextType {
   editText: string;
   isCreating: boolean;
   isUpdating: boolean;
+  emailTemplateMetadata: { id: number; name: string } | null;
+  setEmailTemplateMetadata: (metadata: { id: number; name: string } | null) => void;
 
   // Actions
   setActiveLectureId: (id: string) => void;
