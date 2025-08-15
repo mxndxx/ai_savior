@@ -32,7 +32,7 @@ export default function FAQSection() {
   };
 
   return (
-    <section className="space-y-5 bg-white py-10 md:space-y-10 md:py-[100px] lg:space-y-16">
+    <section className="space-y-5 bg-black py-10 md:space-y-10 md:py-[100px] lg:space-y-16">
       <div className="flex w-full flex-col justify-between gap-5 lg:flex-row">
         {/* Left Content */}
         <div className="space-y-10">
@@ -43,7 +43,7 @@ export default function FAQSection() {
             <h2 className="text-3xl leading-[1.2] font-semibold whitespace-pre-line md:text-4xl lg:text-5xl">
               자주 묻는 질문
             </h2>
-            <p className="text-lg leading-[1.3] text-gray-700 md:text-xl lg:text-[28px]">
+            <p className="text-lg leading-[1.3] text-gray-500 md:text-xl lg:text-[28px]">
               N잡 AI에게 수강생 여러분들께서{"\n"}
               가장 궁금해 하시는 질문들을 안내드립니다.
             </p>
@@ -64,7 +64,7 @@ export default function FAQSection() {
               <div key={faq.id} className="space-y-2 border-none lg:space-y-3">
                 <button
                   onClick={() => toggleItem(faq.id)}
-                  className="flex w-full items-center justify-between rounded-[20px] border border-gray-200 px-5 py-5 text-left text-lg transition-colors hover:bg-slate-100 md:text-2xl lg:px-10 lg:py-7"
+                  className="flex w-full items-center justify-between rounded-[20px] border border-gray-200 px-5 py-5 text-left text-lg transition-colors hover:bg-slate-100 hover:text-black md:text-2xl lg:px-10 lg:py-7"
                 >
                   {faq.question}
                   <ChevronDown
@@ -73,6 +73,7 @@ export default function FAQSection() {
                     }`}
                   />
                 </button>
+
                 <div
                   className={`overflow-hidden transition-all duration-500 ease-in-out ${
                     openItem === faq.id
@@ -80,7 +81,7 @@ export default function FAQSection() {
                       : "max-h-0 opacity-0"
                   }`}
                 >
-                  <div className="rounded-xl border-2 border-violet-400 px-5 py-4 text-base leading-relaxed text-gray-600 md:text-lg lg:px-10">
+                  <div className="rounded-xl border-2 border-violet-400 px-5 py-4 text-base leading-relaxed text-gray-500 md:text-lg lg:px-10">
                     {faq.answer}
                   </div>
                 </div>
