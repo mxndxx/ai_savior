@@ -1,28 +1,38 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { ChevronDown, ChevronUp } from "lucide-react"
 
 export default function Footer() {
+  const [isCompanyInfoOpen, setIsCompanyInfoOpen] = useState(false)
   return (
     <footer className="rounded-t-4xl bg-black py-6 text-white">
       <div className="container mx-auto p-4">
         {/* Main Footer Content */}
         <div className="mb-4 grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Company Info */}
-          <div className="sm:col-span-2">
-            {/* Contact Info */}
-            <div className="space-y-2 text-sm text-gray-300">
-              <div>주식회사 에이아이사스</div>
-              {/* <div>서비스명: N잡 AI</div> */}
-              <div>대표자: 최서준</div>
-              <div>사업자등록번호: 878-81-03281</div>
-              <div>통신판매업 신고번호: 제 2025-경기김포-0882호</div>
-              <div>
-                주소: 경기도 김포시 김포한강8로 158, 6층 604-C121호(마산동)
+            <div className="md:col-span-2">
+              <div className="space-y-2 text-slate-300 text-sm">
+                <button
+                  onClick={() => setIsCompanyInfoOpen(!isCompanyInfoOpen)}
+                  className="flex items-center space-x-1 w-full text-left hover:text-white transition-colors"
+                >
+                  <span className="font-medium">주식회사 에이아이사스</span>
+                  {isCompanyInfoOpen ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                </button>
+
+                {isCompanyInfoOpen && (
+                  <div className="mt-4 p-4 bg-black rounded-lg space-y-1">
+                    <p>대표자: 최서준</p>
+                    <p>사업자등록번호: 878-81-03281</p>
+                    <p>통신판매업 신고번호: 제 2025-경기김포-0882호</p>
+                    <p>주소: 경기도 김포시 김포한강2로 158, 6층 604-C121호(아시동)</p>
+                    <p>연락처: 010-2014-2125 | e-mail: cddmh11@gmail.com</p>
+                  </div>
+                )}
               </div>
-              <div>연락처: 010-2014-2125 | e-mail: cddmh11@gmail.com</div>
             </div>
-          </div>
 
           {/* Quick Links */}
           <div>
