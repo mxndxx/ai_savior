@@ -16,7 +16,7 @@ export default function SuccessStories() {
   ];
 
   return (
-    <section className="bg-white py-10 md:py-[100px]">
+    <section className="py-10 md:py-[100px]">
       <div className="w-full space-y-6 md:space-y-10 lg:space-y-12">
         {/* Header */}
         <div className="flex w-full flex-col items-start gap-3 md:flex-row md:items-end md:justify-between">
