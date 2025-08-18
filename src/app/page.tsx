@@ -1,9 +1,18 @@
 'use client';
 
 import Link from "next/link";
+import NextImage from "next/image";
 import { useMemo, useState, useRef } from "react";
-import Image from "next/image";
-import { Search, Play, ChevronDown, ChevronUp, ChevronRight, Shield, Sparkles } from "lucide-react";
+import {
+  Search,
+  ChevronDown,
+  ChevronUp,
+  ChevronRight,
+  Shield,
+  Sparkles,
+  Menu,
+  X,
+} from "lucide-react";
 import FAQSection from "@/components/FAQSection";
 import CoachesSection from "@/components/CoachesSection";
 import SuccessStories from "@/components/SuccessStories";
@@ -18,74 +27,29 @@ type Agent = {
 };
 
 const AGENTS: Agent[] = [
-  {
-    "slug": "real-estate-auction",
-    "title": "AI 부동산 경매 에이전트",
-    "pitch": "200만원 투자로, 30일 안에 1,000만원의 첫 시세 차익을 경험하십시오.",
-    "category": "수익 창출"
-  },
-  {
-    "slug": "institutional-analyzer",
-    "title": "AI 주식/코인 '기관' 정보 분석기",
-    "pitch": "기관 투자자들의 움직임을 분석하는 AI와 함께 7일 안에 첫 수익 실현의 기쁨을 맛보십시오.",
-    "category": "금융 자동화"
-  },
-  {
-    "slug": "gov-bidding",
-    "title": "AI 정부/기업 입찰 에이전트",
-    "pitch": "AI가 발굴한 수천만원짜리 첫 정부 사업을 30일 안에 수주하는 경험을 하십시오.",
-    "category": "수익 창출"
-  },
-  {
-    "slug": "ma-startup-investor",
-    "title": "AI M&A/스타트업 투자 에이전트",
-    "pitch": "대기업이 인수할 가능성이 높은 비상장 스타트업 정보를 가장 먼저 얻으십시오.",
-    "category": "투자"
-  },
-  {
-    "slug": "luxury-resell",
-    "title": "AI 중고 명품 리셀 에이전트",
-    "pitch": "AI가 찾아낸 시세보다 50만원 이상 저렴한 첫 명품을 단 7일 안에 손에 넣으십시오.",
-    "category": "리셀"
-  },
-  {
-    "slug": "global-sourcing",
-    "title": "AI 해외구매대행 '독점' 상품 발굴기",
-    "pitch": "AI가 발굴하고 세팅해 준 '독점' 상품으로 당신의 스토어에서 첫 매출을 경험하십시오.",
-    "category": "커머스"
-  },
-  {
-    "slug": "yt-shorts-affiliate",
-    "title": "AI 유튜브 숏폼 제휴 마케터",
-    "pitch": "AI가 24시간 운영하는 당신의 채널에서 14일 안에 첫 쿠팡 커미션을 확인하십시오.",
-    "category": "마케팅"
-  },
-  {
-    "slug": "freelance-scanner",
-    "title": "AI 외주/프리랜서 '고단가' 프로젝트 스캐너",
-    "pitch": "AI가 당신에게 최적화된 300만원 이상의 첫 프로젝트를 14일 안에 자동으로 수주하게 하십시오.",
-    "category": "수익 창출"
-  },
-  {
-    "slug": "blog-adsense",
-    "title": "AI 블로그 애드센스 자동화",
-    "pitch": "60일 안에 구글 애드센스 승인을 받고, AI 블로그에서 첫 달러 수익을 경험하십시오.",
-    "category": "콘텐츠"
-  },
-  {
-    "slug": "tax-refund-finder",
-    "title": "AI '세금 환급' 자동 분석기",
-    "pitch": "AI가 당신의 숨겨진 환급금을 찾아, '보너스'를 안겨드립니다.",
-    "category": "개인 금융"
-  }
+  { slug: "real-estate-auction", title: "AI 부동산 경매 에이전트", pitch: "200만원 투자로, 30일 안에 1,000만원의 첫 시세 차익을 경험하십시오.", category: "수익 창출" },
+  { slug: "institutional-analyzer", title: "AI 주식/코인 '기관' 정보 분석기", pitch: "기관 투자자들의 움직임을 분석하는 AI와 함께 7일 안에 첫 수익 실현의 기쁨을 맛보십시오.", category: "금융 자동화" },
+  { slug: "gov-bidding", title: "AI 정부/기업 입찰 에이전트", pitch: "AI가 발굴한 수천만원짜리 첫 정부 사업을 30일 안에 수주하는 경험을 하십시오.", category: "수익 창출" },
+  { slug: "ma-startup-investor", title: "AI M&A/스타트업 투자 에이전트", pitch: "대기업이 인수할 가능성이 높은 비상장 스타트업 정보를 가장 먼저 얻으십시오.", category: "투자" },
+  { slug: "luxury-resell", title: "AI 중고 명품 리셀 에이전트", pitch: "AI가 찾아낸 시세보다 50만원 이상 저렴한 첫 명품을 단 7일 안에 손에 넣으십시오.", category: "리셀" },
+  { slug: "global-sourcing", title: "AI 해외구매대행 '독점' 상품 발굴기", pitch: "AI가 발굴하고 세팅해 준 '독점' 상품으로 당신의 스토어에서 첫 매출을 경험하십시오.", category: "커머스" },
+  { slug: "yt-shorts-affiliate", title: "AI 유튜브 숏폼 제휴 마케터", pitch: "AI가 24시간 운영하는 당신의 채널에서 14일 안에 첫 쿠팡 커미션을 확인하십시오.", category: "마케팅" },
+  { slug: "freelance-scanner", title: "AI 외주/프리랜서 '고단가' 프로젝트 스캐너", pitch: "AI가 당신에게 최적화된 300만원 이상의 첫 프로젝트를 14일 안에 자동으로 수주하게 하십시오.", category: "수익 창출" },
+  { slug: "blog-adsense", title: "AI 블로그 애드센스 자동화", pitch: "60일 안에 구글 애드센스 승인을 받고, AI 블로그에서 첫 달러 수익을 경험하십시오.", category: "콘텐츠" },
+  { slug: "tax-refund-finder", title: "AI '세금 환급' 자동 분석기", pitch: "AI가 당신의 숨겨진 환급금을 찾아, '보너스'를 안겨드립니다.", category: "개인 금융" },
 ] as const;
 
 const CATEGORIES = ["전체","금융 자동화","수익 창출","개인 금융","투자","리셀","커머스","마케팅","콘텐츠"] as const;
 
 export default function Home() {
   const [query, setQuery] = useState("");
-    const [isCompanyInfoOpen, setIsCompanyInfoOpen] = useState(false)
+  const [isCompanyInfoOpen, setIsCompanyInfoOpen] = useState(false);
   const [cat, setCat] = useState<typeof CATEGORIES[number]>("전체");
+
+  // navbar (mobile)
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+
   const filtered = useMemo(() => {
     return AGENTS.filter(a => {
       const hitQ = a.title.includes(query) || a.pitch.includes(query);
@@ -99,44 +63,149 @@ export default function Home() {
 
   return (
     <main className="min-h-screen w-full bg-black text-white">
-      {/* Nav */}
+      {/* NAVBAR */}
       <header className="sticky top-0 z-50 backdrop-blur supports-[backdrop-filter]:bg-black/40 bg-black/60 border-b border-white/10">
-        <div className="container-xxl flex items-center justify-between py-3">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded-sm bg-[var(--accent)]"></div>
-            <span className="font-semibold tracking-tight text-lg" style={{letterSpacing:"-0.2px"}}>
-              <span className="text-[var(--accent)]">월천메이커</span> AI
-            </span>
+        <div className="container-xxl flex items-center gap-3 py-3">
+          {/* Hamburger (mobile) */}
+          <button
+            className="lg:hidden inline-flex items-center justify-center rounded-md border border-white/10 p-2 text-white/80 hover:bg-white/5"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+
+          {/* Logo */}
+          <Link href="/" className="shrink-0 flex items-center gap-2" aria-label="월천메이커 AI 홈">
+            <NextImage
+              src="/mooncheonmaker_w_ribbon_icon.svg"   // place le fichier dans /public
+              alt="월천메이커 AI 로고"
+              width={28}
+              height={28}
+              priority
+              className="h-7 w-7"
+            />
           </Link>
-          <nav className="hidden md:flex items-center gap-2">
-            {/* 카테고리 */}
-            <div className="flex gap-1">
-              {CATEGORIES.map(c => (
+
+          <div className="hidden lg:flex min-w-0 flex-1 items-center gap-3">
+            <div className="masked-overflow relative flex-1 overflow-x-auto">
+              <div className="flex flex-nowrap gap-1 pr-4">
+                {CATEGORIES.map(c => (
+                  <button
+                    key={c}
+                    onClick={() => setCat(c)}
+                    className={`inline-flex shrink-0 items-center justify-center px-4 py-1.5 rounded-full text-sm border border-white/15 transition ${cat===c ? 'bg-white/10' : 'bg-transparent hover:bg-white/5'}`}
+                  >
+                    {c}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Search */}
+            <div className="relative shrink-0">
+              <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-white/50" />
+              <input
+                placeholder="어떤 목표를 찾고 계신가요? (예: 애드센스, 경매)"
+                className="pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-md placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] w-64 xl:w-72"
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Bouton search (mobile) */}
+          <button
+            className="lg:hidden ml-auto inline-flex items-center justify-center rounded-md border border-white/10 p-2 text-white/80 hover:bg-white/5"
+            onClick={() => setShowSearch(s => !s)}
+            aria-label="Toggle search"
+          >
+            <Search className="w-5 h-5" />
+          </button>
+
+          {/* CTA */}
+          <Link href="#final-offer" className="shrink-0 hidden sm:inline-flex cta-pulse px-3 py-1.5 rounded-md text-sm bg-[var(--accent)] hover:opacity-90 transition">
+            무료 웨비나 신청
+          </Link>
+        </div>
+
+        {/* Search bar behind the header */}
+        {showSearch && (
+          <div className="lg:hidden border-t border-white/10 px-3 pb-3">
+            <div className="relative mt-2">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+              <input
+                placeholder="목표 검색…"
+                className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-md placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* Drawer Menu (mobile) */}
+      {menuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setMenuOpen(false)} />
+          <div className="absolute left-0 top-0 h-full w-[86%] max-w-sm bg-[#0a0a0a] border-r border-white/10 p-4 flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)} aria-label="월천메이커 AI 홈">
+                <NextImage
+                  src="/mooncheonmaker_w_ribbon_icon.svg"
+                  alt="월천메이커 AI 로고"
+                  width={28}
+                  height={28}
+                  priority
+                  className="h-7 w-7"
+                />
+              </Link>
+              <button
+                className="inline-flex items-center justify-center rounded-md border border-white/10 p-2 text-white/80 hover:bg-white/5"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Search */}
+            <div className="relative">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/50" />
+              <input
+                placeholder="목표 검색…"
+                className="w-full pl-9 pr-3 py-2 bg-white/5 border border-white/10 rounded-md placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent)]"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-2">
+              {CATEGORIES.map((c) => (
                 <button
                   key={c}
-                  onClick={() => setCat(c)}
-                  className={`inline-flex items-center justify-center px-4 py-1.5 h-auto w-auto whitespace-nowrap break-keep rounded-full text-sm border border-white/15 transition ${cat===c ? 'bg-white/10' : 'bg-transparent hover:bg-white/5'}`}
+                  onClick={() => {
+                    setCat(c);
+                    setMenuOpen(false);
+                  }}
+                  className={`inline-flex items-center justify-center px-4 py-2 rounded-full text-sm border border-white/15 ${cat === c ? "bg-white/10" : "bg-transparent hover:bg-white/5"}`}
                 >
                   {c}
                 </button>
               ))}
             </div>
-            <div className="w-px h-6 bg-white/10 mx-2" />
-            <div className="relative">
-              <Search className="w-4 h-4 absolute left-2 top-1/2 -translate-y-1/2 text-white/50" />
-              <input
-                placeholder="어떤 목표를 찾고 계신가요? (예: 애드센스, 경매)"
-                className="pl-8 pr-3 py-1.5 bg-white/5 border border-white/10 rounded-md placeholder-white/40 focus:outline-none focus:ring-2 focus:ring-[var(--accent)] w-72"
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-              />
-            </div>
-          </nav>
-          <Link href="#final-offer" className="cta-pulse px-3 py-1.5 rounded-md text-sm bg-[var(--accent)] hover:opacity-90 transition">
-            무료 웨비나 신청
-          </Link>
+
+            <Link
+              href="#final-offer"
+              onClick={() => setMenuOpen(false)}
+              className="mt-auto inline-flex items-center justify-center rounded-md bg-[var(--accent)] px-4 py-3 font-medium hover:opacity-90"
+            >
+              무료 웨비나 신청
+            </Link>
+          </div>
         </div>
-      </header>
+      )}
 
       {/* Section 1 - Hook */}
       <section className="relative min-h-[90vh] flex items-center">
@@ -200,7 +269,6 @@ export default function Home() {
                         <Link href={`/agents/${agent.slug}`} className="inline-flex items-center gap-1 text-[var(--accent)] hover:underline">
                           자세히 보기 <ChevronRight className="w-4 h-4" />
                         </Link>
-                        {/* <Play className="w-4 h-4 text-white/40" title="미리보기 (향후 제공)" /> */}
                       </div>
                     </div>
                   </div>
@@ -267,20 +335,16 @@ export default function Home() {
           </div>
         </div>
       </section>
+
       <HeroSection />
       <LectureSection />
-      {/* Section 6 - FaQ */}
       <FAQSection />
-      {/* Section 7 - Mentors */}
       <CoachesSection />
-      {/* Section 8 - Success Stories */}
       <SuccessStories />
-
 
       {/* Footer */}
       <footer className="py-10 border-t border-white/10">
         <div className="container-xxl space-y-6 text-white/60 text-sm">
-
           {/* 회사 정보 (접기/펼치기) */}
           <div className="md:col-span-2">
             <div className="space-y-2 text-slate-300 text-sm">
@@ -304,7 +368,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 아래 저작권 & 정책 링크 */}
+          {/* 저작권 & 정책 */}
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div>© {new Date().getFullYear()} 월천메이커 AI (wol1000.ai). 모든 권리 보유.</div>
             <div className="flex gap-4">
@@ -315,6 +379,26 @@ export default function Home() {
         </div>
       </footer>
 
+      <style jsx global>{`
+        .masked-overflow::before,
+        .masked-overflow::after {
+          content: "";
+          position: sticky;
+          top: 0;
+          bottom: 0;
+          width: 16px;
+          pointer-events: none;
+          z-index: 1;
+        }
+        .masked-overflow::before {
+          left: 0;
+          background: linear-gradient(to right, rgba(0,0,0,0.8), transparent);
+        }
+        .masked-overflow::after {
+          float: right;
+          background: linear-gradient(to left, rgba(0,0,0,0.8), transparent);
+        }
+      `}</style>
     </main>
   );
 }
