@@ -2,8 +2,8 @@ import LectureCarousel from "@/components/LectureCarousel";
 
 export default function LectureSection() {
   return (
-    <section className="flex flex-col gap-16 py-16">
-      <div className="mb-8">
+    <section className="py-20 border-t border-white/10">
+      <div className="container-xxl space-y-10">
         <div className="mb-10 flex flex-col">
           <h2 className="text-3xl font-bold text-black md:text-4xl">
             얼리버드 할인 중
@@ -18,7 +18,7 @@ export default function LectureSection() {
           autoPlayInterval={4000}
         />
       </div>
-      <div className="mb-8">
+      <div className="container-xxl space-y-10">
         <div className="mb-10 flex flex-col">
           <h2 className="text-3xl font-bold text-black md:text-4xl">
             매일 배우는, 무료강의

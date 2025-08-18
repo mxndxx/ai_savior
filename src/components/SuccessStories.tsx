@@ -2,8 +2,7 @@
 
 import LectureImage from "@/components/LectureImage";
 
-const proxied = (url: string) =>
-  `/api/proxy/image?url=${encodeURIComponent(url)}`;
+const proxied = (url: string) => `/api/proxy/image?url=${encodeURIComponent(url)}`;
 
 type Story = { src: string; title?: string };
 
@@ -16,31 +15,34 @@ export default function SuccessStories() {
   ];
 
   return (
-    <section className="py-10 md:py-[100px]">
-      <div className="w-full space-y-6 md:space-y-10 lg:space-y-12">
+    <section className="py-16 border-t border-white/10 bg-black">
+      <div className="container-xxl space-y-10">
         {/* Header */}
-        <div className="flex w-full flex-col items-start gap-3 md:flex-row md:items-end md:justify-between">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
           <div className="flex flex-col gap-2">
-            <span className="w-fit rounded-full border-2 border-purple-600 px-4 py-1 text-sm font-semibold text-purple-600 md:text-[20px]">
-              Success Stories
+            <span className="w-fit rounded-full border border-[var(--accent)] text-[var(--accent)] px-4 py-1 text-sm font-semibold">
+              성공 사례
             </span>
-            <h2 className="text-3xl leading-[1.2] font-semibold whitespace-pre-line md:text-4xl lg:text-5xl">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold tracking-tight">
               Success Stories
             </h2>
           </div>
         </div>
 
-        {/* GRID: 2 colonnes en mobile, 4 colonnes (même niveau) dès md */}
-        <ul className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
+        {/* Grid */}
+        <ul className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
           {items.map((it, i) => (
-            <li key={i}>
-              {/* Wrapper contrôlé par nous → pas de w-full sur <img/> */}
-              <LectureImage
-                src={proxied(it.src)}
-                alt={it.title || `Success story ${i + 1}`}
-                fill
-                className="aspect-[16/9] rounded-4xl"
-              />
+            <li key={i} className="group">
+              <div className="relative aspect-video rounded-xl overflow-hidden border border-white/10 bg-white/[0.02]">
+                <div className="absolute inset-0">
+                  <LectureImage
+                    src={proxied(it.src)}
+                    alt={it.title || `Success story ${i + 1}`}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+              </div>
             </li>
           ))}
         </ul>
