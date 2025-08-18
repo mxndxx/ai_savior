@@ -200,7 +200,7 @@ export default function Home() {
                         <Link href={`/agents/${agent.slug}`} className="inline-flex items-center gap-1 text-[var(--accent)] hover:underline">
                           자세히 보기 <ChevronRight className="w-4 h-4" />
                         </Link>
-                        <Play className="w-4 h-4 text-white/40" title="미리보기 (향후 제공)" />
+                        {/* <Play className="w-4 h-4 text-white/40" title="미리보기 (향후 제공)" /> */}
                       </div>
                     </div>
                   </div>

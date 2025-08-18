@@ -14,7 +14,6 @@ export default function Webinar() {
 
   return (
     <main className="min-h-[100svh] bg-black text-white">
-      {/* zone centrée (vertical + horizontal) */}
       <section className="min-h-[100svh] grid place-items-center px-4">
         <div className="w-full max-w-2xl space-y-6">
           <h1 className="text-3xl md:text-5xl font-bold text-[var(--accent)] text-center">
