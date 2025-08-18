@@ -78,7 +78,7 @@ export default function Home() {
           {/* Logo */}
           <Link href="/" className="shrink-0 flex items-center gap-2" aria-label="월천메이커 AI 홈">
             <NextImage
-              src="/mooncheonmaker_w_ribbon_icon.svg"   // place le fichier dans /public
+              src="/mooncheonmaker_w_ribbon_icon.svg"
               alt="월천메이커 AI 로고"
               width={28}
               height={28}
@@ -207,10 +207,10 @@ export default function Home() {
         </div>
       )}
 
-      {/* Section 1 - Hook */}
-      <section className="relative min-h-[90vh] flex items-center">
+      {/* Section 1 - Hook (compact only) */}
+      <section className="relative min-h-[60svh] md:min-h-[62svh] flex items-center">
         <div className="absolute inset-0 pointer-events-none [background:radial-gradient(60%_40%_at_50%_0%,rgba(229,9,20,0.15),transparent_65%),radial-gradient(40%_35%_at_10%_80%,rgba(0,123,255,0.2),transparent_70%)]" />
-        <div className="container-xxl text-center space-y-6">
+        <div className="container-xxl text-center space-y-4 md:space-y-5">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             <span className="text-white">노동의 시대는 끝났습니다.</span>
           </h1>
@@ -220,8 +220,11 @@ export default function Home() {
           <h3 className="text-base md:text-lg text-white/70">
             실행은 AI가, 수익은 당신이.
           </h3>
-          <div className="pt-4 flex justify-center">
-            <button onClick={scrollToVault} className="cta-pulse inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[var(--accent)] hover:opacity-90 transition glow">
+          <div className="pt-2 md:pt-3 flex justify-center">
+            <button
+              onClick={scrollToVault}
+              className="cta-pulse inline-flex items-center gap-2 px-6 py-2.5 md:py-3 rounded-full bg-[var(--accent)] hover:opacity-90 transition glow"
+            >
               나의 첫 AI 자산, 지금 바로 확인하기 <ChevronDown className="w-4 h-4" />
             </button>
           </div>
