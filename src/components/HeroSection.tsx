@@ -79,8 +79,8 @@ export default function HeroSection() {
   }
 
   return (
-    <section className="h-full w-full">
-      <div className="w-full max-w-none px-0">
+    <section className="py-20 border-t border-white/10">
+      <div className="container-xxl space-y-10">
         {/* Main Hero Carousel */}
         <div className="relative mb-12 overflow-hidden rounded-4xl">
           <div

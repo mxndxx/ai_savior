@@ -21,7 +21,7 @@ export default function LectureImage({
 }: LectureImageProps) {
   if (fill) {
     return (
-      <div className={`relative overflow-hidden ${className}`}>
+      <div className={`relative overflow-hidden w-full h-full ${className}`}>
         <Image
           src={src}
           alt={alt}
