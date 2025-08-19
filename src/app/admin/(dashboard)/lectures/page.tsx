@@ -59,7 +59,7 @@ export default function LecturesPage() {
   };
 
   // 모달 열기 (생성/수정/복제 통합)
-  const openModal = (lecture: LectureWithCoach | null = null, duplicate: boolean = false) => {
+  const openModal = (lecture: LectureWithCoach | null = null, duplicate = false) => {
     if (duplicate && lecture) {
       setIsEditMode(false);
       setIsDuplicateMode(true);
@@ -86,59 +86,54 @@ export default function LecturesPage() {
   }
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-black">
       <main className="flex-1 overflow-y-auto p-4">
         <div className="mb-4 flex justify-end">
           <button
-            onClick={() => openModal()} // null 대신 빈 호출
-            className="flex items-center gap-2 rounded-lg bg-black px-4 py-2 text-sm text-white hover:bg-gray-700"
+            onClick={() => openModal()}
+            className="flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-sm text-black hover:bg-white/90"
           >
             <Plus className="h-4 w-4" />
             강의 추가
           </button>
         </div>
 
-        <div className="rounded-lg bg-white shadow-sm">
+        {/* Table card */}
+        <div className="rounded-lg border border-white/10 bg-[#141414] shadow-sm">
           <div className="overflow-x-auto rounded-xl">
             <table className="w-full">
-              <thead className="border-b bg-gray-50">
+              <thead className="border-b border-white/10 bg-transparent">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-white/60 uppercase">
                     강의
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-white/60 uppercase">
                     강의 시작일
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-white/60 uppercase">
                     강사
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                  <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-white/60 uppercase">
                     작업
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-white/10">
                 {loading ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
+                    <td colSpan={5} className="px-6 py-4 text-center text-white/60">
                       강의 목록을 불러오는 중...
                     </td>
                   </tr>
                 ) : lectures.length === 0 ? (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-6 py-4 text-center text-gray-500"
-                    >
+                    <td colSpan={5} className="px-6 py-4 text-center text-white/60">
                       등록된 강의가 없습니다.
                     </td>
                   </tr>
                 ) : (
                   lectures.map((lecture) => (
-                    <tr key={lecture.id} className="hover:bg-gray-50">
+                    <tr key={lecture.id} className="hover:bg-white/5">
                       <td className="px-6 py-4">
                         <div className="flex items-center">
                           <Image
@@ -149,17 +144,17 @@ export default function LecturesPage() {
                             height={80}
                           />
                           <div className="ml-4">
-                            <div className="line-clamp-2 text-sm font-medium text-gray-900">
+                            <div className="line-clamp-2 text-sm font-medium text-white">
                               {lecture.title}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-sm text-white/60">
                               가격 : {lecture.price.toLocaleString()}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">
+                        <div className="text-sm text-white">
                           {(() => {
                             const dateStr = lecture.start_date;
                             const date = dateStr.substring(0, 10);
@@ -168,40 +163,35 @@ export default function LecturesPage() {
                             const hourNum = parseInt(hour);
                             const period = hourNum >= 12 ? "오후" : "오전";
                             const displayHour =
-                              hourNum > 12
-                                ? hourNum - 12
-                                : hourNum === 0
-                                  ? 12
-                                  : hourNum;
-
-                            return `${date} ${period} ${displayHour.toString().padStart(2, "0")}:${minute}`;
+                              hourNum > 12 ? hourNum - 12 : hourNum === 0 ? 12 : hourNum;
+                            return `${date} ${period} ${displayHour
+                              .toString()
+                              .padStart(2, "0")}:${minute}`;
                           })()}
                         </div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">
-                          {lecture.coach.name}
-                        </div>
+                        <div className="text-sm text-white">{lecture.coach.name}</div>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => openModal(lecture)}
-                            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-blue-600"
+                            className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-blue-400"
                             title="수정"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => openModal(lecture, true)}
-                            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-green-600"
+                            className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-green-400"
                             title="복제"
                           >
                             <Copy className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteLecture(lecture)}
-                            className="rounded-lg p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-red-600"
+                            className="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-red-400"
                             title="삭제"
                           >
                             <Trash2 className="h-4 w-4" />

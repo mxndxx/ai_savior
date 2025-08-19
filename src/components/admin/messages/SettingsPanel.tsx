@@ -16,7 +16,7 @@ export const SettingsPanel = () => {
 
   return (
     <div className="p-6">
-      <h2 className="mb-4 text-lg font-semibold text-gray-900 truncate">
+      <h2 className="mb-4 text-lg font-semibold text-white truncate">
         &quot;{activeLecture.title}&quot; 알림 설정
       </h2>
 
