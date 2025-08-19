@@ -4,7 +4,7 @@ import { useMessageSettingsContext } from "./MessageSettingsContext";
 export const LectureList = () => {
   const { lectures, activeLectureId, setActiveLectureId } = useMessageSettingsContext();
   return (
-    <div className="w-1/3 flex-shrink-0 overflow-y-auto border-r border-gray-200">
+    <div className="w-1/3 flex-shrink-0 overflow-y-auto">
       <nav className="space-y-1 p-2">
         {lectures.map((lecture) => (
           <button
@@ -12,8 +12,8 @@ export const LectureList = () => {
             onClick={() => setActiveLectureId(lecture.id)}
             className={`group flex w-full items-center rounded-md p-2 text-sm font-medium ${
               activeLectureId === lecture.id
-                ? "bg-gray-100 text-gray-900"
-                : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                ? "bg-gray-100 text-black"
+                : "text-white hover:bg-gray-50 hover:text-black"
             }`}
           >
             <Image

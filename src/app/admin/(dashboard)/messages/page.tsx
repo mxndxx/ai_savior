@@ -24,11 +24,12 @@ export default function MessagesPage() {
         channelDetails,
       }}
     >
-      <div className="flex h-screen overflow-hidden bg-gray-100">
+      <div className="flex min-h-screen bg-black">
         <main className="flex-1 overflow-hidden p-4">
-          <h1 className="mb-4 text-2xl font-bold">알림 관리</h1>
+          <h1 className="mb-4 text-2xl font-bold text-white">알림 관리</h1>
+
           <div
-            className="flex overflow-hidden rounded-lg bg-white shadow-sm"
+            className="flex overflow-hidden rounded-lg bg-[#141414] text-white shadow-sm"
             style={{ height: "calc(100vh - 120px)" }}
           >
             <LectureList />

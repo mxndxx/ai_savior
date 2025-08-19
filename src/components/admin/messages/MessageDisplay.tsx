@@ -28,13 +28,13 @@ export const MessageDisplay = ({
   return (
     <div
       className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-md ${
-        isEmpty ? "border-gray-200 bg-gray-50" : "border-gray-300 bg-white"
+        isEmpty ? "border-gray-200 bg-[#202020]" : "border-gray-300 bg-[#202020]"
       }`}
       onClick={onEdit}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 pr-2">
-          <h3 className="font-medium text-gray-900">{channelLabel}</h3>
+          <h3 className="font-medium text-gray-500">{channelLabel}</h3>
           <div className="mt-1">{displayContent()}</div>
         </div>
         <Edit3

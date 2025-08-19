@@ -54,18 +54,18 @@ export const EmailDisplay = ({
   return (
     <div
       className={`group cursor-pointer rounded-lg border p-4 transition-all hover:shadow-md ${
-        isEmpty ? "border-gray-200 bg-gray-50" : "border-gray-300 bg-white"
+        isEmpty ? "border-gray-200 bg-[#202020]" : "border-gray-300 bg-[#202020]"
       }`}
       onClick={onEdit}
     >
       <div className="flex items-start justify-between">
         <div className="flex-1 pr-2">
-          <h3 className="font-medium text-gray-900">{channelLabel}</h3>
+          <h3 className="font-medium text-gray-400">{channelLabel}</h3>
           <div className="mt-1">{displayContent()}</div>
         </div>
         <Edit3
           size={16}
-          className="mt-0.5 text-gray-400 opacity-0 transition-opacity group-hover:opacity-100"
+          className="mt-0.5 text-gray-400 opacity-100 transition-opacity group-hover:opacity-50"
         />
       </div>
     </div>
