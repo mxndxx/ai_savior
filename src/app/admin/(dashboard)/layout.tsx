@@ -36,7 +36,7 @@ export default async function AdminLayout({
       <Sidebar />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header user={userInfo} />
-        <main className="flex-1 overflow-y-auto">{children}</main>
+        <main className="flex-1 overflow-y-auto bg-black">{children}</main>
       </div>
     </div>
   );
