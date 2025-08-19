@@ -207,9 +207,29 @@ export default function Home() {
         </div>
       )}
 
-      {/* Section 1 - Hook (compact only) */}
-      <section className="relative min-h-[60svh] md:min-h-[62svh] flex items-center">
-        <div className="absolute inset-0 pointer-events-none [background:radial-gradient(60%_40%_at_50%_0%,rgba(229,9,20,0.15),transparent_65%),radial-gradient(40%_35%_at_10%_80%,rgba(0,123,255,0.2),transparent_70%)]" />
+      {/* Section 1 - Hook */}
+      <section className="relative min-h-[60svh] md:min-h-[62svh] flex items-center isolate overflow-hidden">
+        {/* BACKGROUND */}
+        <div className="absolute inset-0 -z-10 overflow-hidden">
+          <NextImage
+            src="/hero-wall.avif"
+            alt="월천메이커 배경"
+            fill
+            priority
+            sizes="100vw"
+            className="
+              pointer-events-none select-none
+              object-cover object-center
+              brightness-[0.55] md:brightness-[0.55]  /* assombrit directement l'image */
+              contrast-[0.90] saturate-[1.2]
+              will-change-transform
+            "
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/25 to-black/65" />
+          <div className="absolute inset-0 [background:radial-gradient(60%_40%_at_50%_0%,rgba(229,9,20,0.10),transparent_65%),radial-gradient(40%_35%_at_10%_80%,rgba(0,123,255,0.12),transparent_70%)]" />
+        </div>
+
+        {/* CONTENU */}
         <div className="container-xxl text-center space-y-4 md:space-y-5">
           <h1 className="text-4xl md:text-6xl font-bold leading-tight">
             <span className="text-white">노동의 시대는 끝났습니다.</span>
@@ -230,6 +250,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+
 
       {/* Section 2 - Shift */}
       <section className="py-16 border-t border-white/10">
@@ -383,6 +404,76 @@ export default function Home() {
       </footer>
 
       <style jsx global>{`
+        .hero-wall {
+          position: relative;
+          isolation: isolate;
+        }
+        .hero-wall::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -2;
+          background-image: url('/hero-wall.avif');
+          background-size: cover;        /* pas de zoom excessif */
+          background-position: center;   /* bien centré */
+          background-repeat: no-repeat;
+          filter: contrast(1.05) saturate(1.05) brightness(0.88); /* un poil plus sombre */
+        }
+        .hero-wall::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background:
+            /* couche noire globale (haut -> bas) */
+            linear-gradient(180deg,
+              rgba(0,0,0,0.86) 0%,
+              rgba(0,0,0,0.86) 45%,
+              rgba(0,0,0,0.90) 100%
+            ),
+            radial-gradient(120% 85% at 50% 20%,
+              rgba(0,0,0,0.00) 0%,
+              rgba(0,0,0,0.72) 52%,
+              rgba(0,0,0,0.90) 100%
+            ),
+            radial-gradient(65% 120% at 100% 100%,
+              rgba(229,9,20,0.18) 0%,
+              rgba(229,9,20,0.00) 60%
+            ),
+            radial-gradient(60% 120% at 0% 100%,
+              rgba(121,53,200,0.16) 0%,
+              rgba(121,53,200,0.00) 60%
+            );
+          pointer-events: none;
+        }
+
+        @media (min-width: 1024px) {
+          .hero-wall::after {
+            filter: contrast(1.05) saturate(1.05) brightness(0.90);
+          }
+          .hero-wall::before {
+            background:
+              linear-gradient(180deg,
+                rgba(0,0,0,0.80) 0%,
+                rgba(0,0,0,0.82) 45%,
+                rgba(0,0,0,0.88) 100%
+              ),
+              radial-gradient(110% 80% at 50% 18%,
+                rgba(0,0,0,0.00) 0%,
+                rgba(0,0,0,0.66) 52%,
+                rgba(0,0,0,0.88) 100%
+              ),
+              radial-gradient(60% 110% at 100% 100%,
+                rgba(229,9,20,0.16) 0%,
+                rgba(229,9,20,0.00) 60%
+              ),
+              radial-gradient(55% 110% at 0% 100%,
+                rgba(121,53,200,0.14) 0%,
+                rgba(121,53,200,0.00) 60%
+              );
+          }
+        }
+
         .masked-overflow::before,
         .masked-overflow::after {
           content: "";
@@ -402,6 +493,7 @@ export default function Home() {
           background: linear-gradient(to left, rgba(0,0,0,0.8), transparent);
         }
       `}</style>
+
     </main>
   );
 }
