@@ -67,9 +67,9 @@ export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
             </span>
           )}
         </div>
-        <div className="text-left">
-          <p className="text-sm font-medium text-gray-900">{user.name}</p>
-          <p className="text-xs text-gray-500">{user.email}</p>
+        <div className="text-left transition-colors hover:[&_p]:!text-black">
+          <p className="text-sm font-medium text-white">{user.name}</p>
+          <p className="text-xs text-white/60">{user.email}</p>
         </div>
         <svg
           className={`h-4 w-4 text-gray-400 transition-transform ${
@@ -116,3 +116,4 @@ export function UserProfileDropdown({ user }: UserProfileDropdownProps) {
     </div>
   );
 }
+
