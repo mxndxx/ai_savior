@@ -1,6 +1,8 @@
+// src/components/AuthButton.tsx
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 
 export default function AuthButton() {
@@ -23,11 +25,19 @@ export default function AuthButton() {
   }
 
   const name = user.name ?? user.email?.split("@")[0] ?? "내 프로필";
+
   return (
     <div className="shrink-0 inline-flex items-center gap-2">
       <Link href="/me" className="inline-flex items-center gap-2 rounded-md px-2 py-1.5 hover:bg-white/5">
         {user.image ? (
-          <img src={user.image} alt="avatar" className="w-7 h-7 rounded-full object-cover" />
+          <Image
+            src={user.image}
+            alt="avatar"
+            width={28}
+            height={28}
+            className="w-7 h-7 rounded-full object-cover"
+            unoptimized
+          />
         ) : (
           <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center text-xs">
             {name.slice(0, 1).toUpperCase()}
