@@ -40,18 +40,15 @@ const handler = NextAuth({
     Kakao({
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
+      authorization: { params: { scope: "profile_nickname profile_image" } }, // pas d'email
       allowDangerousEmailAccountLinking: true,
-      profile(profile) {
-        const kakaoAccount: any = (profile as any).kakao_account || {};
-        const email = kakaoAccount.email ?? null;
-        const nickname = kakaoAccount.profile?.nickname ?? "Kakao User";
-        const avatar = kakaoAccount.profile?.profile_image_url ?? null;
-
+      profile(p: any) {
+        const acct = p?.kakao_account ?? {};
         return {
-          id: String(profile.id),
-          email,
-          name: nickname,
-          image: avatar,
+          id: String(p.id),
+          email: acct.email ?? null,
+          name: acct.profile?.nickname ?? "Kakao User",
+          image: acct.profile?.profile_image_url ?? null,
         };
       },
     }),
