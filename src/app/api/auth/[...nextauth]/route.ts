@@ -39,6 +39,7 @@ const authOptions: NextAuthOptions = {
     Kakao({
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
+      authorization: { params: { scope: "profile_nickname profile_image" } }, // pas d'email
       allowDangerousEmailAccountLinking: true,
       profile(p: any) {
         const acct = p?.kakao_account ?? {};
