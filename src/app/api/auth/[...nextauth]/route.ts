@@ -1,11 +1,10 @@
-// src/app/api/auth/[...nextauth]/route.ts
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import Kakao from "next-auth/providers/kakao";
 import { createClient } from "@supabase/supabase-js";
 import bcrypt from "bcryptjs";
 
-function getDb() {
+function getDbAdmin() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
   return createClient(url, key, { auth: { persistSession: false } });
@@ -24,22 +23,32 @@ const authOptions: NextAuthOptions = {
       credentials: { email: { label: "Email", type: "email" }, password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) return null;
-        const db = getDb();
-        const { data: user } = await db
+        const db = getDbAdmin();
+        const email = credentials.email.trim().toLowerCase();
+
+        const { data: user, error } = await db
           .from("auth_users")
           .select("id, email, password_hash, name, avatar_url")
-          .eq("email", credentials.email.trim().toLowerCase())
-          .single();
-        if (!user?.password_hash) return null;
+          .eq("email", email)
+          .maybeSingle();
+
+        if (error || !user || !user.password_hash) return null;
+
         const ok = await bcrypt.compare(credentials.password, user.password_hash);
         if (!ok) return null;
-        return { id: user.id, email: user.email, name: user.name, image: user.avatar_url || undefined };
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          image: user.avatar_url || undefined,
+        };
       },
     }),
     Kakao({
       clientId: process.env.KAKAO_CLIENT_ID!,
       clientSecret: process.env.KAKAO_CLIENT_SECRET || "",
-      authorization: { params: { scope: "profile_nickname profile_image" } }, // pas d'email
+      authorization: { params: { scope: "profile_nickname profile_image" } },
       allowDangerousEmailAccountLinking: true,
       profile(p: any) {
         const acct = p?.kakao_account ?? {};
@@ -55,18 +64,26 @@ const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account?.provider !== "kakao") return true;
-      const db = getDb();
+      const db = getDbAdmin();
       const kakaoId = String((profile as any).id);
 
-      const { data: existing } = await db.from("auth_users").select("id").eq("kakao_id", kakaoId).single();
+      const { data: existing } = await db
+        .from("auth_users")
+        .select("id")
+        .eq("kakao_id", kakaoId)
+        .maybeSingle();
       if (existing) return true;
 
-      const email = (user.email || null)?.toLowerCase() || null;
+      const email = user.email?.toLowerCase() ?? null;
       const name = user.name || "Kakao User";
       const avatar_url = user.image || null;
 
       if (email) {
-        const { data: byEmail } = await db.from("auth_users").select("id").eq("email", email).single();
+        const { data: byEmail } = await db
+          .from("auth_users")
+          .select("id")
+          .eq("email", email)
+          .maybeSingle();
         if (byEmail) {
           await db
             .from("auth_users")
@@ -75,15 +92,23 @@ const authOptions: NextAuthOptions = {
           return true;
         }
       }
-      await db.from("auth_users").insert({ email, name, avatar_url, kakao_id: kakaoId });
+
+      await db.from("auth_users").insert({
+        email, name, avatar_url, kakao_id: kakaoId,
+      });
       return true;
     },
     async jwt({ token, user }) {
       if (user?.email) token.email = user.email.toLowerCase();
-      if ((user as any)?.id) token.uid = (user as any).id;
+      if (user?.id) token.uid = (user as any).id;
+
       if (!token.uid && token.email) {
-        const db = getDb();
-        const { data } = await db.from("auth_users").select("id").eq("email", token.email).single();
+        const db = getDbAdmin();
+        const { data } = await db
+          .from("auth_users")
+          .select("id")
+          .eq("email", token.email)
+          .maybeSingle();
         if (data?.id) token.uid = data.id;
       }
       return token;
