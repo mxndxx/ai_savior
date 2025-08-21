@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import NextImage from "next/image";
 import { useMemo, useState, useRef } from "react";
@@ -40,6 +41,8 @@ const AGENTS: Agent[] = [
 ] as const;
 
 const CATEGORIES = ["전체","금융 자동화","수익 창출","개인 금융","투자","리셀","커머스","마케팅","콘텐츠"] as const;
+
+const AuthButton = dynamic(() => import("@/components/AuthButton"), { ssr: false });
 
 export default function Home() {
   const [query, setQuery] = useState("");
@@ -127,6 +130,7 @@ export default function Home() {
           <Link href="#final-offer" className="shrink-0 hidden sm:inline-flex cta-pulse px-3 py-1.5 rounded-md text-sm bg-[var(--accent)] hover:opacity-90 transition">
             무료 웨비나 신청
           </Link>
+          <AuthButton />
         </div>
 
         {/* Search bar behind the header */}
