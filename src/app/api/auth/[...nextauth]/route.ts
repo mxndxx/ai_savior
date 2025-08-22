@@ -1,4 +1,4 @@
-export const runtime = "nodejs";
+export const runtime = "nodejs"; // important pour bcrypt
 
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -13,20 +13,20 @@ function getDbAdmin() {
   return createClient(url, key, { auth: { persistSession: false } });
 }
 
-const isProd = process.env.NODE_ENV === "production";
-
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
-  debug: !isProd,
+  debug: true,
+  logger: {
+    error(code, meta) { console.error("[nextauth:error]", code, meta); },
+    warn(code) { console.warn("[nextauth:warn]", code); },
+    debug(code, meta) { console.log("[nextauth:debug]", code, meta); },
+  },
   session: { strategy: "jwt" },
   pages: { signIn: "/login", error: "/login" },
   providers: [
     Credentials({
       name: "email-password",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
+      credentials: { email: { label: "Email", type: "email" }, password: { label: "Password", type: "password" } },
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) return null;
@@ -40,27 +40,13 @@ const authOptions: NextAuthOptions = {
             .eq("email", email)
             .maybeSingle();
 
-          if (error) {
-            console.error("[auth] select error", error);
-            return null;
-          }
-          if (!user?.password_hash) {
-            console.error("[auth] user not found or no hash", { email });
-            return null;
-          }
+          if (error) { console.error("[auth] select error", error); return null; }
+          if (!user?.password_hash) { console.error("[auth] user not found or no hash", { email }); return null; }
 
           const ok = await bcrypt.compare(credentials.password, user.password_hash);
-          if (!ok) {
-            console.error("[auth] wrong password", { email });
-            return null;
-          }
+          if (!ok) { console.error("[auth] wrong password", { email }); return null; }
 
-          return {
-            id: String(user.id),
-            email: user.email,
-            name: user.name ?? null,
-            image: user.avatar_url ?? null,
-          };
+          return { id: String(user.id), email: user.email, name: user.name ?? null, image: user.avatar_url ?? null };
         } catch (e) {
           console.error("[auth] authorize exception", e);
           return null;
@@ -84,42 +70,9 @@ const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, profile }) {
-      if (account?.provider !== "kakao") return true;
-      const db = getDbAdmin();
-      const kakaoId = String((profile as any).id);
-
-      const { data: existing } = await db.from("auth_users").select("id").eq("kakao_id", kakaoId).maybeSingle();
-      if (existing) return true;
-
-      const email = user.email?.toLowerCase() ?? null;
-      const name = user.name || "Kakao User";
-      const avatar_url = user.image || null;
-
-      if (email) {
-        const { data: byEmail } = await db.from("auth_users").select("id").ilike("email", email).maybeSingle();
-        if (byEmail) {
-          await db.from("auth_users").update({ kakao_id: kakaoId, name, avatar_url, updated_at: new Date().toISOString() }).eq("id", byEmail.id);
-          return true;
-        }
-      }
-      await db.from("auth_users").insert({ email, name, avatar_url, kakao_id: kakaoId });
-      return true;
-    },
-    async jwt({ token, user }) {
-      if (user?.email) token.email = user.email.toLowerCase();
-      if ((user as any)?.id) token.uid = (user as any).id;
-      if (!token.uid && token.email) {
-        const db = getDbAdmin();
-        const { data } = await db.from("auth_users").select("id").ilike("email", token.email).maybeSingle();
-        if (data?.id) token.uid = data.id;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      if (session.user) (session.user as any).id = token.uid;
-      return session;
-    },
+    async signIn({ user, account, profile }) { return true; },
+    async jwt({ token, user }) { if ((user as any)?.id) token.uid = String((user as any).id); return token; },
+    async session({ session, token }) { if (session.user) (session.user as any).id = token.uid; return session; },
   },
 };
 
