@@ -23,26 +23,46 @@ const authOptions: NextAuthOptions = {
   providers: [
     Credentials({
       name: "email-password",
-      credentials: { email: { label: "Email", type: "email" }, password: { label: "Password", type: "password" } },
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
       async authorize(credentials) {
         try {
           if (!credentials?.email || !credentials?.password) return null;
+
           const db = getDbAdmin();
           const email = credentials.email.trim().toLowerCase();
 
           const { data: user, error } = await db
             .from("auth_users")
             .select("id, email, password_hash, name, avatar_url")
-            .ilike("email", email)
+            .eq("email", email)
             .maybeSingle();
 
-          if (error || !user || !user.password_hash) return null;
+          if (error) {
+            console.error("[auth] select error", error);
+            return null;
+          }
+          if (!user?.password_hash) {
+            console.error("[auth] user not found or no hash", { email });
+            return null;
+          }
 
           const ok = await bcrypt.compare(credentials.password, user.password_hash);
-          if (!ok) return null;
+          if (!ok) {
+            console.error("[auth] wrong password", { email });
+            return null;
+          }
 
-          return { id: user.id, email: user.email, name: user.name, image: user.avatar_url || undefined };
-        } catch {
+          return {
+            id: String(user.id),
+            email: user.email,
+            name: user.name ?? null,
+            image: user.avatar_url ?? null,
+          };
+        } catch (e) {
+          console.error("[auth] authorize exception", e);
           return null;
         }
       },
