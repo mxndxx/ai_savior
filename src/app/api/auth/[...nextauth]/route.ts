@@ -16,7 +16,7 @@ function getDbAdmin() {
 const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   debug: true,
-  logger: {
+  logger: { 
     error(code, meta) { console.error("[nextauth:error]", code, meta); },
     warn(code) { console.warn("[nextauth:warn]", code); },
     debug(code, meta) { console.log("[nextauth:debug]", code, meta); },
